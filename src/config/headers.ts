@@ -64,13 +64,22 @@ export function securityHeaders(flags: Pick<Flags, 'analytics'>): Record<string,
   };
 }
 
-export function headersFile(flags: Pick<Flags, 'analytics'>): string {
+// Install scripts: plain text (never executed by a browser) with a short cache,
+// so a new release reaches `curl | sh` within minutes. The /* rule's headers
+// (nosniff, same-origin CORP) still apply; curl ignores CORP.
+export const SCRIPT_HEADERS = {
+  'Content-Type': 'text/plain; charset=utf-8',
+  'Cache-Control': 'public, max-age=300',
+};
+
+export function headersFile(flags: Pick<Flags, 'analytics'>, scripts: string[] = []): string {
   const block = (path: string, headers: Record<string, string>) =>
     [path, ...Object.entries(headers).map(([k, v]) => `  ${k}: ${v}`)].join('\n');
   return (
     [
       block('/*', securityHeaders(flags)),
       block('/_astro/*', { 'Cache-Control': 'public, max-age=31536000, immutable' }),
+      ...scripts.map((path) => block(path, SCRIPT_HEADERS)),
     ].join('\n\n') + '\n'
   );
 }
