@@ -1,0 +1,77 @@
+# Claim registry. Every product claim or number on the site comes from here and
+# is rendered with <Claim id="...">. Each entry cites its source:
+#   repo:   tokvera | sievant | halotrcer   (read-only sibling repos)
+#   path, lines, commit: where the quote is; `npm run verify:claims` re-reads it
+#   quote:  exact text at that location (whitespace and **bold** markers ignored)
+# or, for owner decisions:
+#   owner:  true, with `decided` (date) and `note`
+
+- id: www.hero.title
+  text: Find where your AI spend leaks and where your agents are exposed.
+  source:
+    owner: true
+    decided: 2026-10-21
+    note: Hero wording approved by the owner (PLAN.md, owner decisions, Q1).
+
+- id: www.hero.lede
+  text: 'One check. No telemetry, no account: it talks only to the endpoint you point it at.'
+  source:
+    owner: true
+    decided: 2026-10-21
+    note: >-
+      Approved by the owner (Q1). Supported by tokvera README.md:15 ("with no telemetry"),
+      halotrcer internal/report/model.go:38-39 ("contacts only the target you give it ... It sends no telemetry"),
+      sievant docs/faq.md:5 ("no account or license check").
+
+- id: halotrcer.tagline
+  text: One cost and security check for AI products.
+  source:
+    repo: halotrcer
+    path: cmd/halotrcer/main.go
+    lines: '25'
+    commit: 6f09a4dde4226b8939ef49702531b52d097a68cd
+    quote: 'halotrcer: one cost and security check for AI products.'
+
+- id: tokvera.headline
+  text: Find out where your LLM inference is slow, failing or expensive, in two commands.
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '3-4'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: Find out where your LLM inference is slow, failing or expensive, in two commands.
+
+- id: tokvera.summary
+  text: >-
+    It grades the endpoint A–F and writes a self-contained report. It works with OpenAI-compatible
+    servers (vLLM, TGI, Ollama, llama.cpp and others) and the OpenAI and Anthropic APIs.
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '12-14'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: >-
+      It grades the endpoint A–F and writes a self-contained report. It works with OpenAI-compatible
+      servers (vLLM, TGI, Ollama, llama.cpp and others) and the OpenAI and Anthropic APIs.
+
+- id: sievant.headline
+  text: Sievant puts a security checkpoint between AI agents and the tools they call.
+  source:
+    repo: sievant
+    path: README.md
+    lines: '3-4'
+    commit: d8a8bcf0694e222c40ab2f00b68db71975959918
+    quote: Sievant puts a security checkpoint between AI agents and the tools they call.
+
+- id: sievant.summary
+  text: >-
+    It sits in front of MCP (Model Context Protocol) servers and checks every tool call: who is
+    calling, whether they may, what goes in and what comes back.
+  source:
+    repo: sievant
+    path: README.md
+    lines: '4-6'
+    commit: d8a8bcf0694e222c40ab2f00b68db71975959918
+    quote: >-
+      It sits in front of MCP ([Model Context Protocol](https://modelcontextprotocol.io)) servers
+      and checks every tool call: who is calling, whether they may, what goes in and what comes back.

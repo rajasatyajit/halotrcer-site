@@ -1,0 +1,7 @@
+// Applies a stored theme choice before first paint. External (not inline) for CSP.
+try {
+  var t = localStorage.getItem('theme');
+  if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+} catch (e) {
+  // Storage blocked: fall back to prefers-color-scheme.
+}

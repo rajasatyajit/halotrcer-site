@@ -1,0 +1,85 @@
+/* Design tokens. Each colour is light-dark(light, dark); tests/unit/contrast.test.ts
+   checks every text/background pair below at WCAG AA in both themes. */
+
+:root {
+  color-scheme: light dark;
+
+  /* Surfaces and ink: warm paper by day, graphite by night. */
+  --bg: light-dark(#f7f6f3, #121315);
+  --surface: light-dark(#fff, #1a1c1f);
+  --surface-sunken: light-dark(#efede8, #0d0e10);
+  --ink: light-dark(#1b1a17, #ecebe7);
+  --ink-muted: light-dark(#55524b, #a6a39c);
+  --line: light-dark(#d6d2c8, #33363b);
+  --focus: light-dark(#1b1a17, #ecebe7);
+
+  /* Terminal panels stay dark in both themes. */
+  --term-bg: #16171a;
+  --term-ink: #e8e6e1;
+  --term-muted: #a29f97;
+  --term-prompt: #8fd0a8;
+
+  /* Brand signal colours, text-safe on --bg and --surface. */
+  --halotrcer: light-dark(#3b3fb6, #a9acff);
+  --tokvera: light-dark(#8a4b00, #f2b35b);
+  --sievant: light-dark(#0b6b63, #5fd0c1);
+  --accent: var(--halotrcer);
+  --accent-ink: light-dark(#fff, #121315);
+
+  /* Type */
+  --font-sans:
+    system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-2xl: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+  --text-3xl: clamp(2rem, 1.5rem + 2.4vw, 3.25rem);
+  --leading: 1.6;
+  --leading-tight: 1.15;
+  --measure: 68ch;
+
+  /* Space: 8px grid */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --gutter: 1rem;
+  --page-max: 72rem;
+  --radius: 6px;
+  --radius-lg: 10px;
+  --duration: 150ms;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+:root[data-site='tokvera'] {
+  --accent: var(--tokvera);
+}
+
+:root[data-site='sievant'] {
+  --accent: var(--sievant);
+}
+
+@media (width >= 48rem) {
+  :root {
+    --gutter: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration: 0ms;
+  }
+}

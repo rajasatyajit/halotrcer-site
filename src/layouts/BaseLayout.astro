@@ -1,0 +1,58 @@
+---
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/components.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { SITE_NAMES, url } from '../config/site.ts';
+import { getFlags } from '../config/flags.ts';
+import { canonicalPath } from '../lib/paths.ts';
+
+interface Props {
+  title: string;
+  description: string;
+  // Use the site name alone as the title (home pages).
+  bareTitle?: boolean;
+  noindex?: boolean;
+}
+
+const { title, description, bareTitle = false, noindex = false } = Astro.props;
+const { site } = getFlags();
+const siteName = SITE_NAMES[site];
+const fullTitle = bareTitle ? title : `${title} · ${siteName}`;
+const canonical = url(site, canonicalPath(Astro.url.pathname));
+---
+
+<!doctype html>
+<html lang="en" data-site={site}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f6f3" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121315" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <script is:inline src="/theme-init.js"></script>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <SiteHeader />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

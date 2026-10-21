@@ -1,0 +1,44 @@
+---
+import { BOOKING_URL, CONTACT_EMAIL, url } from '../config/site.ts';
+import { getFlags } from '../config/flags.ts';
+
+const { analytics } = getFlags();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div>
+      <h2>Products</h2>
+      <ul>
+        <li>
+          <a href={url('tokvera')}>Tokvera</a>: LLM inference cost and latency
+        </li>
+        <li>
+          <a href={url('sievant')}>Sievant</a>: MCP security gateway
+        </li>
+        <li>
+          <a href={url('www')}>Halotrcer</a>: both, one report
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h2>Contact</h2>
+      <ul>
+        <li>
+          <a href={BOOKING_URL}>Book a call</a>
+        </li>
+        <li>
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+        </li>
+      </ul>
+    </div>
+    <div>
+      <h2>Privacy</h2>
+      <p>
+        {analytics
+          ? 'No cookies. Page views are counted with cookieless Cloudflare Web Analytics.'
+          : 'No cookies, no analytics, no third-party scripts.'}
+      </p>
+    </div>
+  </div>
+</footer>

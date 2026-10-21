@@ -1,0 +1,13 @@
+---
+// Renders a sourced claim from content/claims.yaml. The data-claim attribute
+// marks it as sourced for the build-output claim scan.
+import { claim } from '../lib/claims.ts';
+
+interface Props {
+  id: string;
+}
+
+const c = claim(Astro.props.id);
+---
+
+<span data-claim={c.id}>{c.text}</span>

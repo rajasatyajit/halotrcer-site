@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import LaunchingSoon from '../../../components/LaunchingSoon.astro';
+import { BOOKING_URL, url } from '../../../config/site.ts';
+---
+
+<BaseLayout
+  title="Halotrcer: find AI spend leaks and agent exposures"
+  description="Halotrcer runs Tokvera and Sievant together: one check for LLM inference cost and latency and for MCP agent security, with one combined report."
+  bareTitle
+>
+  <section class="container hero">
+    <p class="eyebrow">Halotrcer</p>
+    <h1>
+      <Claim id="www.hero.title" />
+    </h1>
+    <p class="lede">
+      <Claim id="www.hero.lede" />
+    </p>
+    <div class="button-row">
+      <a class="button" href={BOOKING_URL}>
+        Book a call
+      </a>
+    </div>
+  </section>
+
+  <section class="container section" aria-labelledby="products">
+    <h2 id="products">Two tools, one report</h2>
+    <ul class="card-grid">
+      <li class="card card--tokvera">
+        <h3>
+          <a href={url('tokvera')}>Tokvera</a>
+        </h3>
+        <p>
+          <Claim id="tokvera.headline" />
+        </p>
+      </li>
+      <li class="card card--sievant">
+        <h3>
+          <a href={url('sievant')}>Sievant</a>
+        </h3>
+        <p>
+          <Claim id="sievant.headline" />
+        </p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="container section">
+    <LaunchingSoon product="www" />
+  </section>
+</BaseLayout>

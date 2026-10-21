@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import LaunchingSoon from '../../../components/LaunchingSoon.astro';
+import { url } from '../../../config/site.ts';
+import { getFlags } from '../../../config/flags.ts';
+
+const { site } = getFlags();
+---
+
+<BaseLayout title="Page not found" description="This page doesn’t exist." noindex>
+  <div class="container section">
+    <h1>Page not found</h1>
+    <p class="lede">
+      The page you asked for isn’t here. Try the <a href={url(site)}>home page</a>.
+    </p>
+    <LaunchingSoon product={site} />
+  </div>
+</BaseLayout>
