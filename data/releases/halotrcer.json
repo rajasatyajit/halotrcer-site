@@ -1,0 +1,127 @@
+{
+  "product": "halotrcer",
+  "name": "Halotrcer",
+  "binary": "halotrcer",
+  "source": {
+    "repo": "halotrcer",
+    "ref": "c19c0d91da6bbefd22ab80f3834cf65e2c57ce51",
+    "commit": "c19c0d91da6bbefd22ab80f3834cf65e2c57ce51"
+  },
+  "release": null,
+  "next": [
+    {
+      "cmd": "halotrcer check --target <inference-url>"
+    }
+  ],
+  "scripts": {},
+  "channels": [
+    {
+      "id": "brew",
+      "label": "Homebrew",
+      "os": [
+        "macos"
+      ],
+      "commands": [
+        "brew install --cask rajasatyajit/tap/halotrcer"
+      ],
+      "what": "Installs the Halotrcer cask from the rajasatyajit tap.",
+      "whatCite": "internal/install/channels.go:88"
+    },
+    {
+      "id": "scoop",
+      "label": "Scoop",
+      "os": [
+        "windows"
+      ],
+      "commands": [
+        "scoop bucket add rajasatyajit https://github.com/rajasatyajit/scoop-bucket",
+        "scoop install rajasatyajit/halotrcer"
+      ],
+      "what": "Adds the rajasatyajit bucket, then installs.",
+      "whatCite": "internal/install/channels.go:78-90"
+    },
+    {
+      "id": "winget",
+      "label": "winget",
+      "os": [
+        "windows"
+      ],
+      "commands": [
+        "winget install -e --id Halotrcer.Halotrcer"
+      ],
+      "what": "Installs from the winget community repository.",
+      "whatCite": "internal/install/channels.go:30,92"
+    },
+    {
+      "id": "apt",
+      "label": "apt",
+      "os": [
+        "linux"
+      ],
+      "commands": [
+        "sudo install -d -m 0755 /etc/apt/keyrings",
+        "sudo curl -fsSLo /etc/apt/keyrings/halotrcer-packages.asc https://rajasatyajit.github.io/packages/halotrcer-packages.asc",
+        "echo \"deb [signed-by=/etc/apt/keyrings/halotrcer-packages.asc] https://rajasatyajit.github.io/packages/apt stable main\" | sudo tee /etc/apt/sources.list.d/halotrcer.list",
+        "sudo apt update && sudo apt install halotrcer"
+      ],
+      "what": "Adds the signed apt repository, so apt installs and updates halotrcer.",
+      "whatCite": "internal/install/channels.go:129-154",
+      "verify": {
+        "text": "The repository metadata and every package are signed with the OpenPGP key halotrcer-packages.asc (fingerprint D2D9 6618 831A C55B 81E2 4DA3 039B 5DA0 D3E3 9071).",
+        "cite": "tokvera docs/install.md \"The apt and yum repositories\" (shared repository)",
+        "commands": []
+      }
+    },
+    {
+      "id": "dnf",
+      "label": "dnf / yum",
+      "os": [
+        "linux"
+      ],
+      "commands": [
+        "sudo curl -fsSLo /etc/yum.repos.d/halotrcer.repo https://rajasatyajit.github.io/packages/rpm/halotrcer.repo",
+        "sudo dnf install halotrcer"
+      ],
+      "what": "Adds the signed yum repository for Fedora, RHEL and Amazon Linux.",
+      "whatCite": "internal/install/channels.go:155-162",
+      "verify": {
+        "text": "The repository metadata and every package are signed with the OpenPGP key halotrcer-packages.asc (fingerprint D2D9 6618 831A C55B 81E2 4DA3 039B 5DA0 D3E3 9071).",
+        "cite": "tokvera docs/install.md \"The apt and yum repositories\" (shared repository)",
+        "commands": []
+      }
+    },
+    {
+      "id": "apk",
+      "label": "apk",
+      "os": [
+        "linux"
+      ],
+      "commands": [
+        "wget -O /etc/apk/keys/satyajit.rajaraman@halotrcer.com-halotrcer.rsa.pub https://raw.githubusercontent.com/rajasatyajit/halotrcer/main/packaging/keys/satyajit.rajaraman@halotrcer.com-halotrcer.rsa.pub",
+        "wget https://github.com/rajasatyajit/halotrcer/releases/download/{tag}/halotrcer_{version}_{apkArch}.apk",
+        "apk add ./halotrcer_{version}_{apkArch}.apk"
+      ],
+      "what": "Installs the apk signing key once, then a signed package from the release (Alpine).",
+      "whatCite": "internal/install/channels.go:163-171"
+    },
+    {
+      "id": "go",
+      "label": "go install",
+      "os": "any",
+      "commands": [
+        "go install github.com/rajasatyajit/halotrcer/cmd/halotrcer@latest"
+      ],
+      "what": "Builds from source with Go.",
+      "whatCite": "internal/install/channels.go:54-57,93-98"
+    },
+    {
+      "id": "releases",
+      "label": "GitHub Releases",
+      "os": "any",
+      "commands": [],
+      "link": "https://github.com/rajasatyajit/halotrcer/releases/tag/{tag}",
+      "what": "Download the archive for your platform and checksums.txt from the release page.",
+      "whatCite": "internal/install/direct.go:26-33"
+    }
+  ]
+}

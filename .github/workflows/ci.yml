@@ -41,6 +41,9 @@ jobs:
         launched: ['false', 'true']
     env:
       LAUNCHED: ${{ matrix.launched }}
+      # Launched-mode builds use fixture release data (v0.0.0-fixture): nothing is released yet.
+      RELEASE_DATA_DIR: ${{ matrix.launched == 'true' && '.cache/fixture-releases' || '' }}
+      ALLOW_CANDIDATE_SCRIPTS: ${{ matrix.launched == 'true' && '1' || '0' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -50,6 +53,9 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - name: Fixture release data
+        if: matrix.launched == 'true'
+        run: npm run fixtures:releases
       - run: npm run build -- --site ${{ matrix.site }}
       - name: HTML validation
         run: npm run check:html
@@ -62,6 +68,9 @@ jobs:
       - name: Pre-launch mode
         if: matrix.launched == 'false'
         run: npm run check:prelaunch
+      - name: Launched mode (every channel present and resolved, scripts byte-identical)
+        if: matrix.launched == 'true'
+        run: npm run check:launched
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: dist-${{ matrix.site }}-launched-${{ matrix.launched }}
@@ -77,6 +86,9 @@ jobs:
         launched: ['false', 'true']
     env:
       LAUNCHED: ${{ matrix.launched }}
+      # Launched-mode builds use fixture release data (v0.0.0-fixture): nothing is released yet.
+      RELEASE_DATA_DIR: ${{ matrix.launched == 'true' && '.cache/fixture-releases' || '' }}
+      ALLOW_CANDIDATE_SCRIPTS: ${{ matrix.launched == 'true' && '1' || '0' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -86,15 +98,29 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - name: Fixture release data
+        if: matrix.launched == 'true'
+        run: npm run fixtures:releases
       - run: npm run build
+      - name: Launched mode across all hosts
+        if: matrix.launched == 'true'
+        run: npm run check:launched
       - name: Internal links, cross-host links and fragments
         run: npm run check:links
       - name: Unique titles and descriptions across hosts
         run: npm run check:seo
 
   e2e:
-    name: Accessibility (axe) and browser tests
+    name: Accessibility (axe) and browser tests (launched=${{ matrix.launched }})
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        launched: ['false', 'true']
+    env:
+      LAUNCHED: ${{ matrix.launched }}
+      RELEASE_DATA_DIR: ${{ matrix.launched == 'true' && '.cache/fixture-releases' || '' }}
+      ALLOW_CANDIDATE_SCRIPTS: ${{ matrix.launched == 'true' && '1' || '0' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -104,24 +130,28 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - name: Fixture release data
+        if: matrix.launched == 'true'
+        run: npm run fixtures:releases
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run e2e
       - if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: playwright-results
+          name: playwright-results-launched-${{ matrix.launched }}
           path: test-results
           retention-days: 7
 
   lighthouse:
-    name: Lighthouse ${{ matrix.site }}
+    name: Lighthouse ${{ matrix.site }} (launched=${{ matrix.launched }})
     needs: build
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         site: [www, tokvera, sievant]
+        launched: ['false', 'true']
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -133,7 +163,7 @@ jobs:
           cache-dependency-path: tools/lhci/package-lock.json
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: dist-${{ matrix.site }}-launched-false
+          name: dist-${{ matrix.site }}-launched-${{ matrix.launched }}
           path: dist/${{ matrix.site }}
       - run: npm ci --prefix tools/lhci
       - name: Lighthouse CI (mobile, budgets asserted)
@@ -143,7 +173,7 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: lighthouse-${{ matrix.site }}
+          name: lighthouse-${{ matrix.site }}-launched-${{ matrix.launched }}
           path: .lighthouseci
           include-hidden-files: true
           retention-days: 7

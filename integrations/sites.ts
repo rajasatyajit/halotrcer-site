@@ -8,6 +8,7 @@ import type { Flags } from '../src/config/flags.ts';
 import { BOOKING_TARGET } from '../src/config/site.ts';
 import { headersFile } from '../src/config/headers.ts';
 import { redirectsFile } from '../src/data/redirects.ts';
+import { copyEndpoints, endpointsFor } from './endpoints.ts';
 
 const ROUTE_FILE = /\.(astro|ts|md|mdx)$/;
 
@@ -40,9 +41,19 @@ export function sitesIntegration(flags: Flags): AstroIntegration {
         }
         logger.info(`site=${flags.site} launched=${flags.launched}`);
       },
-      'astro:build:done': ({ dir }) => {
+      'astro:build:done': ({ dir, logger }) => {
         const out = fileURLToPath(dir);
-        writeFileSync(join(out, '_headers'), headersFile(flags));
+        const endpoints = endpointsFor(flags);
+        copyEndpoints(endpoints, out);
+        for (const e of endpoints)
+          logger.info(`serving /${e.name} (sha256 ${e.sha256.slice(0, 12)})`);
+        writeFileSync(
+          join(out, '_headers'),
+          headersFile(
+            flags,
+            endpoints.map((e) => `/${e.name}`),
+          ),
+        );
         writeFileSync(join(out, '_redirects'), redirectsFile(flags.site));
       },
     },

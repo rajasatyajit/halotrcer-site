@@ -2,7 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Claim from '../../../components/Claim.astro';
 import Hero from '../../../components/Hero.astro';
-import LaunchingSoon from '../../../components/LaunchingSoon.astro';
+import InstallOrSoon from '../../../components/InstallOrSoon.astro';
 import Terminal from '../../../components/Terminal.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
 import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
@@ -130,6 +130,6 @@ const audit = serviceFor('cost-security-audit');
   </section>
 
   <section class="container section">
-    <LaunchingSoon product="www" />
+    <InstallOrSoon product="halotrcer" />
   </section>
 </BaseLayout>

@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import InstallPicker from '../../../components/InstallPicker.astro';
+import LaunchingSoon from '../../../components/LaunchingSoon.astro';
+import { url } from '../../../config/site.ts';
+import { getFlags } from '../../../config/flags.ts';
+import { loadRelease, PRODUCT_IDS } from '../../../lib/releases.ts';
+
+const { launched } = getFlags();
+const HOST: Record<string, 'www' | 'tokvera' | 'sievant'> = {
+  halotrcer: 'www',
+  tokvera: 'tokvera',
+  sievant: 'sievant',
+};
+const scripts = PRODUCT_IDS.flatMap((p) => {
+  const data = loadRelease(p);
+  if (!data?.release) return [];
+  return Object.entries(data.scripts).map(([name, s]) => ({
+    product: data.name,
+    url: url(HOST[p] ?? 'www', `/${name}`),
+    sha256: s.sha256,
+    tag: data.release?.tag ?? '',
+  }));
+});
+---
+
+<BaseLayout
+  title="Install Tokvera, Sievant and Halotrcer"
+  description="Install Tokvera, Sievant or the Halotrcer bundle on macOS, Linux or Windows, with the checksums of the install scripts and how each channel is verified."
+>
+  <header class="container page-head">
+    <h1>Install</h1>
+    <p class="lede">
+      Every channel installs a signed GitHub release. Pick a product and a method; the page suggests
+      one for your system.
+    </p>
+  </header>
+
+  <div class="container">
+    {launched ? (
+      <InstallPicker defaultProduct="halotrcer" heading="Choose a product and a method" />
+    ) : (
+      <LaunchingSoon product="www" />
+    )}
+  </div>
+
+  {launched && scripts.length > 0 && (
+    <section class="container section" aria-labelledby="checksums">
+      <h2 id="checksums">Install script checksums</h2>
+      <p>
+        These files are served byte for byte as published in each product’s repository at the
+        release tag. Compare before you run one.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Script</th>
+              <th scope="col">Release</th>
+              <th scope="col">SHA-256</th>
+            </tr>
+          </thead>
+          <tbody>
+            {scripts.map((s) => (
+              <tr>
+                <td>
+                  <a href={s.url}>{s.url.replace('https://', '')}</a>
+                </td>
+                <td>
+                  {s.product} {s.tag}
+                </td>
+                <td>
+                  <code class="picker__hash">{s.sha256}</code>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  )}
+
+  <section class="container section" aria-labelledby="verify">
+    <h2 id="verify">How releases are verified</h2>
+    <ul class="checklist">
+      <li>
+        <Claim id="security.signature" />
+      </li>
+      <li>
+        <Claim id="security.provenance" />
+      </li>
+      <li>
+        <Claim id="security.packages" />
+      </li>
+    </ul>
+    <p>
+      More on the <a href={url('www', '/security')}>security page</a>.
+    </p>
+  </section>
+</BaseLayout>

@@ -1,0 +1,276 @@
+{
+  "product": "sievant",
+  "name": "Sievant",
+  "binary": "sievant",
+  "source": {
+    "repo": "sievant",
+    "ref": "d8a8bcf0694e222c40ab2f00b68db71975959918",
+    "commit": "d8a8bcf0694e222c40ab2f00b68db71975959918"
+  },
+  "release": null,
+  "next": [
+    {
+      "cmd": "sievant scan",
+      "note": "read-only audit of the MCP client configurations on this machine"
+    },
+    {
+      "cmd": "sievant wrap --all",
+      "note": "route those MCP servers through Sievant; sievant unwrap restores them"
+    }
+  ],
+  "scripts": {
+    "install.sh": {
+      "path": "scripts/install.sh",
+      "sha256": "85d8e6ed1f7edf567014c727e217db0845bb43b0c6700793051d233d42506601",
+      "bytes": 13710
+    },
+    "install.ps1": {
+      "path": "scripts/install.ps1",
+      "sha256": "dc27a0dbbe065967a6bab80f3d2cb563c0609eef94f70d90290608b164795a90",
+      "bytes": 18099
+    }
+  },
+  "channels": [
+    {
+      "id": "script",
+      "label": "Install script",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "commands": [
+        "curl -fsSL https://sievant.halotrcer.com/install.sh | sh"
+      ],
+      "what": "Downloads the latest release from GitHub, checks its SHA-256 (and its cosign signature when cosign is installed), and installs sievant into ~/.local/bin. Run it again to upgrade.",
+      "whatCite": "docs/install.md \"The install scripts\"",
+      "verify": {
+        "text": "The script verifies the release before installing anything. To check the script itself, compare its SHA-256 with the one published on the install page.",
+        "cite": "docs/install.md \"The install scripts\" step 5",
+        "commands": []
+      }
+    },
+    {
+      "id": "powershell",
+      "label": "PowerShell",
+      "os": [
+        "windows"
+      ],
+      "commands": [
+        "irm https://sievant.halotrcer.com/install.ps1 | iex"
+      ],
+      "what": "The same steps on Windows PowerShell 5.1 or PowerShell 7; installs sievant.exe into your user profile.",
+      "whatCite": "docs/install.md \"install.ps1 (Windows)\"",
+      "verify": {
+        "text": "The script verifies the release before installing anything. To check the script itself, compare its SHA-256 with the one published on the install page.",
+        "cite": "docs/install.md \"The install scripts\" step 5",
+        "commands": []
+      }
+    },
+    {
+      "id": "brew",
+      "label": "Homebrew",
+      "os": [
+        "macos"
+      ],
+      "commands": [
+        "brew install --cask rajasatyajit/tap/sievant"
+      ],
+      "what": "Installs the Sievant cask from the rajasatyajit tap. The macOS binary is not notarized by Apple: the guarantee is the checksum and the cosign signature.",
+      "whatCite": "docs/install.md \"Homebrew (macOS)\"",
+      "verify": {
+        "text": "Check that checksums.txt was signed by the repository’s release workflow on a version tag, then compare your download’s SHA-256 with its line in checksums.txt.",
+        "cite": "docs/install.md \"Homebrew (macOS)\"",
+        "commands": [
+          "TAG={tag}   # the version you installed: sievant version",
+          "curl -fsSLO \"https://github.com/rajasatyajit/sievant/releases/download/$TAG/checksums.txt\"",
+          "curl -fsSLO \"https://github.com/rajasatyajit/sievant/releases/download/$TAG/checksums.txt.sigstore.json\"",
+          "cosign verify-blob --bundle checksums.txt.sigstore.json \\\n  --certificate-identity-regexp '^https://github\\.com/rajasatyajit/sievant/\\.github/workflows/release\\.yml@refs/tags/v' \\\n  --certificate-oidc-issuer https://token.actions.githubusercontent.com \\\n  checksums.txt"
+        ]
+      }
+    },
+    {
+      "id": "scoop",
+      "label": "Scoop",
+      "os": [
+        "windows"
+      ],
+      "commands": [
+        "scoop bucket add rajasatyajit https://github.com/rajasatyajit/scoop-bucket",
+        "scoop install rajasatyajit/sievant"
+      ],
+      "what": "Adds the rajasatyajit bucket, then installs.",
+      "whatCite": "docs/install.md \"Scoop and winget (Windows)\"",
+      "verify": {
+        "text": "Check that checksums.txt was signed by the repository’s release workflow on a version tag, then compare your download’s SHA-256 with its line in checksums.txt.",
+        "cite": "docs/install.md \"Homebrew (macOS)\"",
+        "commands": [
+          "TAG={tag}   # the version you installed: sievant version",
+          "curl -fsSLO \"https://github.com/rajasatyajit/sievant/releases/download/$TAG/checksums.txt\"",
+          "curl -fsSLO \"https://github.com/rajasatyajit/sievant/releases/download/$TAG/checksums.txt.sigstore.json\"",
+          "cosign verify-blob --bundle checksums.txt.sigstore.json \\\n  --certificate-identity-regexp '^https://github\\.com/rajasatyajit/sievant/\\.github/workflows/release\\.yml@refs/tags/v' \\\n  --certificate-oidc-issuer https://token.actions.githubusercontent.com \\\n  checksums.txt"
+        ]
+      }
+    },
+    {
+      "id": "winget",
+      "label": "winget",
+      "os": [
+        "windows"
+      ],
+      "commands": [
+        "winget install -e --id Halotrcer.Sievant"
+      ],
+      "what": "Installs from the winget community repository, which can show a new version later than GitHub while Microsoft reviews it.",
+      "whatCite": "docs/install.md \"Scoop and winget (Windows)\"",
+      "verify": {
+        "text": "Check that checksums.txt was signed by the repository’s release workflow on a version tag, then compare your download’s SHA-256 with its line in checksums.txt.",
+        "cite": "docs/install.md \"Homebrew (macOS)\"",
+        "commands": [
+          "TAG={tag}   # the version you installed: sievant version",
+          "curl -fsSLO \"https://github.com/rajasatyajit/sievant/releases/download/$TAG/checksums.txt\"",
+          "curl -fsSLO \"https://github.com/rajasatyajit/sievant/releases/download/$TAG/checksums.txt.sigstore.json\"",
+          "cosign verify-blob --bundle checksums.txt.sigstore.json \\\n  --certificate-identity-regexp '^https://github\\.com/rajasatyajit/sievant/\\.github/workflows/release\\.yml@refs/tags/v' \\\n  --certificate-oidc-issuer https://token.actions.githubusercontent.com \\\n  checksums.txt"
+        ]
+      }
+    },
+    {
+      "id": "apt",
+      "label": "apt",
+      "os": [
+        "linux"
+      ],
+      "commands": [
+        "sudo install -d -m 0755 /etc/apt/keyrings",
+        "sudo curl -fsSLo /etc/apt/keyrings/halotrcer-packages.asc \\\n  https://rajasatyajit.github.io/packages/halotrcer-packages.asc",
+        "echo \"deb [signed-by=/etc/apt/keyrings/halotrcer-packages.asc] https://rajasatyajit.github.io/packages/apt stable main\" |\n  sudo tee /etc/apt/sources.list.d/sievant.list",
+        "sudo apt update && sudo apt install sievant"
+      ],
+      "what": "Adds the signed apt repository, so apt installs and updates sievant.",
+      "whatCite": "docs/install.md \"The apt and yum repositories\"",
+      "verify": {
+        "text": "The repository metadata and every package are signed with the OpenPGP key halotrcer-packages.asc (fingerprint D2D9 6618 831A C55B 81E2 4DA3 039B 5DA0 D3E3 9071).",
+        "cite": "docs/install.md \"The apt and yum repositories\"",
+        "commands": []
+      }
+    },
+    {
+      "id": "dnf",
+      "label": "dnf / yum",
+      "os": [
+        "linux"
+      ],
+      "commands": [
+        "sudo curl -fsSLo /etc/yum.repos.d/sievant.repo https://rajasatyajit.github.io/packages/rpm/sievant.repo",
+        "sudo dnf install sievant"
+      ],
+      "what": "Adds the signed yum repository for Fedora, RHEL and Amazon Linux; dnf offers to import the key on first use.",
+      "whatCite": "docs/install.md \"The apt and yum repositories\"",
+      "verify": {
+        "text": "The repository metadata and every package are signed with the OpenPGP key halotrcer-packages.asc (fingerprint D2D9 6618 831A C55B 81E2 4DA3 039B 5DA0 D3E3 9071).",
+        "cite": "docs/install.md \"The apt and yum repositories\"",
+        "commands": []
+      }
+    },
+    {
+      "id": "apk",
+      "label": "apk",
+      "os": [
+        "linux"
+      ],
+      "commands": [
+        "wget -O /etc/apk/keys/satyajit.rajaraman@halotrcer.com-sievant.rsa.pub \\\n  https://raw.githubusercontent.com/rajasatyajit/sievant/main/packaging/keys/satyajit.rajaraman@halotrcer.com-sievant.rsa.pub",
+        "apk add ./sievant_{version}_{apkArch}.apk"
+      ],
+      "what": "Installs the apk signing key once, then a signed package from the release (Alpine).",
+      "whatCite": "docs/install.md \"Alpine (signed apk)\"",
+      "verify": {
+        "text": "With the key installed, apk verifies the package without --allow-untrusted.",
+        "cite": "docs/install.md \"Alpine (signed apk)\"",
+        "commands": []
+      }
+    },
+    {
+      "id": "docker",
+      "label": "Docker",
+      "os": "any",
+      "commands": [
+        "docker run --rm ghcr.io/rajasatyajit/sievant:latest version"
+      ],
+      "what": "Runs the distroless, non-root image for linux/amd64 and linux/arm64.",
+      "whatCite": "docs/install.md \"Container image\"",
+      "verify": {
+        "text": "Each image is cosign-signed by the same release workflow.",
+        "cite": "docs/install.md \"Container image\"",
+        "commands": [
+          "cosign verify ghcr.io/rajasatyajit/sievant:{tag} \\\n  --certificate-identity-regexp '^https://github\\.com/rajasatyajit/sievant/\\.github/workflows/release\\.yml@refs/tags/v' \\\n  --certificate-oidc-issuer https://token.actions.githubusercontent.com"
+        ]
+      }
+    },
+    {
+      "id": "helm",
+      "label": "Helm",
+      "os": "any",
+      "commands": [
+        "helm install sievant oci://ghcr.io/rajasatyajit/charts/sievant --version {version} \\\n  --namespace sievant --create-namespace -f values.yaml"
+      ],
+      "what": "Installs the chart into Kubernetes, for gateway or sidecar mode. Its default image is the release’s, pinned by digest.",
+      "whatCite": "docs/install.md \"Kubernetes (Helm)\"",
+      "verify": {
+        "text": "The chart is cosign-signed by the release workflow and carries a SLSA build provenance attestation.",
+        "cite": "docs/install.md \"Kubernetes (Helm)\"",
+        "commands": [
+          "cosign verify ghcr.io/rajasatyajit/charts/sievant:{version} \\\n  --certificate-identity-regexp '^https://github\\.com/rajasatyajit/sievant/\\.github/workflows/release\\.yml@refs/tags/v' \\\n  --certificate-oidc-issuer https://token.actions.githubusercontent.com",
+          "gh attestation verify oci://ghcr.io/rajasatyajit/charts/sievant:{version} --repo rajasatyajit/sievant \\\n  --signer-workflow rajasatyajit/sievant/.github/workflows/release.yml"
+        ]
+      }
+    },
+    {
+      "id": "go",
+      "label": "go install",
+      "os": "any",
+      "commands": [
+        "go install github.com/rajasatyajit/sievant/cmd/sievant@latest"
+      ],
+      "what": "Builds from source with Go.",
+      "whatCite": "docs/install.md quick-start table"
+    },
+    {
+      "id": "releases",
+      "label": "GitHub Releases",
+      "os": "any",
+      "commands": [],
+      "link": "https://github.com/rajasatyajit/sievant/releases/tag/{tag}",
+      "what": "Download the archive for your platform and checksums.txt from the release page.",
+      "whatCite": "docs/install.md introduction",
+      "verify": {
+        "text": "Check that checksums.txt was signed by the repository’s release workflow on a version tag, then compare your download’s SHA-256 with its line in checksums.txt.",
+        "cite": "docs/install.md \"Homebrew (macOS)\"",
+        "commands": [
+          "TAG={tag}   # the version you installed: sievant version",
+          "curl -fsSLO \"https://github.com/rajasatyajit/sievant/releases/download/$TAG/checksums.txt\"",
+          "curl -fsSLO \"https://github.com/rajasatyajit/sievant/releases/download/$TAG/checksums.txt.sigstore.json\"",
+          "cosign verify-blob --bundle checksums.txt.sigstore.json \\\n  --certificate-identity-regexp '^https://github\\.com/rajasatyajit/sievant/\\.github/workflows/release\\.yml@refs/tags/v' \\\n  --certificate-oidc-issuer https://token.actions.githubusercontent.com \\\n  checksums.txt"
+        ]
+      }
+    },
+    {
+      "id": "airgap",
+      "label": "Air-gapped",
+      "os": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "commands": [
+        "sievant verify sievant_{version}_airgap_{platform}.tar.gz"
+      ],
+      "what": "One bundle per platform with the archive, SBOM, packages, checksums and signatures. Carry it across, then check it with a Sievant you already trust before installing.",
+      "whatCite": "docs/install.md \"Air-gapped install\"",
+      "verify": {
+        "text": "sievant verify reads only: every file must be the one checksums.txt names, byte for byte, and with cosign installed it checks the signature first.",
+        "cite": "docs/install.md \"Air-gapped install\"",
+        "commands": []
+      }
+    }
+  ]
+}

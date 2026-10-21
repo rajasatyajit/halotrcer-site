@@ -1,0 +1,248 @@
+---
+// Install picker (LAUNCHED=true only).
+// Without JavaScript: one <details> per channel, every arch variant listed.
+// With JavaScript (html.js, set before first paint): the server-rendered tabs
+// show from the first frame; src/islands/install/picker.ts then picks the
+// visitor's platform and remembers the choice (URL hash first, then localStorage).
+import LaunchingSoon from './LaunchingSoon.astro';
+import {
+  isArchDependent,
+  loadRelease,
+  PRODUCT_IDS,
+  resolve,
+  type Arch,
+  type Channel,
+  type PlatformOs,
+  type ProductId,
+  type Release,
+} from '../lib/releases.ts';
+import { url } from '../config/site.ts';
+
+interface Props {
+  defaultProduct: ProductId;
+  headingLevel?: 'h2' | 'h3';
+  heading?: string;
+}
+
+const { defaultProduct, headingLevel = 'h2', heading = 'Install' } = Astro.props;
+const Heading = headingLevel;
+const Sub = headingLevel === 'h2' ? 'h3' : 'h4';
+
+const order = [defaultProduct, ...PRODUCT_IDS.filter((p) => p !== defaultProduct)];
+const products = order.map((id) => ({ id, data: loadRelease(id) }));
+
+const OS_LABEL: Record<string, string> = { macos: 'macOS', linux: 'Linux', windows: 'Windows' };
+const osLabel = (c: Channel) =>
+  c.os === 'any' ? 'Any OS' : c.os.map((o) => OS_LABEL[o]).join(', ');
+
+interface Variant {
+  key: string;
+  label: string;
+  os?: PlatformOs;
+  arch?: Arch;
+}
+
+function variants(c: Channel): Variant[] {
+  if (!isArchDependent(c)) return [{ key: 'any', label: '' }];
+  const archs: Arch[] = ['x64', 'arm64'];
+  const usesPlatform = [...c.commands, ...(c.verify?.commands ?? [])].some((t) =>
+    t.includes('{platform}'),
+  );
+  if (!usesPlatform) return archs.map((arch) => ({ key: arch, label: arch, arch }));
+  const oses: [PlatformOs, string][] = [
+    ['linux', 'Linux'],
+    ['darwin', 'macOS'],
+    ['windows', 'Windows'],
+  ];
+  return oses.flatMap(([os, name]) =>
+    archs.map((arch) => ({ key: `${os}-${arch}`, label: `${name} ${arch}`, os, arch })),
+  );
+}
+
+const fill = (text: string, release: Release, v: Variant) =>
+  resolve(text, release, { arch: v.arch ?? 'x64', ...(v.os ? { os: v.os } : {}) });
+const scriptName = (c: Channel) => (c.id === 'script' ? 'install.sh' : 'install.ps1');
+const nextText = (next: { cmd: string; note?: string | undefined }[]) =>
+  next.map((n) => (n.note ? `${n.cmd}    # ${n.note}` : n.cmd)).join('\n');
+---
+
+<section
+  class="picker"
+  data-picker
+  data-default-product={defaultProduct}
+  aria-labelledby="install-heading"
+>
+  <Heading id="install-heading">{heading}</Heading>
+  <p class="picker__note">
+    Run these on the computer you want to install on.
+    <button class="text-button" type="button" data-copy-link>
+      Copy a link to this page
+    </button>
+  </p>
+  <p class="visually-hidden" id="install-recommended">
+    Recommended for your system
+  </p>
+
+  <div class="picker__tabs" role="tablist" aria-label="Product" data-tabs="product">
+    {products.map(({ id, data }) => (
+      <button
+        class="picker__tab"
+        type="button"
+        role="tab"
+        id={`tab-install-${id}`}
+        aria-controls={`install-${id}`}
+        aria-selected={id === defaultProduct ? 'true' : 'false'}
+        tabindex={id === defaultProduct ? 0 : -1}
+        data-product-tab={id}
+      >
+        {data?.name ?? id}
+      </button>
+    ))}
+  </div>
+
+  {products.map(({ id, data }) => (
+    <div
+      class="picker__product"
+      data-product={id}
+      id={`install-${id}`}
+      {...(id === defaultProduct ? { 'data-active': '' } : {})}
+    >
+      <Sub class="picker__product-name">
+        {data?.name ?? id}
+        {data?.release && <span class="picker__version">{data.release.tag}</span>}
+      </Sub>
+      {!data?.release ? (
+        <LaunchingSoon product={id} headingLevel="h4" />
+      ) : (
+        <>
+          <div
+            class="picker__tabs picker__tabs--channels"
+            role="tablist"
+            aria-label={`${data.name} install method`}
+            data-tabs="channel"
+          >
+            {data.channels.map((c, i) => (
+              <button
+                class="picker__tab"
+                type="button"
+                role="tab"
+                id={`tab-install-${id}-${c.id}`}
+                aria-controls={`panel-install-${id}-${c.id}`}
+                aria-selected={i === 0 ? 'true' : 'false'}
+                tabindex={i === 0 ? 0 : -1}
+                data-channel-tab={c.id}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+          <div class="picker__channels">
+            {data.channels.map((c, i) => {
+              const release = data.release as Release;
+              const vs = variants(c);
+              return (
+                <details
+                  class="picker__channel"
+                  id={`install-${id}-${c.id}`}
+                  data-channel={c.id}
+                  {...(i === 0 ? { open: true, 'data-active': '' } : {})}
+                >
+                  <summary>
+                    {c.label} <span class="picker__os">{osLabel(c)}</span>
+                  </summary>
+                  <div class="picker__panel" id={`panel-install-${id}-${c.id}`}>
+                    {vs.length > 1 && (
+                      <div class="picker__variants" role="group" aria-label="Platform">
+                        {vs.map((v, j) => (
+                          <button
+                            class="picker__variant-button"
+                            type="button"
+                            aria-pressed={j === 0 ? 'true' : 'false'}
+                            data-variant-button={v.key}
+                          >
+                            {v.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {vs.map((v, j) => (
+                      <div
+                        class="picker__variant"
+                        data-variant={v.key}
+                        {...(v.os ? { 'data-variant-os': v.os } : {})}
+                        {...(v.arch ? { 'data-variant-arch': v.arch } : {})}
+                        {...(j === 0 ? { 'data-active': '' } : {})}
+                      >
+                        {c.commands.length > 0 && (
+                          <div class="picker__cmd">
+                            <div class="picker__cmd-bar">
+                              <span>{v.label}</span>
+                              <button
+                                class="copy-button"
+                                type="button"
+                                data-copy={`cmd-${id}-${c.id}-${v.key}`}
+                              >
+                                Copy
+                              </button>
+                            </div>
+                            <!-- prettier-ignore -->
+                            <pre tabindex="0"><code id={`cmd-${id}-${c.id}-${v.key}`}>{c.commands.map((t) => fill(t, release, v)).join('\n')}</code></pre>
+                          </div>
+                        )}
+                        {c.link && (
+                          <p>
+                            <a class="button button--ghost" href={fill(c.link, release, v)}>
+                              Open the {release.tag} release
+                            </a>
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                    <p class="picker__what">{c.what}</p>
+                    {c.verify && (
+                      <details class="picker__verify">
+                        <summary>Verify</summary>
+                        <p>{c.verify.text}</p>
+                        {(c.id === 'script' || c.id === 'powershell') && (
+                          <p>
+                            SHA-256 of <code>{scriptName(c)}</code>:{' '}
+                            <code class="picker__hash">{data.scripts[scriptName(c)]?.sha256}</code>
+                          </p>
+                        )}
+                        {c.verify.commands.length > 0 &&
+                          vs.map((v, j) => (
+                            <div
+                              class="picker__variant"
+                              data-variant={v.key}
+                              {...(j === 0 ? { 'data-active': '' } : {})}
+                            >
+                              {v.label && <p class="picker__variant-label">{v.label}</p>}
+                              <!-- prettier-ignore -->
+                              <pre tabindex="0"><code>{c.verify?.commands.map((t) => fill(t, release, v)).join('\n')}</code></pre>
+                            </div>
+                          ))}
+                      </details>
+                    )}
+                    <p class="picker__next-label">Then run:</p>
+                    <!-- prettier-ignore -->
+                    <pre class="picker__next" tabindex="0"><code>{nextText(data.next)}</code></pre>
+                  </div>
+                </details>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </div>
+  ))}
+  <p class="picker__more">
+    Checksums for the install scripts, and how each channel is verified, are on the{' '}
+    <a href={url('www', '/install')}>install page</a>.
+  </p>
+  <p class="visually-hidden" aria-live="polite" data-copy-status></p>
+</section>
+
+<script>
+  import '../islands/install/picker.ts';
+  import '../islands/copy.ts';
+</script>

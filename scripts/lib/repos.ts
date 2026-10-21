@@ -25,3 +25,10 @@ export const resolveRef = (repo: RepoId, ref: string) =>
 
 export const showFile = (repo: RepoId, commit: string, path: string) =>
   git(repo, ['show', `${commit}:${path}`]);
+
+// Raw bytes, for files that must be served byte for byte (install scripts).
+export const showFileBytes = (repo: RepoId, commit: string, path: string): Buffer =>
+  execFileSync('git', ['-C', REPOS[repo], 'show', `${commit}:${path}`], {
+    stdio: ['ignore', 'pipe', 'pipe'],
+    maxBuffer: 16 * 1024 * 1024,
+  });

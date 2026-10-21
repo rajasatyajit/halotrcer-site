@@ -1,0 +1,18 @@
+{
+  "$comment": "Owner decision Q3: each product's install scripts are pinned to the exact commit that will be tagged as its release candidate. status 'candidate' = a working ref, not yet the RC commit; set the RC commit and status 'rc' before enabling INSTALL_ENDPOINTS (the build refuses otherwise). Then run npm run sync:releases and commit.",
+  "tokvera": {
+    "ref": "f2a79068c4bd6f56c5c12410f26da5358b6fb251",
+    "status": "candidate",
+    "scripts": { "install.sh": "scripts/install.sh", "install.ps1": "scripts/install.ps1" }
+  },
+  "sievant": {
+    "ref": "d8a8bcf0694e222c40ab2f00b68db71975959918",
+    "status": "candidate",
+    "scripts": { "install.sh": "scripts/install.sh", "install.ps1": "scripts/install.ps1" }
+  },
+  "halotrcer": {
+    "ref": "c19c0d91da6bbefd22ab80f3834cf65e2c57ce51",
+    "status": "candidate",
+    "scripts": {}
+  }
+}

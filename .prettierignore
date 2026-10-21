@@ -4,3 +4,6 @@ node_modules/
 research/
 package-lock.json
 .remember/
+data/
+vendor/
+.cache/

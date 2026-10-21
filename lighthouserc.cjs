@@ -11,6 +11,7 @@ const PAGES = {
     '/pricing.html',
     '/scoring.html',
     '/security.html',
+    '/install.html',
     '/book.html',
     '/404.html',
   ],
