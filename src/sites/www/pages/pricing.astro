@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PriceCard from '../../../components/PriceCard.astro';
+import { BOOKING_URL, CONTACT_EMAIL, url } from '../../../config/site.ts';
+import { getFlags } from '../../../config/flags.ts';
+import { loadPricing } from '../../../lib/pricing.ts';
+
+const pricing = loadPricing();
+const { launched } = getFlags();
+---
+
+<BaseLayout
+  title="Pricing"
+  description="Fixed-scope engagements: the AI Performance & Observability Audit, the Agent Security Review, and the combined AI Cost & Security Audit. Starting prices in USD."
+>
+  <header class="container page-head">
+    <h1>Pricing</h1>
+    <p class="lede">
+      Three fixed-scope engagements. Each scope is agreed on a call before work starts. Prices are
+      starting prices in US dollars.
+    </p>
+  </header>
+
+  <section class="container" aria-label="Engagements">
+    <div class="price-grid">
+      {pricing.services.map((s) => (
+        <PriceCard service={s} headingLevel="h2" />
+      ))}
+    </div>
+  </section>
+
+  {pricing.founding_offer && (
+    <section class="container section" aria-labelledby="founding">
+      <div class="note" data-owner-source="content/pricing.md">
+        <h2 id="founding">{pricing.founding_offer.title}</h2>
+        <p>{pricing.founding_offer.text}</p>
+      </div>
+    </section>
+  )}
+
+  <section class="container section" aria-labelledby="free">
+    <h2 id="free">Prefer to run it yourself?</h2>
+    <p>
+      <a href={url('tokvera')}>Tokvera</a> and <a href={url('sievant')}>Sievant</a>{' '}
+      {launched ? 'are' : 'will be'} free and open source (Apache-2.0). The engagements above are
+      for teams who want us to run them, deploy the fixes and write the report.
+    </p>
+    <div class="button-row">
+      <a class="button" href={BOOKING_URL}>
+        Book a call
+      </a>
+      <a class="button button--ghost" href={`mailto:${CONTACT_EMAIL}`}>
+        Email us
+      </a>
+    </div>
+  </section>
+</BaseLayout>

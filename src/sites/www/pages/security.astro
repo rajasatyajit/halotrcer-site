@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import { CONTACT_EMAIL, url } from '../../../config/site.ts';
+import { getFlags } from '../../../config/flags.ts';
+
+const { launched } = getFlags();
+const mail = (subject: string) => `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`;
+---
+
+<BaseLayout
+  title="Security"
+  description="How to report a vulnerability in Tokvera, Sievant or Halotrcer, what each release proves (cosign signatures, SLSA provenance, signed packages, SBOMs), and how this site is secured."
+>
+  <header class="container page-head">
+    <h1>Security</h1>
+    <p class="lede">
+      How to report a vulnerability, what a release proves, and how this site is set up.
+    </p>
+  </header>
+
+  <section class="container section" aria-labelledby="report">
+    <h2 id="report">Report a vulnerability</h2>
+    <p>
+      Email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> and put the product in the
+      subject:
+    </p>
+    <ul class="checklist">
+      <li>
+        <a href={mail('tokvera security')}>"tokvera security"</a> for Tokvera
+      </li>
+      <li>
+        <a href={mail('sievant security')}>"sievant security"</a> for Sievant
+      </li>
+      <li>
+        <a href={mail('halotrcer security')}>"halotrcer security"</a> for Halotrcer or this site
+      </li>
+    </ul>
+    <p>
+      Please don’t open a public issue. Don’t send real prompts, API keys, credentials or customer
+      data: a reproduction with made-up content is enough.
+    </p>
+    <p>
+      <Claim id="security.ack" />
+    </p>
+    <p>
+      <Claim id="security.sievant-bypass" />
+    </p>
+    <p>
+      Machine-readable contact details are in{' '}
+      <a href={url('www', '/.well-known/security.txt')}>
+        <code>/.well-known/security.txt</code>
+      </a>
+      .
+    </p>
+  </section>
+
+  <section class="container section" aria-labelledby="release">
+    <h2 id="release">What a release proves</h2>
+    {!launched && (
+      <p>
+        Nothing is released yet. From the first release, each product’s releases work like this:
+      </p>
+    )}
+    <ul class="checklist">
+      <li>
+        <strong>Signature.</strong> <Claim id="security.signature" />
+      </li>
+      <li>
+        <strong>Provenance.</strong> <Claim id="security.provenance" />
+      </li>
+      <li>
+        <strong>Packages and SBOMs.</strong> <Claim id="security.packages" />
+      </li>
+    </ul>
+    <p>
+      The packages and repository metadata are signed with the OpenPGP key
+      <code>halotrcer-packages.asc</code>, fingerprint:
+    </p>
+    <p>
+      <code>
+        <Claim id="security.fingerprint" />
+      </code>
+    </p>
+  </section>
+
+  <section class="container section" aria-labelledby="data">
+    <h2 id="data">What the tools send</h2>
+    <ul class="checklist">
+      <li>
+        <strong>Tokvera.</strong> <Claim id="tokvera.no-telemetry" />
+      </li>
+      <li>
+        <strong>Sievant.</strong> <Claim id="sievant.no-telemetry" />
+      </li>
+      <li>
+        <strong>Halotrcer.</strong> <Claim id="halotrcer.privacy" />
+      </li>
+    </ul>
+  </section>
+
+  <section class="container section" aria-labelledby="site">
+    <h2 id="site">This site</h2>
+    <ul class="checklist">
+      <li>
+        A strict Content Security Policy: scripts, styles and images load only from this site, with
+        no inline scripts and no <code>unsafe-inline</code> or <code>unsafe-eval</code>. Framing is
+        refused.
+      </li>
+      <li>HTTPS only, with HSTS (including subdomains) and preload.</li>
+      <li>
+        No cookies, no third-party scripts or fonts, and a Permissions-Policy that turns off camera,
+        microphone, location, payment and every other feature the site doesn’t use.
+      </li>
+    </ul>
+  </section>
+</BaseLayout>

@@ -10,6 +10,8 @@ export function navFor(site: SiteId): NavItem[] {
   switch (site) {
     case 'www':
       return [
+        { label: 'Audit', href: url('www', '/audit') },
+        { label: 'Pricing', href: url('www', '/pricing') },
         { label: 'Tokvera', href: url('tokvera') },
         { label: 'Sievant', href: url('sievant') },
       ];

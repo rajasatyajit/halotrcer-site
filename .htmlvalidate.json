@@ -2,6 +2,12 @@
   "extends": ["html-validate:recommended"],
   "rules": {
     "no-inline-style": "error",
-    "require-sri": "off"
+    "require-sri": "off",
+    "valid-id": [
+      "error",
+      {
+        "relaxed": true
+      }
+    ]
   }
 }

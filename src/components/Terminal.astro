@@ -1,0 +1,26 @@
+---
+// A terminal panel: real text (copyable, LCP-friendly), never an image.
+// `note` says where the content comes from (e.g. "Output format, from the CLI source").
+export interface Line {
+  kind: 'cmd' | 'out' | 'comment';
+  text: string;
+}
+
+interface Props {
+  label: string;
+  lines: Line[];
+  note?: string;
+}
+
+const { label, lines, note } = Astro.props;
+---
+
+<figure class="terminal">
+  <figcaption class="terminal__bar">
+    <span>{label}</span>
+    {note && <span class="terminal__note">{note}</span>}
+  </figcaption>
+  <pre class="terminal__body" tabindex="0" aria-label={label}><code>{lines.map((l) => (
+    <span class={`terminal__line terminal__line--${l.kind}`}>{l.text}</span>
+  ))}</code></pre>
+</figure>

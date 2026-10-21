@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import PriceCard from '../../../components/PriceCard.astro';
+import { BOOKING_URL, url } from '../../../config/site.ts';
+import { serviceFor } from '../../../lib/pricing.ts';
+
+const audit = serviceFor('cost-security-audit');
+---
+
+<BaseLayout
+  title="AI Cost & Security Audit"
+  description="For CTOs and founders: we run Tokvera and Sievant on your AI product, deploy the instrumentation and the MCP checkpoint, and hand you one combined report with a ranked 30-day fix plan."
+>
+  <header class="container page-head">
+    <p class="eyebrow">For CTOs and founders</p>
+    <h1>AI Cost &amp; Security Audit</h1>
+    <p class="lede">
+      Find where your AI spend leaks and where your agents are exposed, before a customer's security
+      review or your next invoice does. We run both tools on your system and leave the fixes ranked.
+    </p>
+    <div class="button-row">
+      <a class="button" href={BOOKING_URL}>
+        Book a call
+      </a>
+      <a class="button button--ghost" href={url('www', '/pricing')}>
+        See pricing
+      </a>
+    </div>
+  </header>
+
+  <section class="container section split" aria-labelledby="get">
+    <div>
+      <h2 id="get">What you get</h2>
+      <p>
+        One engagement covering both halves of the problem: what your LLM inference costs and how it
+        behaves under load, and what your agents' tools can reach.
+      </p>
+      <ul class="checklist">
+        <li>
+          <strong>Cost and latency</strong>, measured by <a href={url('tokvera')}>Tokvera</a>:
+          <Claim id="tokvera.measures" />
+        </li>
+        <li>
+          <strong>Agent exposure</strong>, from <a href={url('sievant')}>Sievant</a>:
+          <Claim id="sievant.scan-finds" />
+        </li>
+        <li>
+          <strong>One combined report</strong> with these sections:
+          <Claim id="halotrcer.report-sections" />
+        </li>
+      </ul>
+    </div>
+    <PriceCard service={audit} />
+  </section>
+
+  <section class="container section" aria-labelledby="plan">
+    <h2 id="plan">How the fix plan is built</h2>
+    <p>
+      <Claim id="halotrcer.fix-plan" />
+    </p>
+    <p>
+      Critical security findings, and findings a customer security review would flag (tagged
+      <em>deal risk</em>) at high severity, rank first, ahead of the largest measured cost and
+      latency failures. The full rules are on
+      <a href={url('www', '/scoring')}>how findings are ranked</a>.
+    </p>
+  </section>
+
+  <section class="container section" aria-labelledby="claims">
+    <h2 id="claims">What we will not claim</h2>
+    <ul class="checklist">
+      <li>
+        <Claim id="halotrcer.no-savings" />
+      </li>
+      <li>
+        <Claim id="halotrcer.provisional" />
+      </li>
+      <li>
+        A scan or review is not a certification. It covers what the tools measured on the systems we
+        were given.
+      </li>
+    </ul>
+  </section>
+
+  <section class="container section" aria-labelledby="one">
+    <h2 id="one">Only need one half?</h2>
+    <p>
+      The <a href={url('www', '/pricing')}>pricing page</a> lists the AI Performance &amp;
+      Observability Audit (Tokvera) and the Agent Security Review (Sievant) separately.
+    </p>
+    <a class="button" href={BOOKING_URL}>
+      Book a call
+    </a>
+  </section>
+</BaseLayout>

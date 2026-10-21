@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import DraftNotice from '../../../components/DraftNotice.astro';
+import { CONTACT_EMAIL, url } from '../../../config/site.ts';
+---
+
+<BaseLayout
+  title="Terms"
+  description="Terms for using the Halotrcer websites, the open-source licences of Tokvera and Sievant, and how paid engagements are agreed."
+>
+  <header class="container page-head">
+    <h1>Terms</h1>
+    <p class="lede">
+      These terms cover the Halotrcer websites. They are operated by Satyajit Rajaraman, trading as
+      Halotrcer.
+    </p>
+  </header>
+  <div class="container prose">
+    <DraftNotice />
+
+    <h2>The websites</h2>
+    <p>
+      The sites describe Tokvera, Sievant and Halotrcer and the services we offer. We keep them
+      accurate and tie product statements to the products’ own documentation, but they are provided
+      as they are, without warranty. Prices on the <a href={url('www', '/pricing')}>pricing page</a>
+      are starting prices, not offers.
+    </p>
+
+    <h2>The software</h2>
+    <p>
+      Tokvera, Sievant and Halotrcer are licensed under the Apache License, Version 2.0. That
+      licence, not these terms, governs your use of the software.
+    </p>
+
+    <h2>Paid engagements</h2>
+    <p>
+      Audits and reviews are agreed in writing before work starts, with a fixed scope and price.
+      That written agreement governs the engagement.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+    </p>
+  </div>
+</BaseLayout>

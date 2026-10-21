@@ -42,6 +42,19 @@
   color: var(--accent);
 }
 
+/* Narrow screens: wordmark and theme toggle share the first row, nav takes the second. */
+.site-nav {
+  order: 3;
+  flex-basis: 100%;
+}
+
+@media (width >= 40rem) {
+  .site-nav {
+    order: 0;
+    flex-basis: auto;
+  }
+}
+
 .site-nav ul {
   display: flex;
   flex-wrap: wrap;
@@ -204,4 +217,229 @@
 
 .site-footer a {
   color: var(--ink-muted);
+}
+
+/* Terminal panel (dark in both themes) */
+.terminal {
+  margin: 0;
+  border-radius: var(--radius-lg);
+  background: var(--term-bg);
+  color: var(--term-ink);
+  overflow: hidden;
+}
+
+.terminal__bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s-2);
+  padding: var(--s-2) var(--s-4);
+  border-bottom: 1px solid #2a2c31;
+  color: var(--term-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.terminal__body {
+  margin: 0;
+  padding: var(--s-4);
+  overflow-x: auto;
+  line-height: 1.7;
+}
+
+.terminal__line {
+  display: block;
+  white-space: pre;
+}
+
+.terminal__line--cmd::before {
+  content: '$ ';
+  color: var(--term-prompt);
+}
+
+.terminal__line--comment {
+  color: var(--term-muted);
+}
+
+/* Feature grid and steps */
+.feature-grid {
+  display: grid;
+  gap: var(--s-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feature-grid h3 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--s-2);
+}
+
+.split {
+  display: grid;
+  gap: var(--s-6);
+  align-items: start;
+}
+
+@media (width >= 60rem) {
+  .split {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Pricing */
+.price-grid {
+  display: grid;
+  gap: var(--s-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+}
+
+.price-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--s-5);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--halotrcer);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.price-card--tokvera {
+  border-top-color: var(--tokvera);
+}
+
+.price-card--sievant {
+  border-top-color: var(--sievant);
+}
+
+.price-card__name {
+  font-size: var(--text-xl);
+}
+
+.price-card__price {
+  margin-bottom: var(--s-1);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+}
+
+.price-card__from {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.price-card__duration {
+  color: var(--ink-muted);
+}
+
+.price-card .button {
+  margin-top: auto;
+}
+
+.checklist {
+  padding-left: var(--s-5);
+}
+
+.checklist li {
+  padding-block: var(--s-1);
+}
+
+/* Notes */
+.note {
+  max-width: var(--measure);
+  margin-block: var(--s-5);
+  padding: var(--s-4) var(--s-5);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.note p:last-child {
+  margin-bottom: 0;
+}
+
+.note--draft {
+  border-left-color: var(--ink-muted);
+}
+
+.source-note {
+  margin-top: var(--s-5);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+/* Prose (rendered docs and long pages) */
+.prose {
+  max-width: var(--measure);
+}
+
+.prose h2 {
+  margin-top: var(--s-7);
+  font-size: var(--text-xl);
+}
+
+.prose h3 {
+  margin-top: var(--s-6);
+  font-size: var(--text-lg);
+}
+
+.prose blockquote {
+  margin: var(--s-5) 0;
+  padding: var(--s-3) var(--s-5);
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+}
+
+.prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.prose :not(pre) > code {
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  background: var(--surface-sunken);
+}
+
+.prose pre {
+  padding: var(--s-4);
+  border-radius: var(--radius);
+  background: var(--term-bg);
+  color: var(--term-ink);
+  overflow-x: auto;
+}
+
+.table-wrap,
+.prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  margin-block: var(--s-4);
+  font-size: var(--text-sm);
+}
+
+th,
+td {
+  padding: var(--s-2) var(--s-3);
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  font-weight: 600;
+}
+
+.page-head {
+  padding-block: var(--s-7) var(--s-5);
+}
+
+.page-head .lede {
+  max-width: 60ch;
 }

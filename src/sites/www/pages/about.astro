@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import { BOOKING_URL, CONTACT_EMAIL, url } from '../../../config/site.ts';
+---
+
+<BaseLayout
+  title="About"
+  description="Halotrcer makes Tokvera and Sievant, open-source tools for LLM inference cost and latency and for MCP agent security, and runs audits with them."
+>
+  <header class="container page-head">
+    <h1>About Halotrcer</h1>
+    <p class="lede">
+      Halotrcer makes two open-source tools and runs audits with them:{' '}
+      <a href={url('tokvera')}>Tokvera</a> for LLM inference cost and latency, and{' '}
+      <a href={url('sievant')}>Sievant</a> for MCP agent security.
+    </p>
+  </header>
+
+  <section class="container section" aria-labelledby="tools">
+    <h2 id="tools">The tools</h2>
+    <ul class="checklist">
+      <li>
+        <Claim id="tokvera.license" />
+      </li>
+      <li>
+        <Claim id="sievant.license" />
+      </li>
+      <li>
+        <Claim id="halotrcer.no-code" />
+      </li>
+    </ul>
+  </section>
+
+  <section class="container section" aria-labelledby="honest">
+    <h2 id="honest">How this site is written</h2>
+    <p>
+      Every statement about what the tools do comes from their own repositories, at a recorded
+      commit, and an automated check re-reads each quote from the repository. You won’t find
+      invented customers, testimonials, user counts or benchmark numbers here. Scoring that isn’t
+      calibrated yet says so.
+    </p>
+  </section>
+
+  <section class="container section" aria-labelledby="contact">
+    <h2 id="contact">Contact</h2>
+    <p>
+      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>, or{' '}
+      <a href={BOOKING_URL}>book a call</a>.
+    </p>
+    <p class="source-note">
+      <Claim id="about.copyright" />
+    </p>
+  </section>
+</BaseLayout>
