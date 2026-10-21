@@ -1,6 +1,21 @@
 # Halotrcer website plan
 
-Status: draft for owner review (2026-10-21). No code is written until this is approved.
+Status: approved by the owner on 2026-10-21, with the decisions below. Where they differ from the rest of this plan, the decisions win.
+
+## Owner decisions (2026-10-21)
+
+| # | Decision |
+|---|---|
+| Q1 Hero | Approved: "Find where your AI spend leaks and where your agents are exposed. One check. No telemetry, no account: it talks only to the endpoint you point it at." |
+| Q2 Pricing | Starting prices in USD, single source `content/pricing.md` (`source: owner`):<br>• AI Performance & Observability Audit (Tokvera): from $3,500, about 2 weeks. Instrumentation and dashboards left behind, ranked fix list, signed report, 60-minute walkthrough.<br>• Agent Security Review (Sievant): from $7,500, 1–2 weeks. Threat model, Sievant deployed (observe, then enforce), posture report for the client's customer security review, walkthrough.<br>• AI Cost & Security Audit (both): from $9,500, 2–3 weeks. Both of the above, one combined report.<br>• Founding-client offer: the first two clients get 50% off in exchange for a case study.<br>Service + Offer JSON-LD uses `priceSpecification.minPrice`. |
+| Q3 Install endpoints | `INSTALL_ENDPOINTS` approved. Each product's scripts are pinned to the exact commit that will be tagged as its release candidate. The refs, one per product, live in one file, `config/release-refs.json`. `npm run verify:scripts` checks the served scripts byte for byte against `git show <ref>:scripts/install.{sh,ps1}` locally. CI checks the SHA-256 values recorded in that file. |
+| Q4 Samples | Committed simulated reports only, labelled "Simulated demo run". Nothing is built or run. |
+| Q5 Sievant scoring | Explain severities, `--fail-on` and the planned score (marked roadmap). No invented score. |
+| Q6 Sievant speed | If shown: "about 0.25 ms per call at p99" (README.md:21) is **proxy overhead**, from `TestProxyOverheadBudget` p99 overhead in BASELINE.md (medians about 217–248 µs across recorded runs; latest row BASELINE.md:428 median 248.1 µs), "measured on a development machine". `BenchmarkChain` (about 322–371 µs) is a different measurement (the policy chain) and isn't used as the per-call figure. |
+| Q9 CSP | No JSON-LD hashes. Global CSP; CI asserts every inline `<script>` is `application/ld+json`. |
+| Q10 Calculator | Second output is "spend on repeated, uncached requests", from the reader's inputs, labelled an estimate, never called savings. |
+| Q11 Booking | `/book` → 302 to the owner's Cal.com link. **The URL hasn't been supplied yet.** `BOOKING_URL` stays unset, and until it's set `/book` renders a contact page with the email instead of redirecting. |
+| Others | Q7, Q8, Q12–Q17 as proposed in §15. |
 
 Evidence base: `research/facts-tokvera.md`, `research/facts-sievant.md`, `research/facts-halotrcer.md`. They are read-only surveys of the three product repos, and every fact in them cites `file:line`. Every product claim on the site must trace to one of those citations or to the product repo directly.
 
