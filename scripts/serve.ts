@@ -56,7 +56,7 @@ function serve(site: SiteId): void {
     const status = file ? 200 : 404;
     const body = readFileSync(file ?? join(root, '404.html'));
     res.writeHead(status, {
-      'Content-Type': TYPES[extname(file ?? '.html')] ?? 'application/octet-stream',
+      'Content-Type': (file ? TYPES[extname(file)] : TYPES['.html']) ?? 'application/octet-stream',
     });
     res.end(body);
   }).listen(PORTS[site], '127.0.0.1');
