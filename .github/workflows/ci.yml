@@ -119,6 +119,8 @@ jobs:
         run: npm run check:launched
       - name: Internal links, cross-host links and fragments
         run: npm run check:links
+      - name: Published URLs never break (data/published-urls.json)
+        run: npm run check:permanence
       - name: Unique titles and descriptions across hosts
         run: npm run check:seo
 
