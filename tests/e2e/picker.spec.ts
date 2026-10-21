@@ -2,7 +2,7 @@
 // Each OS and arch is mocked through the user agent plus a stubbed
 // navigator.userAgentData (or none, as in Safari and Firefox).
 import { expect, test, type Page } from '@playwright/test';
-import { ORIGINS } from './helpers.ts';
+import { BROWSER, CLIPBOARD_PERMISSIONS, copied, ORIGINS, recordClipboard } from './helpers.ts';
 
 test.skip(process.env.LAUNCHED !== 'true', 'picker tests need a launched build');
 
@@ -90,7 +90,8 @@ test.describe('recommends a channel per platform', () => {
       const mock = PLATFORMS[platform] as Mock;
       const context = await browser.newContext({
         userAgent: mock.ua,
-        isMobile: platform === 'iPhone',
+        // Playwright's Firefox has no mobile emulation.
+        isMobile: platform === 'iPhone' && BROWSER !== 'firefox',
       });
       const page = await context.newPage();
       await mockPlatform(page, mock);
@@ -217,25 +218,15 @@ test.describe('keyboard', () => {
 });
 
 test.describe('copy', () => {
-  test.use({ userAgent: UA.mac, permissions: ['clipboard-write'] });
+  test.use({ userAgent: UA.mac, permissions: CLIPBOARD_PERMISSIONS });
   test('copies the command and announces it', async ({ page }) => {
-    // Our Permissions-Policy denies clipboard-read, so record what is written
-    // (the real writeText still runs).
-    await page.addInitScript(() => {
-      const w = window as unknown as { __copied?: string };
-      const original = navigator.clipboard.writeText.bind(navigator.clipboard);
-      navigator.clipboard.writeText = (text: string) => {
-        w.__copied = text;
-        return original(text);
-      };
-    });
+    await recordClipboard(page);
     await page.goto(`${ORIGINS.tokvera}/#tokvera/brew`);
     const panel = page.locator('#install-tokvera-brew');
     await panel.getByRole('button', { name: 'Copy' }).click();
     await expect(page.locator('[data-copy-status]').first()).toHaveText('Copied to the clipboard');
     await expect(panel.getByRole('button', { name: 'Copied' })).toBeVisible();
-    const copied = await page.evaluate(() => (window as unknown as { __copied?: string }).__copied);
-    expect(copied).toBe('brew install --cask rajasatyajit/tap/tokvera');
+    expect(await copied(page)).toBe('brew install --cask rajasatyajit/tap/tokvera');
   });
 });
 

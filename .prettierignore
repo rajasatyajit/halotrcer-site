@@ -9,3 +9,5 @@ vendor/
 .cache/
 content/samples/
 content/docs/
+# Plain-text guide with a frontmatter example Prettier would reflow
+content/proof/README

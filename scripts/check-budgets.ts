@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { builtSites, DIST, pages, Report, walk } from './lib/dist.ts';
 
-export const BUDGET = { js: 20 * 1024, css: 20 * 1024, page: 250 * 1024 };
+export const BUDGET = { js: 20 * 1024, css: 20 * 1024, page: 250 * 1024, search: 60 * 1024 };
 // Static or dynamic import of a relative module in minified output.
 const CHAINED = /\b(?:from|import)\s*\(?\s*["'`]\.{1,2}\//;
 const TEXT = /\.(html|css|js|svg|json|txt|xml)$/;
@@ -48,7 +48,7 @@ for (const site of builtSites()) {
     const js = scripts.reduce((n, s) => n + size(s), 0);
     const css = styles.reduce((n, s) => n + size(s), 0);
     const total = gz(readFileSync(page.file)) + js + css + other.reduce((n, s) => n + size(s), 0);
-    rows.push([`${site}/${page.rel}`, kb(js), kb(css), kb(total)]);
+    rows.push([`${site}/${page.rel}`, kb(js), kb(css), kb(total), String(total)]);
     if (js > BUDGET.js) report.error(`${site}/${page.rel}: JS ${kb(js)} > ${kb(BUDGET.js)}`);
     if (css > BUDGET.css) report.error(`${site}/${page.rel}: CSS ${kb(css)} > ${kb(BUDGET.css)}`);
     if (total > BUDGET.page)
@@ -56,6 +56,29 @@ for (const site of builtSites()) {
   }
 }
 
+// Docs search (Pagefind) loads on first search, not with the page: its JS is
+// capped separately, and a docs page plus everything the first search fetches
+// must still fit the page budget.
+for (const site of builtSites()) {
+  const dir = join(DIST, site, 'pagefind');
+  if (!existsSync(dir)) continue;
+  const at = (f: string) => readFileSync(join(dir, f));
+  const js = gz(at('pagefind.js')) + gz(at('pagefind-worker.js'));
+  const meta = walk(dir).filter((f) => /\.pf_meta$|pagefind-entry\.json$/.test(f));
+  const wasm = walk(dir).filter((f) => /wasm\.en\.pagefind$/.test(f));
+  const fetched = js + [...meta, ...wasm].reduce((n, f) => n + readFileSync(f).length, 0);
+  const heaviest = Math.max(
+    0,
+    ...rows.filter((r) => r[0]?.startsWith(`${site}/docs/`)).map((r) => Number(r[4] ?? 0)),
+  );
+  rows.push([`${site}/pagefind (first search)`, kb(js), '-', kb(fetched)]);
+  if (js > BUDGET.search) report.error(`${site}: Pagefind JS ${kb(js)} > ${kb(BUDGET.search)}`);
+  if (heaviest + fetched > BUDGET.page)
+    report.error(
+      `${site}: heaviest docs page plus first search ${kb(heaviest + fetched)} > ${kb(BUDGET.page)}`,
+    );
+}
+
 console.log(['page', 'js (gz)', 'css (gz)', 'total'].join('\t'));
-for (const r of rows) console.log(r.join('\t'));
+for (const r of rows) console.log(r.slice(0, 4).join('\t'));
 report.finish('budgets');

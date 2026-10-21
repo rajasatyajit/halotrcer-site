@@ -1,0 +1,31 @@
+---
+// Customer proof from content/proof/*.md for this host, newest first. Renders
+// nothing at all when there is none (the folder is empty until a client agrees).
+import { getCollection, render } from 'astro:content';
+import { getFlags } from '../config/flags.ts';
+
+const { site } = getFlags();
+const items = (await getCollection('proof'))
+  .filter((p) => !p.data.hosts || p.data.hosts.includes(site))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const rendered = await Promise.all(items.map(async (p) => ({ p, ...(await render(p)) })));
+---
+
+{rendered.length > 0 && (
+  <section class="container section" aria-labelledby="proof">
+    <h2 id="proof">From clients</h2>
+    <ul class="proof-list">
+      {rendered.map(({ p, Content }) => (
+        <li data-proof={p.filePath ?? `content/proof/${p.id}.md`}>
+          <blockquote>
+            <Content />
+          </blockquote>
+          <p class="proof-list__who">
+            {p.data.attribution}
+            {p.data.organization && <>, {p.data.organization}</>}
+          </p>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

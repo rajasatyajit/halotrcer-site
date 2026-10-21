@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Proof from '../../../components/Proof.astro';
 import ShareButton from '../../../components/ShareButton.astro';
 import Claim from '../../../components/Claim.astro';
 import PriceCard from '../../../components/PriceCard.astro';
@@ -87,6 +88,8 @@ const jsonld = [service(audit)];
       </li>
     </ul>
   </section>
+
+  <Proof />
 
   <section class="container section" aria-labelledby="one">
     <h2 id="one">Only need one half?</h2>

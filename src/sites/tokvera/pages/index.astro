@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Proof from '../../../components/Proof.astro';
 import Claim from '../../../components/Claim.astro';
 import Hero from '../../../components/Hero.astro';
 import InstallOrSoon from '../../../components/InstallOrSoon.astro';
@@ -99,6 +100,8 @@ const jsonld = [softwareApplication('tokvera')];
       measures it.
     </p>
   </section>
+
+  <Proof />
 
   <section class="container section" aria-labelledby="audit">
     <h2 id="audit">Want it fixed?</h2>

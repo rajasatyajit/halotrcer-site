@@ -22,6 +22,17 @@ const TYPES: Record<string, string> = {
   '.ps1': 'text/plain; charset=utf-8',
 };
 
+// WebKit applies upgrade-insecure-requests to http://127.0.0.1 (Chromium and
+// Firefox exempt localhost), so every stylesheet and script would be fetched
+// over https from this plain-http server and fail. For WebKit runs only, that
+// one directive is dropped; it has no effect on the deployed https sites, and
+// check:headers and check:live assert it is there.
+const WEBKIT = process.env.PW_BROWSER === 'webkit';
+const forBrowser = (name: string, value: string) =>
+  WEBKIT && name.toLowerCase() === 'content-security-policy'
+    ? value.replace(/;\s*upgrade-insecure-requests\b/, '')
+    : value;
+
 function matches(pattern: string, path: string): boolean {
   const re = new RegExp(`^${pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*')}$`);
   return re.test(path);
@@ -41,7 +52,7 @@ function serve(site: SiteId): void {
       if (!matches(pattern, path)) continue;
       for (const [k, v] of headers) {
         if (k.startsWith('!')) res.removeHeader(k.slice(1));
-        else res.setHeader(k, v);
+        else res.setHeader(k, forBrowser(k, v));
       }
     }
     const redirect = redirects.find(([from]) => from === path);

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Proof from '../../../components/Proof.astro';
 import Claim from '../../../components/Claim.astro';
 import Hero from '../../../components/Hero.astro';
 import InstallOrSoon from '../../../components/InstallOrSoon.astro';
@@ -90,6 +91,8 @@ const jsonld = [softwareApplication('sievant')];
       <a href="/scoring">How findings are rated</a> · <a href="/faq">FAQ</a>
     </p>
   </section>
+
+  <Proof />
 
   <section class="container section" aria-labelledby="review">
     <h2 id="review">Want a review of your setup?</h2>
