@@ -1,8 +1,61 @@
 {
-  "$comment": "Docs synced read-only from the product repos (git show <ref>:<path>). Owner decision Q8: main until launch, release tags after. Run `npm run sync:docs`, review, commit.",
+  "$comment": "Docs synced read-only from the product repos (git show <ref>:<path>). Owner decision Q8: main until launch, release tags after. `dir` syncs every .md in it except `exclude` (internal docs); `order` sets the docs navigation. Run `npm run sync:docs`, review, commit.",
   "halotrcer": {
     "repo": "halotrcer",
     "ref": "main",
     "docs": ["docs/scoring.md"]
+  },
+  "tokvera": {
+    "repo": "tokvera",
+    "ref": "main",
+    "dir": "docs",
+    "exclude": ["releasing.md", "development.md", "findings-schema-detail.md"],
+    "order": [
+      "scan",
+      "scoring",
+      "report-anatomy",
+      "report-signing",
+      "first-run",
+      "config",
+      "agents",
+      "helm",
+      "capture",
+      "usage-log-format",
+      "audit",
+      "audit-kit",
+      "kit",
+      "install",
+      "exit-codes",
+      "troubleshooting",
+      "faq",
+      "roadmap"
+    ]
+  },
+  "sievant": {
+    "repo": "sievant",
+    "ref": "main",
+    "dir": "docs",
+    "exclude": ["releasing.md", "development.md"],
+    "order": [
+      "local-quickstart",
+      "scan-and-wrap",
+      "policies",
+      "gateway",
+      "configuration",
+      "connectors",
+      "kubernetes",
+      "audit",
+      "report",
+      "telemetry",
+      "owasp-llm-mapping",
+      "threat-model",
+      "compatibility",
+      "commands",
+      "install",
+      "exit-codes",
+      "troubleshooting",
+      "faq",
+      "roadmap"
+    ]
   }
 }

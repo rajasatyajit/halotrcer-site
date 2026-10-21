@@ -31,6 +31,7 @@ describe('pre-launch patterns', () => {
     'WCAG 2.2 AA',
     'satyajit.rajaraman@halotrcer.com',
     'The audit takes about two weeks',
+    'launched by a downloaded script (curl … | sh)',
     "Halotrcer's ranking model is at version 0.1.0",
     'may change before scoring 1.0.0.',
   ])('allows: %s', (text) => expect(forbidden(text)).toHaveLength(0));
