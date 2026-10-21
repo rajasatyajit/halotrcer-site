@@ -16,7 +16,9 @@
     "@axe-core/playwright": "4.14.0",
     "@eslint/js": "10.0.1",
     "@playwright/test": "1.64.1",
+    "@resvg/resvg-js": "2.6.2",
     "@types/node": "26.6.5",
+    "dejavu-fonts-ttf": "2.37.3",
     "eslint": "10.13.0",
     "eslint-plugin-astro": "1.7.0",
     "html-validate": "11.17.0",
@@ -45,7 +47,7 @@
     "check:claims": "node scripts/check-claims.ts",
     "verify:claims": "node scripts/verify-claims.ts",
     "budget": "node scripts/check-budgets.ts",
-    "check:dist": "npm run check:html && npm run check:headers && npm run check:claims && npm run check:seo && npm run budget",
+    "check:dist": "npm run check:html && npm run check:headers && npm run check:claims && npm run check:seo && npm run check:jsonld && npm run budget",
     "sync:docs": "node scripts/sync-docs.ts",
     "check:seo": "node scripts/check-seo.ts",
     "check:links": "node scripts/check-links.ts",
@@ -56,6 +58,7 @@
     "build:launched-fixture": "node scripts/fixture-releases.ts && RELEASE_DATA_DIR=.cache/fixture-releases LAUNCHED=true ALLOW_CANDIDATE_SCRIPTS=1 node scripts/build.ts",
     "check:launched": "node scripts/check-launched.ts",
     "verify:scripts": "node scripts/verify-scripts.ts",
-    "sync:samples": "node scripts/sync-samples.ts"
+    "sync:samples": "node scripts/sync-samples.ts",
+    "check:jsonld": "node scripts/check-jsonld.ts"
   }
 }

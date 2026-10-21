@@ -10,6 +10,8 @@ import { headersFile } from '../src/config/headers.ts';
 import { redirectsFile } from '../src/data/redirects.ts';
 import { copyEndpoints, endpointsFor } from './endpoints.ts';
 import { indexDocs } from './search.ts';
+import { renderOgImages } from './og.ts';
+import { writeSitemaps } from './sitemap.ts';
 
 const ROUTE_FILE = /\.(astro|ts|md|mdx)$/;
 
@@ -48,6 +50,9 @@ export function sitesIntegration(flags: Flags): AstroIntegration {
         copyEndpoints(endpoints, out);
         for (const e of endpoints)
           logger.info(`serving /${e.name} (sha256 ${e.sha256.slice(0, 12)})`);
+        const htmlFiles = walk(out).filter((f) => f.endsWith('.html'));
+        logger.info(`og: ${renderOgImages(out, htmlFiles, flags)} images`);
+        logger.info(`sitemap: ${writeSitemaps(out, htmlFiles, flags)} urls`);
         const docsSearch = await indexDocs(out, flags, logger);
         writeFileSync(
           join(out, '_headers'),
