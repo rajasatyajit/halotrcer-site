@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ShareButton from '../../../components/ShareButton.astro';
 import SourceLine from '../../../components/SourceLine.astro';
 import { sample } from '../../../lib/samples.ts';
 
@@ -49,6 +50,9 @@ const SEVERITIES = ['critical', 'high', 'medium', 'low', 'info'];
       written for a customer’s security review, and a client-configuration scan (
       <code>sievant scan</code>).
     </p>
+    <div class="button-row">
+      <ShareButton />
+    </div>
   </header>
 
   <div class="container">

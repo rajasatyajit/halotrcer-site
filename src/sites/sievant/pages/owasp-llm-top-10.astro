@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ShareButton from '../../../components/ShareButton.astro';
 import SourceLine from '../../../components/SourceLine.astro';
 import { sample } from '../../../lib/samples.ts';
 
@@ -28,6 +29,9 @@ const controlsFor = (id: string) => m.controls.filter((c) => c.categories.includ
     <p class="lede">
       The mapping <code>sievant policy owasp</code> prints, rendered here.
     </p>
+    <div class="button-row">
+      <ShareButton />
+    </div>
   </header>
 
   <div class="container" data-sample={`${source.repo}:${source.path}@${source.commit}`}>

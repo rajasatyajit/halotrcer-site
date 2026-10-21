@@ -1,22 +1,7 @@
 // Copy buttons: [data-copy="<element id>"] copies that element's text;
 // [data-copy-link] copies this page's URL. Feedback goes to an aria-live region.
 // Buttons are hidden by CSS until html.js is set, so they never shift layout.
-
-function announce(message: string): void {
-  let region = document.querySelector<HTMLElement>('[data-copy-status]');
-  if (!region) {
-    region = document.createElement('p');
-    region.className = 'visually-hidden';
-    region.setAttribute('aria-live', 'polite');
-    region.dataset.copyStatus = '';
-    document.body.append(region);
-  }
-  region.textContent = '';
-  // A fresh text node makes screen readers announce repeated messages too.
-  requestAnimationFrame(() => {
-    if (region) region.textContent = message;
-  });
-}
+import { announce } from './announce.ts';
 
 function selectText(el: Element): void {
   const range = document.createRange();
