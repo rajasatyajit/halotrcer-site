@@ -1,11 +1,14 @@
 // Per-page budgets from dist: gzipped JS <= 20 KB, page weight (gzipped text
-// assets + binary assets) <= 250 KB, CSS <= 20 KB gzipped, no font files.
+// assets + binary assets) <= 250 KB, CSS <= 20 KB gzipped, no font files, and
+// no built module that imports another.
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { builtSites, DIST, pages, Report, walk } from './lib/dist.ts';
 
 export const BUDGET = { js: 20 * 1024, css: 20 * 1024, page: 250 * 1024 };
+// Static or dynamic import of a relative module in minified output.
+const CHAINED = /\b(?:from|import)\s*\(?\s*["'`]\.{1,2}\//;
 const TEXT = /\.(html|css|js|svg|json|txt|xml)$/;
 
 const gz = (buf: Buffer) => gzipSync(buf, { level: 9 }).length;
@@ -18,6 +21,10 @@ for (const site of builtSites()) {
   const dir = join(DIST, site);
   for (const f of walk(dir)) {
     if (/\.(woff2?|ttf|otf|eot)$/.test(f)) report.error(`${site}: font file shipped: ${f}`);
+    // One request per island: an import between built modules is a chained
+    // request (it delays LCP, and the JS budget below counts only the entry).
+    if (/[/\\]_astro[/\\][^/\\]+\.js$/.test(f) && CHAINED.test(readFileSync(f, 'utf8')))
+      report.error(`${site}: ${f} imports another module (a chained request)`);
   }
   for (const page of pages(site)) {
     const size = (ref: string) => {

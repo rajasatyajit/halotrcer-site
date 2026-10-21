@@ -66,7 +66,10 @@ describe.skipIf(!local)('build-time release fetch', () => {
   });
   it('fetches every file the channel spec reads', () => {
     expect(filesFor(PRODUCTS.tokvera).sort()).toEqual(['docs/helm.md', 'docs/install.md']);
-    expect(filesFor(PRODUCTS.halotrcer)).toEqual(['internal/install/channels.go']);
+    expect(filesFor(PRODUCTS.halotrcer).sort()).toEqual([
+      'docs/install.md',
+      'internal/install/channels.go',
+    ]);
   });
   it('rejects a latest tag that is not vX.Y.Z', async () => {
     const { impl } = fakeGitHub('tokvera', 'nightly');

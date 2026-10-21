@@ -1,0 +1,17 @@
+---
+// Share this page: the Web Share API where the browser has it, otherwise copy
+// the link (aria-live feedback). Hidden without JavaScript.
+interface Props {
+  label?: string;
+}
+
+const { label = 'Share this page' } = Astro.props;
+---
+
+<button class="button button--ghost share-button" type="button" data-share>
+  {label}
+</button>
+
+<script>
+  import '../islands/share.ts';
+</script>

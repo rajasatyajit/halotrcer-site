@@ -2,6 +2,10 @@
 // [data-copy-link] copies this page's URL. Feedback goes to an aria-live region.
 // Buttons are hidden by CSS until html.js is set, so they never shift layout.
 
+// Kept in each island rather than shared: a shared module becomes a chunk
+// the island must fetch before it runs, a chained request that delays LCP
+// (scripts/check-budgets.ts fails on any import between built chunks).
+// Announces through the page's aria-live region, creating one if absent.
 function announce(message: string): void {
   let region = document.querySelector<HTMLElement>('[data-copy-status]');
   if (!region) {
@@ -50,3 +54,6 @@ document.addEventListener('click', (e) => {
   const source = document.getElementById(button.dataset.copy ?? '');
   if (source) void copy(button, source.textContent ?? '', source);
 });
+
+// A module, so its helpers stay local to this island.
+export {};

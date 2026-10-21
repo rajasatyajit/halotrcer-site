@@ -2,11 +2,15 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import SyncedDoc from '../../../components/SyncedDoc.astro';
 import { BOOKING_URL } from '../../../config/site.ts';
+import { faqPage } from '../../../lib/jsonld.ts';
+
+const jsonld = [faqPage('sievant/faq')];
 ---
 
 <BaseLayout
   title="Sievant FAQ"
   description="Does Sievant send anything anywhere? Will it slow my agent down? What does sievant wrap change? Answers from the Sievant documentation."
+  jsonld={jsonld}
 >
   <header class="container page-head">
     <h1>Frequently asked questions</h1>

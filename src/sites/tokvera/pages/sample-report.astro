@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ShareButton from '../../../components/ShareButton.astro';
 import Claim from '../../../components/Claim.astro';
 import SourceLine from '../../../components/SourceLine.astro';
 import { sample } from '../../../lib/samples.ts';
@@ -51,6 +52,9 @@ const { data: r, source } = sample<Report>('tokvera-scan');
       table behind them. This is the JSON report of a scan of Tokvera’s built-in simulator, rendered
       here.
     </p>
+    <div class="button-row">
+      <ShareButton />
+    </div>
   </header>
 
   <div class="container">

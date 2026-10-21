@@ -4,8 +4,8 @@
   "binary": "halotrcer",
   "source": {
     "repo": "halotrcer",
-    "ref": "c19c0d91da6bbefd22ab80f3834cf65e2c57ce51",
-    "commit": "c19c0d91da6bbefd22ab80f3834cf65e2c57ce51"
+    "ref": "6e5a732d3556516f37ea4497ea5f9f421f380eab",
+    "commit": "6e5a732d3556516f37ea4497ea5f9f421f380eab"
   },
   "release": null,
   "next": [
@@ -13,8 +13,54 @@
       "cmd": "halotrcer check --target <inference-url>"
     }
   ],
-  "scripts": {},
+  "scripts": {
+    "install.sh": {
+      "path": "scripts/install.sh",
+      "sha256": "61eb22959805c31627062446291cbeaa1a58765420833e94e347f79d642b3e18",
+      "bytes": 17780
+    },
+    "install.ps1": {
+      "path": "scripts/install.ps1",
+      "sha256": "a92da54ca4b85c2e6cdcfc61404c128982fb4d96a302b27c6af00f4d512e76da",
+      "bytes": 23239
+    }
+  },
   "channels": [
+    {
+      "id": "script",
+      "label": "Install script",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "commands": [
+        "curl -fsSL https://www.halotrcer.com/install.sh | sh"
+      ],
+      "what": "Downloads the latest Halotrcer release from GitHub, verifies it (the cosign signature when cosign is installed, then the SHA-256), installs halotrcer, then has it install Tokvera and Sievant, each verified against its own release. It never uses sudo.",
+      "whatCite": "docs/install.md \"The install scripts\"",
+      "verify": {
+        "text": "The script verifies every release before installing anything. To check the script itself, compare its SHA-256 with the one published on the install page.",
+        "cite": "docs/install.md \"The install scripts\" step 4",
+        "commands": []
+      }
+    },
+    {
+      "id": "powershell",
+      "label": "PowerShell",
+      "os": [
+        "windows"
+      ],
+      "commands": [
+        "irm https://www.halotrcer.com/install.ps1 | iex"
+      ],
+      "what": "The same steps on Windows; it never asks for administrator rights.",
+      "whatCite": "docs/install.md \"The install scripts\"",
+      "verify": {
+        "text": "The script verifies every release before installing anything. To check the script itself, compare its SHA-256 with the one published on the install page.",
+        "cite": "docs/install.md \"The install scripts\" step 4",
+        "commands": []
+      }
+    },
     {
       "id": "brew",
       "label": "Homebrew",

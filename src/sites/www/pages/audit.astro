@@ -1,16 +1,20 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ShareButton from '../../../components/ShareButton.astro';
 import Claim from '../../../components/Claim.astro';
 import PriceCard from '../../../components/PriceCard.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
 import { serviceFor } from '../../../lib/pricing.ts';
+import { service } from '../../../lib/jsonld.ts';
 
 const audit = serviceFor('cost-security-audit');
+const jsonld = [service(audit)];
 ---
 
 <BaseLayout
   title="AI Cost & Security Audit"
   description="For CTOs and founders: we run Tokvera and Sievant on your AI product, deploy the instrumentation and the MCP checkpoint, and hand you one combined report with a ranked 30-day fix plan."
+  jsonld={jsonld}
 >
   <header class="container page-head">
     <p class="eyebrow">For CTOs and founders</p>
@@ -26,6 +30,7 @@ const audit = serviceFor('cost-security-audit');
       <a class="button button--ghost" href={url('www', '/pricing')}>
         See pricing
       </a>
+      <ShareButton />
     </div>
   </header>
 

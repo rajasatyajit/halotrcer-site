@@ -9,13 +9,25 @@ interface Props {
   title: string;
   description: string;
   current?: string; // href of the current page
+  crumb?: string; // this page's name in the breadcrumb trail
 }
 
-const { product, title, description, current } = Astro.props;
+const { product, title, description, current, crumb } = Astro.props;
 const { built } = await productDocs(product);
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout
+  title={title}
+  description={description}
+  crumbs={
+    current === '/docs'
+      ? [{ name: 'Documentation', path: '/docs' }]
+      : [
+          { name: 'Documentation', path: '/docs' },
+          { name: crumb ?? title, path: current ?? '/docs' },
+        ]
+  }
+>
   <div class="container docs">
     <nav class="docs__nav" aria-label="Documentation">
       <p class="docs__nav-title">

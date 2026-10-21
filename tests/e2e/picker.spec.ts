@@ -79,8 +79,8 @@ const EXPECT: [string, keyof typeof ORIGINS, string, string][] = [
   ['Windows arm64', 'sievant', 'sievant', 'winget'],
   ['Linux x64', 'tokvera', 'tokvera', 'script'],
   ['Linux arm64 Firefox (no hints)', 'sievant', 'sievant', 'script'],
-  // The bundle has no install script yet: Linux falls back to apt.
-  ['Linux x64', 'www', 'halotrcer', 'apt'],
+  ['Linux x64', 'www', 'halotrcer', 'script'],
+  ['Windows x64', 'www', 'halotrcer', 'winget'],
   ['iPhone', 'tokvera', 'tokvera', 'script'],
 ];
 
