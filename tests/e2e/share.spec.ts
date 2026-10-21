@@ -1,6 +1,6 @@
 // Share button: the Web Share API when present, else the link is copied.
 import { expect, test } from '@playwright/test';
-import { ORIGINS } from './helpers.ts';
+import { CLIPBOARD_PERMISSIONS, copied, ORIGINS, recordClipboard } from './helpers.ts';
 
 test('uses the Web Share API when the browser has it', async ({ page }) => {
   await page.addInitScript(() => {
@@ -21,23 +21,16 @@ test('uses the Web Share API when the browser has it', async ({ page }) => {
 });
 
 test.describe('without the Web Share API', () => {
-  test.use({ permissions: ['clipboard-write'] });
+  test.use({ permissions: CLIPBOARD_PERMISSIONS });
   test('copies the link and says so', async ({ page }) => {
     await page.addInitScript(() => {
       Object.defineProperty(navigator, 'share', { value: undefined });
-      const w = window as unknown as { __copied?: string };
-      const original = navigator.clipboard.writeText.bind(navigator.clipboard);
-      navigator.clipboard.writeText = (t: string) => {
-        w.__copied = t;
-        return original(t);
-      };
     });
+    await recordClipboard(page);
     await page.goto(`${ORIGINS.www}/audit`);
     await page.getByRole('button', { name: 'Share this page' }).click();
     await expect(page.locator('[data-copy-status]')).toHaveText('Link copied to the clipboard');
-    expect(await page.evaluate(() => (window as unknown as { __copied?: string }).__copied)).toBe(
-      `${ORIGINS.www}/audit`,
-    );
+    expect(await copied(page)).toBe(`${ORIGINS.www}/audit`);
   });
 });
 

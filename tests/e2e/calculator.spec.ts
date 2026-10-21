@@ -1,7 +1,7 @@
 // AI bill leak calculator: computes from the reader's inputs, round-trips
 // through the query string, copies a result, and degrades to the formula.
 import { expect, test, type Page } from '@playwright/test';
-import { ORIGINS } from './helpers.ts';
+import { CLIPBOARD_PERMISSIONS, copied, ORIGINS, recordClipboard } from './helpers.ts';
 
 const PAGE = `${ORIGINS.www}/calculator`;
 // 1M requests × (1000 × 2 + 100 × 10) / 1M = 3,000.00; 1M × 1000 × 25% × 2 / 1M = 500.00
@@ -68,27 +68,18 @@ test('example values are labelled as not real prices', async ({ page }) => {
 });
 
 test.describe('copy', () => {
-  test.use({ permissions: ['clipboard-write'] });
+  test.use({ permissions: CLIPBOARD_PERMISSIONS });
   test('copies a summary and the link, and never says savings', async ({ page }) => {
-    await page.addInitScript(() => {
-      const w = window as unknown as { __copied?: string };
-      const original = navigator.clipboard.writeText.bind(navigator.clipboard);
-      navigator.clipboard.writeText = (t: string) => {
-        w.__copied = t;
-        return original(t);
-      };
-    });
+    await recordClipboard(page);
     await page.goto(`${PAGE}?${QUERY}`);
     await page.getByRole('button', { name: 'Copy result and link' }).click();
     await expect(page.locator('[data-copy-status]')).toHaveText(
       'Result and link copied to the clipboard',
     );
-    const copied = await page.evaluate(
-      () => (window as unknown as { __copied?: string }).__copied ?? '',
-    );
-    expect(copied).toContain('3,000.00');
-    expect(copied).toContain(`${PAGE}?${QUERY}`);
-    expect(copied).not.toMatch(/sav(e|ing)/i);
+    const text = await copied(page);
+    expect(text).toContain('3,000.00');
+    expect(text).toContain(`${PAGE}?${QUERY}`);
+    expect(text).not.toMatch(/sav(e|ing)/i);
   });
 });
 

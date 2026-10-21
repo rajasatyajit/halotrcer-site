@@ -4,6 +4,8 @@ on:
   push:
     branches: ['**']
   pull_request:
+  # Manual runs also include the Firefox and WebKit browser tests.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -157,6 +159,46 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: playwright-results-launched-${{ matrix.launched }}
+          path: test-results
+          retention-days: 7
+
+  e2e-browsers:
+    name: Browser tests in ${{ matrix.browser }} (launched=${{ matrix.launched }})
+    # Firefox and WebKit on main and on manual runs only (PLAN.md §10).
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    runs-on: ${{ github.event.repository.private && vars.LINUX_RUNNER || 'ubuntu-24.04' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+        launched: ['false', 'true']
+    env:
+      LAUNCHED: ${{ matrix.launched }}
+      RELEASE_DATA_DIR: ${{ matrix.launched == 'true' && '.cache/fixture-releases' || '' }}
+      ALLOW_CANDIDATE_SCRIPTS: ${{ matrix.launched == 'true' && '1' || '0' }}
+      PW_BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Runner tools (self-hosted only)
+        if: runner.environment == 'self-hosted'
+        run: sh scripts/ci/runner-tools.sh git tar gzip sudo sudo-nopasswd apt-get
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Fixture release data
+        if: matrix.launched == 'true'
+        run: npm run fixtures:releases
+      - run: npm run build
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run e2e
+      - if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-results-${{ matrix.browser }}-launched-${{ matrix.launched }}
           path: test-results
           retention-days: 7
 
