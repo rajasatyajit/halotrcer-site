@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'm*-*']
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Types, lint, unit tests, audit
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      # Shipped dependencies only: the dev-only braces advisory (lint tooling) has no fix upstream.
+      - run: npm audit --omit=dev --audit-level=high
+
+  build:
+    name: Build ${{ matrix.site }} (launched=${{ matrix.launched }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        site: [www, tokvera, sievant]
+        launched: ['false', 'true']
+    env:
+      LAUNCHED: ${{ matrix.launched }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build -- --site ${{ matrix.site }}
+      - name: HTML validation
+        run: npm run check:html
+      - name: Security headers and CSP
+        run: npm run check:headers
+      - name: Honesty (no unsourced numbers or customer proof)
+        run: npm run check:claims
+      - name: Budgets
+        run: npm run budget
+      - name: Pre-launch mode
+        if: matrix.launched == 'false'
+        run: npm run check:prelaunch
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dist-${{ matrix.site }}-launched-${{ matrix.launched }}
+          path: dist/${{ matrix.site }}
+          retention-days: 7
+
+  lighthouse:
+    name: Lighthouse ${{ matrix.site }}
+    needs: build
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        site: [www, tokvera, sievant]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: tools/lhci/package-lock.json
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist-${{ matrix.site }}-launched-false
+          path: dist/${{ matrix.site }}
+      - run: npm ci --prefix tools/lhci
+      - name: Lighthouse CI (mobile, budgets asserted)
+        env:
+          SITE: ${{ matrix.site }}
+        run: tools/lhci/node_modules/.bin/lhci autorun --config=lighthouserc.cjs
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: lighthouse-${{ matrix.site }}
+          path: .lighthouseci
+          retention-days: 7
