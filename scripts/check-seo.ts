@@ -41,8 +41,9 @@ for (const site of builtSites()) {
     const noindex = /noindex/.test(
       r.querySelector('meta[name=robots]')?.getAttribute('content') ?? '',
     );
-    // Only these pages may be noindex, and they must be (Lighthouse skips SEO on them).
-    const mustNoindex = NOINDEX.test(page.rel);
+    // Only these pages may be noindex, and they must be (Lighthouse skips SEO on
+    // them), plus blog posts that are still outlines (DraftNotice outline).
+    const mustNoindex = NOINDEX.test(page.rel) || r.querySelector('[data-draft-post]') !== null;
     if (noindex !== mustNoindex) {
       report.error(`${where}: ${noindex ? 'unexpected noindex' : 'should be noindex'}`);
     }

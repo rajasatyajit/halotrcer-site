@@ -19,4 +19,19 @@ const docs = defineCollection({
   }),
 });
 
-export const collections = { docs };
+// Blog posts (www /blog). Drafts are outlines awaiting the owner: noindex, and
+// left out of the sitemap and the feeds. A published post needs a date.
+const blog = defineCollection({
+  loader: glob({ pattern: '*.md', base: './content/blog' }),
+  schema: z
+    .object({
+      title: z.string().max(70),
+      description: z.string().min(50).max(200),
+      draft: z.boolean(),
+      published: z.coerce.date().optional(),
+      updated: z.coerce.date().optional(),
+    })
+    .refine((p) => p.draft || p.published, 'a published post needs a published date'),
+});
+
+export const collections = { docs, blog };

@@ -1,9 +1,28 @@
 ---
-// Marks a page as a draft awaiting the owner's review (privacy, terms).
+// Marks a page as a draft awaiting the owner's review (privacy, terms), or a
+// blog post that is still an outline.
+interface Props {
+  outline?: boolean;
+}
+
+const { outline = false } = Astro.props;
 ---
 
-<aside class="note note--draft" aria-label="Draft notice">
+<aside
+  class="note note--draft"
+  aria-label="Draft notice"
+  data-draft-post={outline ? '' : undefined}
+>
   <p>
-    <strong>Draft.</strong> This page is awaiting review and may change.
+    {outline ? (
+      <>
+        <strong>Draft outline.</strong> This post is not written yet: below is its plan. It has no
+        findings or results yet, and it is not indexed by search engines.
+      </>
+    ) : (
+      <>
+        <strong>Draft.</strong> This page is awaiting review and may change.
+      </>
+    )}
   </p>
 </aside>
