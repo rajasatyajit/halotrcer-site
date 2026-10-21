@@ -5,8 +5,19 @@ import type { Flags } from './flags.ts';
 const ANALYTICS_SCRIPT = 'https://static.cloudflareinsights.com';
 const ANALYTICS_CONNECT = 'https://cloudflareinsights.com';
 
-export function contentSecurityPolicy(flags: Pick<Flags, 'analytics'>): string {
-  const script = ["'self'", ...(flags.analytics ? [ANALYTICS_SCRIPT] : [])];
+// wasm: Pagefind's docs search runs as WebAssembly, which needs 'wasm-unsafe-eval'.
+// It allows compiling WebAssembly only (not JavaScript eval), and only on the docs
+// pages and Pagefind's own files (its worker runs under its script's CSP).
+export const DOCS_SEARCH_PATHS = ['/docs', '/docs/*', '/pagefind/*'];
+export function contentSecurityPolicy(
+  flags: Pick<Flags, 'analytics'>,
+  opts: { wasm?: boolean } = {},
+): string {
+  const script = [
+    "'self'",
+    ...(opts.wasm ? ["'wasm-unsafe-eval'"] : []),
+    ...(flags.analytics ? [ANALYTICS_SCRIPT] : []),
+  ];
   const connect = ["'self'", ...(flags.analytics ? [ANALYTICS_CONNECT] : [])];
   return [
     "default-src 'none'",
@@ -72,7 +83,11 @@ export const SCRIPT_HEADERS = {
   'Cache-Control': 'public, max-age=300',
 };
 
-export function headersFile(flags: Pick<Flags, 'analytics'>, scripts: string[] = []): string {
+export function headersFile(
+  flags: Pick<Flags, 'analytics'>,
+  scripts: string[] = [],
+  opts: { docsSearch?: boolean } = {},
+): string {
   const block = (path: string, headers: Record<string, string>) =>
     [path, ...Object.entries(headers).map(([k, v]) => `  ${k}: ${v}`)].join('\n');
   return (
@@ -80,6 +95,17 @@ export function headersFile(flags: Pick<Flags, 'analytics'>, scripts: string[] =
       block('/*', securityHeaders(flags)),
       block('/_astro/*', { 'Cache-Control': 'public, max-age=31536000, immutable' }),
       ...scripts.map((path) => block(path, SCRIPT_HEADERS)),
+      // Docs pages replace the site CSP ("!" detaches the /* header) with one
+      // that also allows WebAssembly, for the search.
+      ...(opts.docsSearch
+        ? DOCS_SEARCH_PATHS.map((path) =>
+            [
+              path,
+              '  ! Content-Security-Policy',
+              `  Content-Security-Policy: ${contentSecurityPolicy(flags, { wasm: true })}`,
+            ].join('\n'),
+          )
+        : []),
     ].join('\n\n') + '\n'
   );
 }

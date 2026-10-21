@@ -38,7 +38,11 @@ function serve(site: SiteId): void {
   createServer((req, res) => {
     const path = decodeURIComponent(new URL(req.url ?? '/', 'http://x').pathname);
     for (const [pattern, headers] of rules) {
-      if (matches(pattern, path)) for (const [k, v] of headers) res.setHeader(k, v);
+      if (!matches(pattern, path)) continue;
+      for (const [k, v] of headers) {
+        if (k.startsWith('!')) res.removeHeader(k.slice(1));
+        else res.setHeader(k, v);
+      }
     }
     const redirect = redirects.find(([from]) => from === path);
     if (redirect) {
