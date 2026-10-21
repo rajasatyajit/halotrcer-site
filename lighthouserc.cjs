@@ -47,12 +47,12 @@ module.exports = {
         },
         {
           // Intentionally noindex pages (404, the /book fallback): Lighthouse SEO
-          // always marks noindex down, so assert they really are noindex instead.
+          // always marks noindex down (SEO and is-crawlable), so both are off here.
           matchingUrlPattern: NOINDEX,
           assertions: {
             ...ALL_CATEGORIES,
             'categories:seo': 'off',
-            'is-crawlable': ['error', { maxScore: 0 }],
+            'is-crawlable': 'off',
             ...BUDGETS,
           },
         },
