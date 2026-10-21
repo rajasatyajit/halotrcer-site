@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.lighthouseci/
+test-results/
+playwright-report/
+.remember/
+*.log
+.DS_Store
+tools/lhci/node_modules/
