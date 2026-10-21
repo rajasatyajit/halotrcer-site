@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, 'm*-*']
+    branches: ['**']
   pull_request:
 
 permissions:
@@ -13,13 +13,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Every job runs on LINUX_RUNNER (a repository variable, e.g. a self-hosted
+  # runner's label) only while the repository is private; a public repository
+  # always runs on GitHub-hosted runners (docs/development.md).
   verify:
     name: Types, lint, unit tests, audit
-    runs-on: ubuntu-24.04
+    runs-on: ${{ github.event.repository.private && vars.LINUX_RUNNER || 'ubuntu-24.04' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Runner tools (self-hosted only)
+        if: runner.environment == 'self-hosted'
+        run: sh scripts/ci/runner-tools.sh git tar gzip
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
@@ -33,7 +39,7 @@ jobs:
 
   build:
     name: Build ${{ matrix.site }} (launched=${{ matrix.launched }})
-    runs-on: ubuntu-24.04
+    runs-on: ${{ github.event.repository.private && vars.LINUX_RUNNER || 'ubuntu-24.04' }}
     strategy:
       fail-fast: false
       matrix:
@@ -48,6 +54,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Runner tools (self-hosted only)
+        if: runner.environment == 'self-hosted'
+        run: sh scripts/ci/runner-tools.sh git tar gzip
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
@@ -79,7 +88,7 @@ jobs:
 
   cross-host:
     name: Links and SEO across all hosts (launched=${{ matrix.launched }})
-    runs-on: ubuntu-24.04
+    runs-on: ${{ github.event.repository.private && vars.LINUX_RUNNER || 'ubuntu-24.04' }}
     strategy:
       fail-fast: false
       matrix:
@@ -93,6 +102,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Runner tools (self-hosted only)
+        if: runner.environment == 'self-hosted'
+        run: sh scripts/ci/runner-tools.sh git tar gzip
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
@@ -112,7 +124,7 @@ jobs:
 
   e2e:
     name: Accessibility (axe) and browser tests (launched=${{ matrix.launched }})
-    runs-on: ubuntu-24.04
+    runs-on: ${{ github.event.repository.private && vars.LINUX_RUNNER || 'ubuntu-24.04' }}
     strategy:
       fail-fast: false
       matrix:
@@ -125,6 +137,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Runner tools (self-hosted only)
+        if: runner.environment == 'self-hosted'
+        run: sh scripts/ci/runner-tools.sh git tar gzip sudo sudo-nopasswd apt-get
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
@@ -146,7 +161,7 @@ jobs:
   lighthouse:
     name: Lighthouse ${{ matrix.site }} (launched=${{ matrix.launched }})
     needs: build
-    runs-on: ubuntu-24.04
+    runs-on: ${{ github.event.repository.private && vars.LINUX_RUNNER || 'ubuntu-24.04' }}
     strategy:
       fail-fast: false
       matrix:
@@ -156,6 +171,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Runner tools (self-hosted only)
+        if: runner.environment == 'self-hosted'
+        run: sh scripts/ci/runner-tools.sh git tar gzip sudo sudo-nopasswd apt-get
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
@@ -166,10 +184,16 @@ jobs:
           name: dist-${{ matrix.site }}-launched-${{ matrix.launched }}
           path: dist/${{ matrix.site }}
       - run: npm ci --prefix tools/lhci
+      # Install Chromium here rather than relying on a browser in the runner image,
+      # so the job also runs on a self-hosted runner (docs/development.md).
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
       - name: Lighthouse CI (mobile, budgets asserted)
         env:
           SITE: ${{ matrix.site }}
-        run: tools/lhci/node_modules/.bin/lhci autorun --config=lighthouserc.cjs
+        run: |
+          export CHROME_PATH="$(node -e "console.log(require('@playwright/test').chromium.executablePath())")"
+          tools/lhci/node_modules/.bin/lhci autorun --config=lighthouserc.cjs
       - if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
