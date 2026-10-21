@@ -4,8 +4,8 @@ Every requirement in the brief, what enforces it, and its state at the end of M7
 `.github/workflows/ci.yml` on every push unless a row says otherwise. Rows marked **manual** need
 the deployed sites or the owner and are not claimed as done.
 
-Last full green CI before M7: run 39596698475 (`m6-viral` 5580d57, 17 of 17 jobs, Lighthouse
-included).
+Last full green CI: run 39638677403 (`m7-hardening` 91f318f, manual run, 21 of 21 jobs:
+Lighthouse, and the browser tests in Chromium, Firefox and WebKit, both modes).
 
 ## Hosts, products and content
 
@@ -45,7 +45,7 @@ included).
 | WCAG 2.2 AA                                                               | axe on every key page, light and dark; keyboard tests for the picker                                     | ✅ CI (automated subset); manual review advised |
 | Works with JavaScript disabled                                            | no-JS render tests per key page; picker `<details>`; calculator shows the formula                        | ✅ CI                                           |
 | No third-party scripts, fonts or trackers; analytics off                  | CSP `'self'`, LHCI third-party count 0, no font files (budget), `ANALYTICS` defaults off                 | ✅ CI                                           |
-| Firefox and WebKit                                                        | `e2e-browsers` job on main and manual runs                                                               | **first run pending** (dispatch on M7)          |
+| Firefox and WebKit                                                        | `e2e-browsers` job on main and manual runs                                                               | ✅ CI (run 39638677403, both modes)             |
 
 ## SEO and sharing
 
