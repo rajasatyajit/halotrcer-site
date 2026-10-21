@@ -53,6 +53,7 @@
     "check:links": "node scripts/check-links.ts",
     "check:permanence": "node scripts/check-permanence.ts",
     "check:external": "node scripts/check-external-links.ts",
+    "check:live": "node scripts/check-live.ts",
     "urls:record": "node scripts/record-urls.ts",
     "e2e": "playwright test",
     "serve": "node scripts/serve.ts",
