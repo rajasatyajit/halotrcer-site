@@ -12,7 +12,9 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.11",
+    "@axe-core/playwright": "4.14.0",
     "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.1",
     "@types/node": "26.6.5",
     "eslint": "10.13.0",
     "eslint-plugin-astro": "1.7.0",
@@ -41,6 +43,11 @@
     "check:claims": "node scripts/check-claims.ts",
     "verify:claims": "node scripts/verify-claims.ts",
     "budget": "node scripts/check-budgets.ts",
-    "check:dist": "npm run check:html && npm run check:headers && npm run check:claims && npm run budget"
+    "check:dist": "npm run check:html && npm run check:headers && npm run check:claims && npm run check:seo && npm run budget",
+    "sync:docs": "node scripts/sync-docs.ts",
+    "check:seo": "node scripts/check-seo.ts",
+    "check:links": "node scripts/check-links.ts",
+    "e2e": "playwright test",
+    "serve": "node scripts/serve.ts"
   }
 }
