@@ -2,11 +2,15 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import SyncedDoc from '../../../components/SyncedDoc.astro';
 import { BOOKING_URL } from '../../../config/site.ts';
+import { faqPage } from '../../../lib/jsonld.ts';
+
+const jsonld = [faqPage('tokvera/faq')];
 ---
 
 <BaseLayout
   title="Tokvera FAQ"
   description="Is a scan safe on production? What does it cost? Why is the grade provisional? Answers from the Tokvera documentation."
+  jsonld={jsonld}
 >
   <header class="container page-head">
     <h1>Frequently asked questions</h1>

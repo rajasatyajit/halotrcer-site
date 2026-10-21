@@ -6,14 +6,17 @@ import InstallOrSoon from '../../../components/InstallOrSoon.astro';
 import Terminal from '../../../components/Terminal.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
 import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+import { softwareApplication } from '../../../lib/jsonld.ts';
 
 const audit = serviceFor('performance-audit');
+const jsonld = [softwareApplication('tokvera')];
 ---
 
 <BaseLayout
   title="Tokvera: LLM latency and cost scanner"
   description="Tokvera measures LLM inference endpoints the way users feel them: time to first token, latency at rising concurrency, error rates and cost per 1,000 requests, graded A–F."
   bareTitle
+  jsonld={jsonld}
 >
   <Hero eyebrow="Tokvera">
     <a class="button" href="/sample-report">

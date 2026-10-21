@@ -6,14 +6,17 @@ import InstallOrSoon from '../../../components/InstallOrSoon.astro';
 import Terminal from '../../../components/Terminal.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
 import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+import { organization, softwareApplication, website } from '../../../lib/jsonld.ts';
 
 const audit = serviceFor('cost-security-audit');
+const jsonld = [organization(), website(), softwareApplication('halotrcer')];
 ---
 
 <BaseLayout
   title="Halotrcer: find AI spend leaks and agent exposures"
   description="Halotrcer runs Tokvera and Sievant together: one check for LLM inference cost and latency and for MCP agent security, with one combined report and a ranked fix plan."
   bareTitle
+  jsonld={jsonld}
 >
   <Hero eyebrow="Halotrcer">
     <a class="button" href={url('www', '/audit')}>

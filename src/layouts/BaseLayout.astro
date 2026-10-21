@@ -7,6 +7,8 @@ import SiteFooter from '../components/SiteFooter.astro';
 import { SITE_NAMES, url } from '../config/site.ts';
 import { getFlags } from '../config/flags.ts';
 import { canonicalPath } from '../lib/paths.ts';
+import { breadcrumbs, serialize, type Crumb, type JsonLd } from '../lib/jsonld.ts';
+import { ogImagePath } from '../lib/og.ts';
 
 interface Props {
   title: string;
@@ -14,13 +16,23 @@ interface Props {
   // Use the site name alone as the title (home pages).
   bareTitle?: boolean;
   noindex?: boolean;
+  // Structured data for this page; breadcrumbs are added for every page but the home.
+  jsonld?: JsonLd[];
+  crumbs?: Crumb[];
 }
 
-const { title, description, bareTitle = false, noindex = false } = Astro.props;
+const { title, description, bareTitle = false, noindex = false, jsonld = [], crumbs } = Astro.props;
 const { site } = getFlags();
 const siteName = SITE_NAMES[site];
 const fullTitle = bareTitle ? title : `${title} · ${siteName}`;
-const canonical = url(site, canonicalPath(Astro.url.pathname));
+const path = canonicalPath(Astro.url.pathname);
+const canonical = url(site, path);
+const ogImage = url(site, ogImagePath(path));
+const isHome = path === '/';
+const graph = [
+  ...jsonld,
+  ...(!isHome && !noindex ? [breadcrumbs(site, crumbs ?? [{ name: title, path }])] : []),
+];
 ---
 
 <!doctype html>
@@ -41,7 +53,18 @@ const canonical = url(site, canonicalPath(Astro.url.pathname));
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary" />
+    {!noindex && (
+      <>
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={fullTitle} />
+      </>
+    )}
+    <meta name="twitter:card" content="summary_large_image" />
+    {graph.length > 0 && (
+      <script is:inline type="application/ld+json" set:html={serialize(graph)} />
+    )}
     <script is:inline src="/theme-init.js"></script>
     <slot name="head" />
   </head>

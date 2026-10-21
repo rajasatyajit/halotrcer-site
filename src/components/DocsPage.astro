@@ -18,6 +18,7 @@ const name = SITE_NAMES[product];
   title={pageTitle(doc)}
   description={describe(doc, name)}
   current={`/docs/${slugOf(doc)}`}
+  crumb={plainTitle(doc)}
 >
   <article data-pagefind-body>
     <p class="eyebrow">{name} docs</p>

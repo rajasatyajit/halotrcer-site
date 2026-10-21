@@ -6,15 +6,18 @@ import InstallOrSoon from '../../../components/InstallOrSoon.astro';
 import Terminal from '../../../components/Terminal.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
 import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+import { softwareApplication } from '../../../lib/jsonld.ts';
 
 const review = serviceFor('agent-security-review');
 const blocks = ['credential', 'secrets', 'rugpull', 'injection', 'allowlist', 'scan'];
+const jsonld = [softwareApplication('sievant')];
 ---
 
 <BaseLayout
   title="Sievant: open-source MCP security gateway"
   description="Sievant is an open-source MCP security gateway and sidecar: it checks every tool call between AI agents and MCP servers and records it in a local audit trail."
   bareTitle
+  jsonld={jsonld}
 >
   <Hero eyebrow="Sievant">
     <a class="button" href="#blocks">

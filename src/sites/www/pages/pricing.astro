@@ -4,14 +4,17 @@ import PriceCard from '../../../components/PriceCard.astro';
 import { BOOKING_URL, CONTACT_EMAIL, url } from '../../../config/site.ts';
 import { getFlags } from '../../../config/flags.ts';
 import { loadPricing } from '../../../lib/pricing.ts';
+import { service } from '../../../lib/jsonld.ts';
 
 const pricing = loadPricing();
+const jsonld = pricing.services.map(service);
 const { launched } = getFlags();
 ---
 
 <BaseLayout
   title="Pricing"
   description="Fixed-scope engagements: the AI Performance & Observability Audit, the Agent Security Review, and the combined AI Cost & Security Audit. Starting prices in USD."
+  jsonld={jsonld}
 >
   <header class="container page-head">
     <h1>Pricing</h1>
