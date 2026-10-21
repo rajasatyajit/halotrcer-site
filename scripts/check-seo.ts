@@ -1,8 +1,11 @@
 // SEO basics on every built page: lang, one <h1>, a title and description, a
-// canonical URL on the page's own host matching og:url, and titles and
-// descriptions unique across all three hosts. noindex pages skip uniqueness.
+// canonical URL on the page's own host matching og:url, titles and descriptions
+// unique across all three hosts, and noindex on exactly the allowlisted pages.
 import { HOSTS } from '../src/config/site.ts';
 import { builtSites, pages, Report } from './lib/dist.ts';
+
+// 404 pages, and /book while it is the fallback page (keep in sync with lighthouserc.cjs).
+const NOINDEX = /^(404|book)\.html$/;
 
 const report = new Report();
 const titles = new Map<string, string>();
@@ -32,6 +35,11 @@ for (const site of builtSites()) {
     const noindex = /noindex/.test(
       r.querySelector('meta[name=robots]')?.getAttribute('content') ?? '',
     );
+    // Only these pages may be noindex, and they must be (Lighthouse skips SEO on them).
+    const mustNoindex = NOINDEX.test(page.rel);
+    if (noindex !== mustNoindex) {
+      report.error(`${where}: ${noindex ? 'unexpected noindex' : 'should be noindex'}`);
+    }
     if (noindex) continue;
     for (const [map, value, what] of [
       [titles, title, 'title'],
