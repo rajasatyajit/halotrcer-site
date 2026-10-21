@@ -824,6 +824,47 @@
       quote: 'sievant scan --fail-on high # exit 3 when a finding is high or worse',
     }
 
+- id: sievant.scan-reads
+  text: >-
+    sievant scan reads the MCP server configuration of Claude Desktop, Claude Code, Cursor, VS Code
+    and Windsurf, plus the project files in the current directory. It never changes them.
+  source:
+    repo: sievant
+    path: docs/scan-and-wrap.md
+    lines: '7-12'
+    commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
+    quote: >-
+      Cursor, VS Code (`mcp.json`, `settings.json`, JSONC) and Windsurf, for the current OS, plus the
+      project files in the current directory (`--no-project` skips them), or only the files given
+      with `--config`. It never changes them.
+
+- id: sievant.scan-inspect
+  text: >-
+    With --inspect-tools it also starts each server and runs the prompt-injection detector over
+    every tool's name, title and description. Starting a server runs its code, so it is never the
+    default.
+  source:
+    repo: sievant
+    path: docs/scan-and-wrap.md
+    lines: '44-48'
+    commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
+    quote: >-
+      runs the prompt-injection detector over every tool's name, title and description. Starting a
+      server runs its code, so it is never the default.
+
+- id: sievant.scan-terminal
+  text: |-
+    $ sievant scan
+    $ sievant scan --json > scan.json
+    $ sievant scan --html scan.html
+    $ sievant scan --fail-on high
+  source:
+    repo: sievant
+    path: docs/scan-and-wrap.md
+    lines: '37-40'
+    commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
+    quote: 'sievant scan --html scan.html # self-contained, offline HTML (no scripts)'
+
 - id: sievant.exposure-score
   text: >-
     Planned (roadmap, not built): an exposure score, an A to F grade from weighted pillars (secrets,

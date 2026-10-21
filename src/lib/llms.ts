@@ -29,6 +29,11 @@ async function body(): Promise<string> {
         'provisional ranking across both tools',
       ),
       link(
+        'AI bill leak calculator',
+        url('www', '/calculator'),
+        'monthly spend and repeated, uncached input, estimated from your own numbers',
+      ),
+      link(
         'Install',
         url('www', '/install'),
         launched ? 'every install channel' : 'available at release',
@@ -53,10 +58,12 @@ async function body(): Promise<string> {
       ? [
           link('How Tokvera grades an endpoint', url(site, '/scoring')),
           link('Sample report', url(site, '/sample-report'), 'a simulated demo run'),
+          link('AI bill leak calculator', url(site, '/calculator'), 'an estimate from your inputs'),
           link('Integrations', url(site, '/integrations')),
           link('FAQ', url(site, '/faq')),
         ]
       : [
+          link('Is your MCP setup leaking?', url(site, '/scan'), 'what sievant scan checks'),
           link(
             'OWASP LLM Top 10 mapping',
             url(site, '/owasp-llm-top-10'),

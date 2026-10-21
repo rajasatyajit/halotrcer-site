@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import InstallOrSoon from '../../../components/InstallOrSoon.astro';
+import ShareButton from '../../../components/ShareButton.astro';
+import SourceNote from '../../../components/SourceNote.astro';
+import Terminal from '../../../components/Terminal.astro';
+import { BOOKING_URL, url } from '../../../config/site.ts';
+import { docTable } from '../../../lib/md-table.ts';
+import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+import { getEntry } from 'astro:content';
+
+const rules = docTable('sievant/scan-and-wrap', 'Scanning MCP client configurations');
+const doc = await getEntry('docs', 'sievant/scan-and-wrap');
+if (!doc) throw new Error('sievant/scan-and-wrap not synced');
+const src = doc.data.source;
+const review = serviceFor('agent-security-review');
+---
+
+<BaseLayout
+  title="Is your MCP setup leaking?"
+  description="Check the MCP servers your AI clients launch for hard-coded credentials, access to your whole disk and servers fetched from the internet. sievant scan reads, never changes."
+>
+  <header class="container page-head">
+    <p class="eyebrow">MCP configuration scan</p>
+    <h1>Is your MCP setup leaking?</h1>
+    <p class="lede">
+      <Claim id="sievant.scan-reads" />
+    </p>
+    <div class="button-row">
+      <a class="button" href="#finds">
+        What it finds
+      </a>
+      <a class="button button--ghost" href="/sample-report#scan">
+        Sample scan report
+      </a>
+      <ShareButton />
+    </div>
+  </header>
+
+  <section class="container section split" aria-labelledby="looks">
+    <div>
+      <h2 id="looks">What a finding looks like</h2>
+      <p>
+        <Claim id="sievant.block-scan" />
+      </p>
+      <p>
+        <Claim id="sievant.scan-inspect" />
+      </p>
+    </div>
+    <Terminal label="sievant scan" claimId="sievant.block-scan-out" note="From the README" />
+  </section>
+
+  <section class="container section" aria-labelledby="finds">
+    <h2 id="finds">What it finds</h2>
+    <div class="table-wrap" tabindex="0" data-source-doc={`${src.repo}:${src.path}@${src.commit}`}>
+      <table>
+        <thead>
+          <tr>
+            {rules.head.map((h) => (
+              <th scope="col">{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rules.rows.map((r) => (
+            <tr>
+              {r.map((c) => (
+                <td>{c}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <SourceNote repo={src.repo} path={src.path} commit={src.commit} />
+    <p>
+      See <a href="/scoring">how Sievant rates findings</a> and the full{' '}
+      <a href="/docs/scan-and-wrap">scan and wrap guide</a>.
+    </p>
+  </section>
+
+  <section class="container section split" aria-labelledby="ci">
+    <div>
+      <h2 id="ci">Reports, and a gate for CI</h2>
+      <p>
+        <Claim id="sievant.fail-on" />
+      </p>
+    </div>
+    <Terminal label="Report formats" claimId="sievant.scan-terminal" note="From the docs" />
+  </section>
+
+  <section class="container section">
+    <InstallOrSoon product="sievant" />
+  </section>
+
+  <section class="container section" aria-labelledby="review">
+    <h2 id="review">Found something? Want it reviewed?</h2>
+    <p>
+      The {review.name} goes past configuration: a threat model, Sievant deployed in front of your
+      agents (observe first, then enforce) and a posture report for your customer’s security review.
+    </p>
+    <p data-owner-source="content/pricing.md">
+      From {formatPrice(review.from)}, {review.duration.toLowerCase()}.
+    </p>
+    <div class="button-row">
+      <a class="button" href={BOOKING_URL}>
+        Book a call
+      </a>
+      <a class="button button--ghost" href={url('www', '/pricing')}>
+        Pricing
+      </a>
+    </div>
+  </section>
+</BaseLayout>
