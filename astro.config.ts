@@ -19,6 +19,8 @@ export default defineConfig({
   vite: {
     build: { assetsInlineLimit: 0 },
   },
+  // Prism emits classes only; Shiki's inline styles would break the CSP.
+  markdown: { syntaxHighlight: 'prism' },
   devToolbar: { enabled: false },
   integrations: [sitesIntegration(flags)],
 });

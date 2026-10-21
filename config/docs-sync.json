@@ -1,0 +1,8 @@
+{
+  "$comment": "Docs synced read-only from the product repos (git show <ref>:<path>). Owner decision Q8: main until launch, release tags after. Run `npm run sync:docs`, review, commit.",
+  "halotrcer": {
+    "repo": "halotrcer",
+    "ref": "main",
+    "docs": ["docs/scoring.md"]
+  }
+}

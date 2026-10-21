@@ -75,3 +75,373 @@
     quote: >-
       It sits in front of MCP ([Model Context Protocol](https://modelcontextprotocol.io)) servers
       and checks every tool call: who is calling, whether they may, what goes in and what comes back.
+
+# ---- Hero variants (content/heroes/*.yaml selects one per host) ----
+
+- id: hero.www.b-title
+  text: One check for your AI product's cost and security.
+  source:
+    {
+      repo: halotrcer,
+      path: cmd/halotrcer/main.go,
+      lines: '25',
+      commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51,
+      quote: 'one cost and security check for AI products.',
+    }
+
+- id: hero.www.b-lede
+  text: >-
+    Halotrcer runs Tokvera against your inference endpoint and Sievant against your MCP client
+    configuration, then writes one combined report.
+  source:
+    repo: halotrcer
+    path: cmd/halotrcer/check.go
+    lines: '22-24'
+    commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51
+    quote: >-
+      Runs Tokvera against the inference endpoint and Sievant against this machine's MCP client
+      configuration, in parallel, and writes one combined report (HTML, PDF and JSON) into --out.
+
+- id: hero.www.c-title
+  text: Your AI spend and your agent exposure, in one report.
+  source:
+    {
+      repo: halotrcer,
+      path: cmd/halotrcer/check.go,
+      lines: '23-24',
+      commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51,
+      quote: 'writes one combined report',
+    }
+
+- id: hero.www.c-lede
+  text: >-
+    Latency, errors and cost measured by Tokvera. MCP configuration findings from Sievant. One
+    ranked list and a 30-day fix plan.
+  source:
+    repo: halotrcer
+    path: docs/scoring.md
+    lines: '7'
+    commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51
+    quote: >-
+      halotrcer check merges Tokvera's and Sievant's findings into one list. The executive summary
+      shows the first five, and the 30-day fix plan is built from the whole list.
+
+- id: hero.tokvera.b-title
+  text: Measure your LLM endpoint the way your users feel it.
+  source:
+    {
+      repo: tokvera,
+      path: README.md,
+      lines: '6',
+      commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417,
+      quote: 'measures an inference endpoint the way your users feel it',
+    }
+
+- id: hero.tokvera.b-lede
+  text: Time to first token, latency percentiles at rising concurrency, error rates and cost per 1,000 requests.
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '7-9'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: '- time to first token, and latency percentiles at rising concurrency; - error rates; - cost per 1,000 requests;'
+
+- id: hero.tokvera.c-title
+  text: Grade your inference endpoint A–F.
+  source:
+    {
+      repo: tokvera,
+      path: README.md,
+      lines: '12',
+      commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417,
+      quote: 'It grades the endpoint A–F and writes a self-contained report.',
+    }
+
+- id: hero.tokvera.c-lede
+  text: >-
+    Works with OpenAI-compatible servers (vLLM, TGI, Ollama, llama.cpp and others) and the OpenAI
+    and Anthropic APIs. A single static binary, with no telemetry.
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '13-15'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: >-
+      OpenAI-compatible servers (vLLM, TGI, Ollama, llama.cpp and others) and the OpenAI and
+      Anthropic APIs. It is free and Apache-2.0, a single static binary, with no telemetry.
+
+- id: hero.sievant.b-title
+  text: 'Check every MCP tool call: who is calling, whether they may, what goes in and what comes back.'
+  source:
+    repo: sievant
+    path: README.md
+    lines: '5-6'
+    commit: d8a8bcf0694e222c40ab2f00b68db71975959918
+    quote: 'checks every tool call: who is calling, whether they may, what goes in and what comes back.'
+
+- id: hero.sievant.b-lede
+  text: Sievant is an open-source MCP security gateway. Every call is recorded in a local audit trail.
+  source:
+    {
+      repo: sievant,
+      path: README.md,
+      lines: '6-7',
+      commit: d8a8bcf0694e222c40ab2f00b68db71975959918,
+      quote: 'Every call is recorded in a local audit trail.',
+    }
+
+- id: hero.sievant.c-title
+  text: Find the secrets and over-broad access in your MCP setup.
+  source:
+    repo: sievant
+    path: docs/scan-and-wrap.md
+    lines: '20'
+    commit: d8a8bcf0694e222c40ab2f00b68db71975959918
+    quote: 'the filesystem root / the whole home directory given to a server'
+
+- id: hero.sievant.c-lede
+  text: >-
+    sievant scan reads the MCP server configuration of Claude Desktop, Claude Code, Cursor, VS Code
+    and Windsurf. It never changes them.
+  source:
+    repo: sievant
+    path: docs/scan-and-wrap.md
+    lines: '7-12'
+    commit: d8a8bcf0694e222c40ab2f00b68db71975959918
+    quote: 'It never changes them.'
+
+# ---- www home ----
+
+- id: halotrcer.check-flow
+  text: >-
+    Tokvera sends load to your endpoint, so Halotrcer shows Tokvera's plan and asks first. Sievant
+    only reads configuration files. The result is one report, in HTML, PDF and JSON.
+  source:
+    repo: halotrcer
+    path: cmd/halotrcer/check.go
+    lines: '26-27'
+    commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51
+    quote: >-
+      Tokvera sends load to the target: halotrcer shows Tokvera's plan and asks first, or give
+      --yes. Sievant only reads configuration files.
+
+- id: halotrcer.privacy
+  text: >-
+    Halotrcer contacts only the target you give it (through Tokvera) and reads only the MCP
+    configuration files Sievant reads, on this machine. It sends no telemetry. Secrets stay masked
+    as each tool masks them; on top of that, Halotrcer drops URL credentials and query strings,
+    hides environment values, shows your home directory as ~ and replaces your user name with
+    <user>.
+  source:
+    repo: halotrcer
+    path: internal/report/model.go
+    lines: '39'
+    commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51
+    quote: 'configuration files Sievant reads, on this machine. It sends no telemetry.'
+
+- id: tokvera.measures
+  text: >-
+    Time to first token and latency percentiles at rising concurrency, error rates, cost per 1,000
+    requests, and whether repeated prompts are worth caching.
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '7-10'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: >-
+      - time to first token, and latency percentiles at rising concurrency; - error rates; - cost
+      per 1,000 requests; - whether repeated prompts are worth caching.
+
+- id: sievant.scan-finds
+  text: >-
+    Credentials and secret values in MCP configuration files, servers given the filesystem root or
+    your whole home directory, and remote servers with no credential or over plain HTTP.
+  source:
+    repo: halotrcer
+    path: docs/scoring.md
+    lines: '49-52'
+    commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51
+    quote: >-
+      a credential, secret value, URL password or capability URL in a configuration file | |
+      AUTH001 | a remote server with no credential | | NET001 | a remote server over plain HTTP | |
+      PERM001, PERM002 | the filesystem root or the whole home directory given to a server
+
+- id: halotrcer.fix-plan
+  text: >-
+    Both tools' findings merge into one ranked list and a 30-day fix plan. The fix text is each
+    tool's own: Halotrcer adds no advice of its own.
+  source:
+    repo: halotrcer
+    path: docs/scoring.md
+    lines: '88'
+    commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51
+    quote: >-
+      The fix text is the tool's own: Tokvera's suggested_fix or Sievant's fix. Halotrcer writes no
+      remediation advice of its own.
+
+- id: halotrcer.no-savings
+  text: There is no savings figure anywhere, because neither tool measures what a fix would save.
+  source:
+    repo: halotrcer
+    path: docs/scoring.md
+    lines: '97'
+    commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51
+    quote: There is no savings figure anywhere, because neither tool measures what a fix would save.
+
+- id: halotrcer.provisional
+  text: >-
+    The ranking is provisional: its tiers are judgement, not calibrated against real results, and
+    may change.
+  source:
+    repo: halotrcer
+    path: docs/scoring.md
+    lines: '3-5'
+    commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51
+    quote: >-
+      Its tiers are judgement, not calibrated against real results, and may change before 1.0.0.
+
+- id: halotrcer.report-sections
+  text: Executive summary, Cost & performance, Agent security, 30-day fix plan, How to read this report.
+  source:
+    {
+      repo: halotrcer,
+      path: internal/report/html.go,
+      lines: '94',
+      commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51,
+      quote: '<h2>Executive summary</h2>',
+    }
+
+# ---- security ----
+
+- id: security.ack
+  text: We aim to acknowledge reports within 5 business days, and to tell you what happens next.
+  source:
+    repo: tokvera
+    path: SECURITY.md
+    lines: '16-17'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: We aim to acknowledge reports within 5 business days, and to tell you what happens next.
+
+- id: security.signature
+  text: >-
+    Every release's checksums.txt is signed with cosign, keyless, by the repository's release
+    workflow running on a version tag. The install scripts check that signature when cosign is
+    installed, and always check the SHA-256 of what they download.
+  source:
+    repo: tokvera
+    path: SECURITY.md
+    lines: '27-30'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: >-
+      every release's checksums.txt is signed with cosign, keyless, by this repository's release
+      workflow running on a version tag.
+
+- id: security.provenance
+  text: >-
+    Every archive, package, SBOM and the container image carries a SLSA v1 build provenance
+    attestation from the same workflow.
+  source:
+    repo: tokvera
+    path: SECURITY.md
+    lines: '31-32'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: >-
+      every archive, package, SBOM and the container image carries a SLSA v1 build provenance
+      attestation from the same workflow.
+
+- id: security.packages
+  text: >-
+    Deb, rpm and apk packages and the apt and yum repository metadata are signed, and each archive
+    ships with an SBOM.
+  source:
+    repo: tokvera
+    path: SECURITY.md
+    lines: '33-35'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: >-
+      deb, rpm and apk packages, and the apt and yum repository metadata, are signed with the keys
+      in
+
+- id: security.fingerprint
+  text: D2D9 6618 831A C55B 81E2 4DA3 039B 5DA0 D3E3 9071
+  source:
+    repo: tokvera
+    path: docs/install.md
+    lines: '186-187'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: D2D9 6618 831A C55B 81E2 4DA3 039B 5DA0 D3E3 9071
+
+- id: security.sievant-bypass
+  text: Sievant is a security control, so a way around it is a vulnerability.
+  source:
+    repo: sievant
+    path: SECURITY.md
+    lines: '23'
+    commit: d8a8bcf0694e222c40ab2f00b68db71975959918
+    quote: Sievant is a security control, so a way around it is a vulnerability.
+
+- id: tokvera.no-telemetry
+  text: >-
+    No telemetry. Tokvera contacts only the target you specify, plus GitHub when you run update or
+    doctor --check-update, and tokvera.halotrcer.com and GitHub for the plugin's first-run install.
+  source:
+    repo: tokvera
+    path: SECURITY.md
+    lines: '42'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: >-
+      No telemetry. Tokvera contacts only the target you specify, plus GitHub when you run update or
+      doctor --check-update, and tokvera.halotrcer.com and GitHub for the plugin's first-run install.
+
+- id: sievant.no-telemetry
+  text: Sievant sends no telemetry. It contacts only the servers and backends you configure.
+  source:
+    repo: sievant
+    path: README.md
+    lines: '142-143'
+    commit: d8a8bcf0694e222c40ab2f00b68db71975959918
+    quote: Sievant sends no telemetry. It contacts only the servers and backends you configure.
+
+# ---- about ----
+
+- id: about.copyright
+  text: Copyright 2026 Satyajit Rajaraman / Halotrcer
+  source:
+    {
+      repo: halotrcer,
+      path: NOTICE,
+      lines: '1',
+      commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51,
+      quote: 'Copyright 2026 Satyajit Rajaraman / Halotrcer',
+    }
+
+- id: tokvera.license
+  text: Tokvera is free and Apache-2.0 licensed, a single static binary.
+  source:
+    {
+      repo: tokvera,
+      path: README.md,
+      lines: '14-15',
+      commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417,
+      quote: 'It is free and Apache-2.0, a single static binary',
+    }
+
+- id: sievant.license
+  text: Sievant is open source (Apache-2.0), one static binary with no runtime dependencies.
+  source:
+    repo: sievant
+    path: README.md
+    lines: '20-21'
+    commit: d8a8bcf0694e222c40ab2f00b68db71975959918
+    quote: 'Sievant is open source (Apache-2.0) and written in Go: one static binary with no runtime dependencies.'
+
+- id: halotrcer.no-code
+  text: >-
+    Halotrcer installs both and runs them as one check. It never contains either tool's code: it
+    runs their released binaries and reads their documented output.
+  source:
+    repo: halotrcer
+    path: cmd/halotrcer/main.go
+    lines: '2-4'
+    commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51
+    quote: "It never contains either tool's code: it runs their released binaries and reads their documented JSON."

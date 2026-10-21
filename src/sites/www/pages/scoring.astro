@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SyncedDoc from '../../../components/SyncedDoc.astro';
+import { url } from '../../../config/site.ts';
+---
+
+<BaseLayout
+  title="How Halotrcer ranks findings"
+  description="How halotrcer check orders Tokvera's and Sievant's findings into one list and a 30-day fix plan. Provisional: the tiers are judgement, not calibrated."
+>
+  <header class="container page-head">
+    <p class="eyebrow">Scoring</p>
+    <h1>How Halotrcer ranks findings</h1>
+    <p class="lede">
+      This page is the ranking documentation from the Halotrcer repository, unchanged. Each tool's
+      own grading is explained on its site: <a href={url('tokvera')}>Tokvera</a> and{' '}
+      <a href={url('sievant')}>Sievant</a>.
+    </p>
+  </header>
+  <div class="container">
+    <SyncedDoc id="halotrcer/scoring" />
+  </div>
+</BaseLayout>

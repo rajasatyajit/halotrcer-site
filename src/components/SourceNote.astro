@@ -1,0 +1,32 @@
+---
+// "Synced from <repo> at <commit>" for content rendered from a product repo.
+import { getFlags } from '../config/flags.ts';
+
+interface Props {
+  repo: 'tokvera' | 'sievant' | 'halotrcer';
+  path: string;
+  commit: string;
+}
+
+const { repo, path, commit } = Astro.props;
+const names = { tokvera: 'Tokvera', sievant: 'Sievant', halotrcer: 'Halotrcer' };
+const short = commit.slice(0, 7);
+// Repositories are private until launch: link to GitHub only when launched.
+const href = getFlags().launched
+  ? `https://github.com/rajasatyajit/${repo}/blob/${commit}/${path}`
+  : undefined;
+---
+
+<p class="source-note">
+  From the {names[repo]} repository:{' '}
+  {href ? (
+    <a href={href}>
+      <code>{path}</code> at <code>{short}</code>
+    </a>
+  ) : (
+    <>
+      <code>{path}</code> at commit <code>{short}</code>
+    </>
+  )}
+  .
+</p>

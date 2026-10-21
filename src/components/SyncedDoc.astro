@@ -1,0 +1,20 @@
+---
+// Renders a doc synced from a product repo (content/docs/<product>/<file>.md),
+// verbatim, marked data-source-doc for the claim scan, with its source commit.
+import { getEntry, render } from 'astro:content';
+import SourceNote from './SourceNote.astro';
+
+interface Props {
+  id: string;
+}
+
+const entry = await getEntry('docs', Astro.props.id);
+if (!entry) throw new Error(`Synced doc "${Astro.props.id}" not found (run npm run sync:docs)`);
+const { Content } = await render(entry);
+const { source } = entry.data;
+---
+
+<div class="prose" data-source-doc={`${source.repo}:${source.path}@${source.commit}`}>
+  <Content />
+</div>
+<SourceNote repo={source.repo} path={source.path} commit={source.commit} />

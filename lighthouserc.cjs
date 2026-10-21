@@ -5,7 +5,15 @@ if (!['www', 'tokvera', 'sievant'].includes(site)) throw new Error('Set SITE=www
 
 // Key pages per host. Paths are the built files (the LHCI static server has no clean URLs).
 const PAGES = {
-  www: ['/index.html', '/book.html', '/404.html'],
+  www: [
+    '/index.html',
+    '/audit.html',
+    '/pricing.html',
+    '/scoring.html',
+    '/security.html',
+    '/book.html',
+    '/404.html',
+  ],
   tokvera: ['/index.html', '/404.html'],
   sievant: ['/index.html', '/404.html'],
 };

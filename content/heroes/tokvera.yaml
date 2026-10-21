@@ -1,0 +1,16 @@
+# Hero headline variants for A/B testing. Text lives in content/claims.yaml (sourced);
+# this file only picks claim ids. Only an approved variant can be built
+# (HERO_VARIANT=a|b|c, default a). Drafts need owner approval first.
+variants:
+  - id: a
+    title: tokvera.headline
+    lede: tokvera.summary
+    status: approved
+  - id: b
+    title: hero.tokvera.b-title
+    lede: hero.tokvera.b-lede
+    status: draft
+  - id: c
+    title: hero.tokvera.c-title
+    lede: hero.tokvera.c-lede
+    status: draft
