@@ -110,6 +110,11 @@
   cursor: pointer;
 }
 
+/* Space stays reserved until the script reveals it: no layout shift. */
+.theme-toggle[data-pending] {
+  visibility: hidden;
+}
+
 /* Hero */
 .hero {
   padding-block: var(--s-8) var(--s-7);

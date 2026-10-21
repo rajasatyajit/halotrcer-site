@@ -1,4 +1,6 @@
-// Theme toggle. Without JS the button stays hidden and prefers-color-scheme applies.
+// Theme toggle. The button's space is reserved (visibility: hidden) until this runs,
+// and its visible text never changes, so revealing it causes no layout shift.
+// Without JS it stays invisible and prefers-color-scheme applies.
 type Theme = 'light' | 'dark';
 
 function current(): Theme {
@@ -9,13 +11,13 @@ function current(): Theme {
 
 function label(button: HTMLButtonElement, theme: Theme): void {
   const next = theme === 'dark' ? 'light' : 'dark';
-  button.textContent = next === 'dark' ? 'Dark' : 'Light';
-  button.setAttribute('aria-label', `Switch to ${next} theme`);
+  // The accessible name starts with the visible text "Theme" (WCAG 2.5.3).
+  button.setAttribute('aria-label', `Theme: switch to ${next}`);
 }
 
 for (const button of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
   label(button, current());
-  button.hidden = false;
+  delete button.dataset.pending;
   button.addEventListener('click', () => {
     const next: Theme = current() === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
