@@ -987,3 +987,24 @@ html.js .calc__nojs {
   font-size: var(--text-sm);
   color: var(--ink-muted);
 }
+
+/* Customer proof (rendered only when content/proof has entries) */
+.proof-list {
+  display: grid;
+  gap: var(--s-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.proof-list blockquote {
+  margin: 0;
+  padding-left: var(--s-4);
+  border-left: 3px solid var(--accent);
+}
+
+.proof-list__who {
+  margin-top: var(--s-2);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}

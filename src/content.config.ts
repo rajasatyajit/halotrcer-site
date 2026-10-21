@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { proofSchema } from './lib/proof-schema.ts';
 
 // Docs synced read-only from the product repos by scripts/sync-docs.ts.
 const docs = defineCollection({
@@ -34,4 +35,10 @@ const blog = defineCollection({
     .refine((p) => p.draft || p.published, 'a published post needs a published date'),
 });
 
-export const collections = { docs, blog };
+// Customer proof (content/proof/*.md). Empty: no proof section renders.
+const proof = defineCollection({
+  loader: glob({ pattern: '*.md', base: './content/proof' }),
+  schema: proofSchema,
+});
+
+export const collections = { docs, blog, proof };

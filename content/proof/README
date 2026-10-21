@@ -1,0 +1,18 @@
+Customer proof: one Markdown file per quote or case study, shown in the
+"From clients" section (src/components/Proof.astro). While this folder has
+no .md file, no proof section is rendered anywhere, and CI checks that.
+
+Each file needs this frontmatter (src/lib/proof-schema.ts); the build fails
+without it:
+
+---
+attribution: Jane Doe, CTO          # as the person agreed to be named
+organization: Example Ltd           # optional
+source: Email to Satyajit, 2026-11-03
+permission: Written permission to publish, email 2026-11-04
+date: 2026-11-03
+hosts: [www, tokvera]               # optional; all three when omitted
+---
+
+The quote or case study, in the person's words. Numbers in it are theirs,
+backed by the source and permission above.

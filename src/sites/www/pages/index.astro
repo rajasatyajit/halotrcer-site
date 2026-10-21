@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Proof from '../../../components/Proof.astro';
 import Claim from '../../../components/Claim.astro';
 import Hero from '../../../components/Hero.astro';
 import InstallOrSoon from '../../../components/InstallOrSoon.astro';
@@ -136,6 +137,8 @@ const jsonld = [organization(), website(), softwareApplication('halotrcer')];
       </li>
     </ul>
   </section>
+
+  <Proof />
 
   <section class="container section" aria-labelledby="audit">
     <h2 id="audit">Rather we ran it?</h2>
