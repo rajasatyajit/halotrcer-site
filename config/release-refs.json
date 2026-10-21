@@ -3,16 +3,25 @@
   "tokvera": {
     "ref": "f2a79068c4bd6f56c5c12410f26da5358b6fb251",
     "status": "candidate",
-    "scripts": { "install.sh": "scripts/install.sh", "install.ps1": "scripts/install.ps1" }
+    "scripts": {
+      "install.sh": "scripts/install.sh",
+      "install.ps1": "scripts/install.ps1"
+    }
   },
   "sievant": {
     "ref": "d8a8bcf0694e222c40ab2f00b68db71975959918",
     "status": "candidate",
-    "scripts": { "install.sh": "scripts/install.sh", "install.ps1": "scripts/install.ps1" }
+    "scripts": {
+      "install.sh": "scripts/install.sh",
+      "install.ps1": "scripts/install.ps1"
+    }
   },
   "halotrcer": {
-    "ref": "c19c0d91da6bbefd22ab80f3834cf65e2c57ce51",
+    "ref": "6e5a732d3556516f37ea4497ea5f9f421f380eab",
     "status": "candidate",
-    "scripts": {}
+    "scripts": {
+      "install.sh": "scripts/install.sh",
+      "install.ps1": "scripts/install.ps1"
+    }
   }
 }

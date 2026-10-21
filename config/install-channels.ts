@@ -270,13 +270,37 @@ export const PRODUCTS: Record<'tokvera' | 'sievant' | 'halotrcer', ProductSpec> 
     repo: 'halotrcer',
     name: 'Halotrcer',
     binary: 'halotrcer',
-    // No docs/install.md yet: commands are the ones internal/install/channels.go
-    // builds for the halotrcer tool, checked against that file.
+    // The install scripts' commands come from docs/install.md; the other
+    // channels are the commands internal/install/channels.go builds for the
+    // halotrcer tool, checked against that file.
+    docs: 'docs/install.md',
     exampleVersion: '0.2.0',
     next: [
       { cmd: 'halotrcer check --target <inference-url>', cite: 'cmd/halotrcer/install.go:94' },
     ],
     channels: [
+      {
+        id: 'script',
+        os: ['macos', 'linux'],
+        source: { kind: 'inline', startsWith: 'curl -fsSL https://www.halotrcer.com/install.sh' },
+        what: 'Downloads the latest Halotrcer release from GitHub, verifies it (the cosign signature when cosign is installed, then the SHA-256), installs halotrcer, then has it install Tokvera and Sievant, each verified against its own release. It never uses sudo.',
+        whatCite: 'docs/install.md "The install scripts"',
+        verify: {
+          text: 'The script verifies every release before installing anything. To check the script itself, compare its SHA-256 with the one published on the install page.',
+          cite: 'docs/install.md "The install scripts" step 4',
+        },
+      },
+      {
+        id: 'powershell',
+        os: ['windows'],
+        source: { kind: 'inline', startsWith: 'irm https://www.halotrcer.com/install.ps1' },
+        what: 'The same steps on Windows; it never asks for administrator rights.',
+        whatCite: 'docs/install.md "The install scripts"',
+        verify: {
+          text: 'The script verifies every release before installing anything. To check the script itself, compare its SHA-256 with the one published on the install page.',
+          cite: 'docs/install.md "The install scripts" step 4',
+        },
+      },
       {
         id: 'brew',
         os: ['macos'],
