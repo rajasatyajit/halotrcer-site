@@ -31,7 +31,11 @@ export const FORBIDDEN: [RegExp, string][] = [
   [/\bgo install\b/, 'go install command'],
   [/ghcr\.io\/rajasatyajit/, 'container image reference'],
   [/github\.com\/rajasatyajit/i, 'GitHub link'],
-  [/\bv?\d+\.\d+\.\d+(-[\w.]+)?\b/, 'version number'],
+  // Release versions only. A scoring-model version ("ranking model is at
+  // version 0.1.0") is documentation, not a release, and is allowed.
+  [/\bv\d+\.\d+\.\d+\b/, 'release version (vX.Y.Z)'],
+  [/\b(tokvera|sievant|halotrcer)[\s_@-]+v?\d+\.\d+\.\d+/i, 'product release version'],
+  [/\b\d+\.\d+\.\d+-(rc|alpha|beta)\b/i, 'pre-release version'],
   [/github-buttons|stargazers|ghbtns|star-button|data-github-stars/i, 'star button'],
 ];
 

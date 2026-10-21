@@ -21,6 +21,8 @@ describe('pre-launch patterns', () => {
     'https://github.com/rajasatyajit/tokvera',
     'Tokvera v0.2.0',
     'version 0.2.0-rc.1',
+    'tokvera_0.2.0_linux_amd64.tar.gz',
+    'Sievant 0.2.0 is out',
   ])('flags: %s', (text) => expect(forbidden(text)).not.toHaveLength(0));
 
   it.each([
@@ -29,6 +31,8 @@ describe('pre-launch patterns', () => {
     'WCAG 2.2 AA',
     'satyajit.rajaraman@halotrcer.com',
     'The audit takes about two weeks',
+    "Halotrcer's ranking model is at version 0.1.0",
+    'may change before scoring 1.0.0.',
   ])('allows: %s', (text) => expect(forbidden(text)).toHaveLength(0));
 });
 
