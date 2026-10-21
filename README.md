@@ -20,6 +20,7 @@ Static sites for www.halotrcer.com, tokvera.halotrcer.com and sievant.halotrcer.
 | `npm run check:launched`                          | Every channel present and resolved, scripts byte-identical (after a launched build)                               |
 | `npm run check:links` / `npm run check:seo`       | Internal and cross-host links; SEO basics, sitemaps, llms.txt (after building all sites)                          |
 | `npm run check:permanence`                        | Every URL in `data/published-urls.json` is still served or redirected, and every sitemap URL is recorded          |
+| `npm run check:external`                          | External links over the network (nightly in CI; GitHub links skipped until launch)                                |
 | `npm run urls:record`                             | Record new sitemap URLs (run after a pre-launch build, then after a launched build; adds only)                    |
 | `PW_CHROMIUM=/usr/bin/chromium npm run e2e`       | Browser tests (axe, picker, no-JS) against the built sites                                                        |
 

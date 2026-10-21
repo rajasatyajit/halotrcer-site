@@ -1,0 +1,37 @@
+name: External links
+
+# Nightly and on demand, not on every push: third-party sites go down and rate
+# limit, and that should not block a merge. Broken links fail the run.
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: external-links
+  cancel-in-progress: true
+
+jobs:
+  # LINUX_RUNNER only while the repository is private (docs/development.md).
+  external-links:
+    name: External links (pre-launch build)
+    runs-on: ${{ github.event.repository.private && vars.LINUX_RUNNER || 'ubuntu-24.04' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Runner tools (self-hosted only)
+        if: runner.environment == 'self-hosted'
+        run: sh scripts/ci/runner-tools.sh git tar gzip
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      # GitHub links stay private until launch and are skipped (scripts/lib/external.ts).
+      - name: External links
+        run: npm run check:external
