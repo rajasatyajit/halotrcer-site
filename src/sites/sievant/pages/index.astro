@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import LaunchingSoon from '../../../components/LaunchingSoon.astro';
+import { BOOKING_URL, url } from '../../../config/site.ts';
+---
+
+<BaseLayout
+  title="Sievant: open-source MCP security gateway"
+  description="Sievant is an open-source MCP security gateway and sidecar: it checks every tool call between AI agents and MCP servers and records it in a local audit trail."
+  bareTitle
+>
+  <section class="container hero">
+    <p class="eyebrow">Sievant</p>
+    <h1>
+      <Claim id="sievant.headline" />
+    </h1>
+    <p class="lede">
+      <Claim id="sievant.summary" />
+    </p>
+    <div class="button-row">
+      <a class="button" href={BOOKING_URL}>
+        Book a call
+      </a>
+      <a class="button button--ghost" href={url('www')}>
+        Part of Halotrcer
+      </a>
+    </div>
+  </section>
+
+  <section class="container section">
+    <LaunchingSoon product="sievant" />
+  </section>
+</BaseLayout>

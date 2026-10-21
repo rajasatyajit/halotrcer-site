@@ -1,0 +1,39 @@
+---
+import { SITE_NAMES, url } from '../config/site.ts';
+import { getFlags } from '../config/flags.ts';
+import { navFor } from '../data/nav.ts';
+import { canonicalPath } from '../lib/paths.ts';
+
+const { site } = getFlags();
+const items = navFor(site);
+const here = url(site, canonicalPath(Astro.url.pathname));
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="wordmark" href={url(site)}>
+      {SITE_NAMES[site]}
+      <span class="wordmark__dot" aria-hidden="true">
+        .
+      </span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        {items.map((item) => (
+          <li>
+            <a href={item.href} aria-current={item.href === here ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <button class="theme-toggle" type="button" data-theme-toggle data-pending>
+      Theme
+    </button>
+  </div>
+</header>
+
+<script>
+  import '../islands/theme-toggle.ts';
+</script>

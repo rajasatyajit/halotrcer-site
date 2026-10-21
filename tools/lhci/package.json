@@ -1,0 +1,8 @@
+{
+  "name": "halotrcer-site-lhci",
+  "private": true,
+  "description": "Lighthouse CI, installed only in CI (npm ci --prefix tools/lhci).",
+  "dependencies": {
+    "@lhci/cli": "0.15.1"
+  }
+}

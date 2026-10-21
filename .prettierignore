@@ -1,0 +1,6 @@
+dist/
+.astro/
+node_modules/
+research/
+package-lock.json
+.remember/

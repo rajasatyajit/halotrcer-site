@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import LaunchingSoon from '../../../components/LaunchingSoon.astro';
+import { BOOKING_URL, url } from '../../../config/site.ts';
+---
+
+<BaseLayout
+  title="Tokvera: LLM latency and cost scanner"
+  description="Tokvera measures LLM inference endpoints: time to first token, latency at rising concurrency, error rates and cost per request, graded A–F in a self-contained report."
+  bareTitle
+>
+  <section class="container hero">
+    <p class="eyebrow">Tokvera</p>
+    <h1>
+      <Claim id="tokvera.headline" />
+    </h1>
+    <p class="lede">
+      <Claim id="tokvera.summary" />
+    </p>
+    <div class="button-row">
+      <a class="button" href={BOOKING_URL}>
+        Book a call
+      </a>
+      <a class="button button--ghost" href={url('www')}>
+        Part of Halotrcer
+      </a>
+    </div>
+  </section>
+
+  <section class="container section">
+    <LaunchingSoon product="tokvera" />
+  </section>
+</BaseLayout>

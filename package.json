@@ -1,0 +1,46 @@
+{
+  "name": "halotrcer-site",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "dependencies": {
+    "astro": "7.4.1",
+    "yaml": "2.9.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.11",
+    "@eslint/js": "10.0.1",
+    "@types/node": "26.6.5",
+    "eslint": "10.13.0",
+    "eslint-plugin-astro": "1.7.0",
+    "html-validate": "11.17.0",
+    "node-html-parser": "9.0.5",
+    "prettier": "3.9.10",
+    "prettier-plugin-astro": "1.1.1",
+    "stylelint": "17.16.0",
+    "stylelint-config-standard": "40.0.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.0",
+    "vitest": "5.0.5"
+  },
+  "scripts": {
+    "dev": "SITE_ID=${SITE_ID:-www} astro dev",
+    "build": "node scripts/build.ts",
+    "build:prelaunch": "LAUNCHED=false node scripts/build.ts",
+    "preview": "SITE_ID=${SITE_ID:-www} astro preview",
+    "typecheck": "SITE_ID=www astro check",
+    "lint": "eslint . && stylelint \"src/**/*.css\" && prettier --check .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "check:html": "html-validate \"dist/**/*.html\"",
+    "check:headers": "node scripts/check-headers.ts",
+    "check:prelaunch": "node scripts/check-prelaunch.ts",
+    "check:claims": "node scripts/check-claims.ts",
+    "verify:claims": "node scripts/verify-claims.ts",
+    "budget": "node scripts/check-budgets.ts",
+    "check:dist": "npm run check:html && npm run check:headers && npm run check:claims && npm run budget"
+  }
+}
