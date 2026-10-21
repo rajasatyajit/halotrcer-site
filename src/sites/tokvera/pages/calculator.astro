@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import Calculator from '../../../components/Calculator.astro';
+import ShareButton from '../../../components/ShareButton.astro';
+import { BOOKING_URL, url } from '../../../config/site.ts';
+import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+
+const audit = serviceFor('performance-audit');
+---
+
+<BaseLayout
+  title="AI bill leak calculator"
+  description="Before you run a Tokvera scan, estimate your monthly LLM API spend and the part that goes on repeated, uncached input, from your own volumes and prices."
+>
+  <header class="container page-head">
+    <p class="eyebrow">Calculator</p>
+    <h1>AI bill leak calculator</h1>
+    <p class="lede">
+      How much of your LLM bill goes on input your requests repeat and nothing caches? Enter your
+      own numbers: there are no defaults and no guessed prices.
+    </p>
+    <div class="button-row">
+      <ShareButton />
+    </div>
+  </header>
+
+  <div class="container section">
+    <Calculator />
+  </div>
+
+  <section class="container section" aria-labelledby="measure">
+    <h2 id="measure">From an estimate to a measurement</h2>
+    <p>
+      <a href="/">Tokvera</a> measures your endpoint instead of estimating it:{' '}
+      <Claim id="tokvera.measures" />
+    </p>
+    <p>The {audit.name} instruments your production traffic and leaves a ranked fix list.</p>
+    <p data-owner-source="content/pricing.md">
+      From {formatPrice(audit.from)}, {audit.duration.toLowerCase()}.
+    </p>
+    <div class="button-row">
+      <a class="button" href={BOOKING_URL}>
+        Book a call
+      </a>
+      <a class="button button--ghost" href={url('www', '/pricing')}>
+        Pricing
+      </a>
+    </div>
+  </section>
+</BaseLayout>

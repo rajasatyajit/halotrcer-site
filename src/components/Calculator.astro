@@ -1,0 +1,162 @@
+---
+// AI bill leak calculator (PLAN.md §6). Fields start empty: there are no default
+// prices. With JavaScript, calculator.ts computes the result and keeps the inputs
+// in the query string; without it, the formula below gives the same numbers.
+import { getFlags } from '../config/flags.ts';
+import { url } from '../config/site.ts';
+
+const fields = [
+  { name: 'r', label: 'Requests per month', hint: 'Calls to the model API in a month.' },
+  {
+    name: 'tin',
+    label: 'Input tokens per request',
+    hint: 'Average prompt size, including the system prompt and context.',
+  },
+  { name: 'tout', label: 'Output tokens per request', hint: 'Average completion size.' },
+  {
+    name: 'pin',
+    label: 'Price per million input tokens',
+    hint: 'From your provider’s price list, in any currency.',
+  },
+  { name: 'pout', label: 'Price per million output tokens', hint: 'In the same currency.' },
+  {
+    name: 'h',
+    label: 'Repeated, uncached share of input (%)',
+    hint: 'How much of each prompt is the same as in other requests and is billed at the full input price.',
+    max: 100,
+  },
+];
+const tokvera = getFlags().site === 'tokvera' ? '/' : url('tokvera');
+---
+
+<div class="calc" data-calculator>
+  <form class="calc__form" method="get" novalidate>
+    <fieldset>
+      <legend>Your numbers</legend>
+      <div class="calc__fields">
+        {fields.map((f) => (
+          <div class="calc__field">
+            <label for={`calc-${f.name}`}>{f.label}</label>
+            <input
+              id={`calc-${f.name}`}
+              name={f.name}
+              type="number"
+              inputmode="decimal"
+              min="0"
+              max={f.max}
+              step="any"
+              required
+              aria-describedby={`calc-${f.name}-hint`}
+            />
+            <p class="calc__hint" id={`calc-${f.name}-hint`}>
+              {f.hint}
+            </p>
+          </div>
+        ))}
+      </div>
+    </fieldset>
+    <div class="button-row">
+      <button class="button" type="submit">
+        Calculate
+      </button>
+      <button class="button button--ghost" type="button" data-calc-example>
+        Fill in example values (not real prices)
+      </button>
+    </div>
+  </form>
+
+  <section class="calc__result" aria-labelledby="calc-result-title" data-calc-result>
+    <h2 id="calc-result-title">Estimate</h2>
+    <dl aria-live="polite" aria-atomic="true" data-user-input>
+      <div>
+        <dt>Monthly spend</dt>
+        <dd data-calc-out="spend">–</dd>
+      </div>
+      <div>
+        <dt>Monthly spend on repeated, uncached input</dt>
+        <dd data-calc-out="repeat">–</dd>
+      </div>
+      <div>
+        <dt>Share of the total</dt>
+        <dd data-calc-out="share">–</dd>
+      </div>
+    </dl>
+    <p class="calc__label">
+      An estimate computed only from your inputs, in the currency of your prices. Not a measurement.
+      <a href={tokvera}>Run Tokvera</a> to measure whether your repeated prompts are worth caching.
+    </p>
+    <div class="button-row">
+      <button class="button button--ghost" type="button" data-calc-copy>
+        Copy result and link
+      </button>
+    </div>
+  </section>
+
+  <p class="note calc__nojs">
+    The calculator needs JavaScript. The formula below gives the same numbers by hand.
+  </p>
+</div>
+
+<section class="calc__formula" aria-labelledby="calc-formula-title">
+  <h2 id="calc-formula-title">How it is calculated</h2>
+  <p>
+    With <var>R</var> requests a month,{' '}
+    <var>
+      T<sub>in</sub>
+    </var>{' '}
+    and{' '}
+    <var>
+      T<sub>out</sub>
+    </var>
+    tokens per request, prices{' '}
+    <var>
+      P<sub>in</sub>
+    </var>{' '}
+    and{' '}
+    <var>
+      P<sub>out</sub>
+    </var>{' '}
+    per million tokens, and a repeated, uncached share <var>h</var> of the input:
+  </p>
+  <ul class="checklist">
+    <li>
+      Monthly spend = <var>R</var> × (
+      <var>
+        T<sub>in</sub>
+      </var>{' '}
+      ×{' '}
+      <var>
+        P<sub>in</sub>
+      </var>{' '}
+      +
+      <var>
+        T<sub>out</sub>
+      </var>{' '}
+      ×{' '}
+      <var>
+        P<sub>out</sub>
+      </var>
+      ) ÷ 1,000,000
+    </li>
+    <li>
+      Spend on repeated, uncached input = <var>R</var> ×{' '}
+      <var>
+        T<sub>in</sub>
+      </var>{' '}
+      × <var>h</var> ×
+      <var>
+        P<sub>in</sub>
+      </var>{' '}
+      ÷ 1,000,000
+    </li>
+  </ul>
+  <p>
+    The second line is what the repeated part of your prompts costs at the full input price. It is
+    not a forecast of what caching would change: that depends on your provider’s cache pricing and
+    on how often requests really repeat, which only a measurement shows.
+  </p>
+</section>
+
+<script>
+  import '../islands/calculator.ts';
+</script>
