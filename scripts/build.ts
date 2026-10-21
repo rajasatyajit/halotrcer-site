@@ -15,11 +15,21 @@ if (requested && !(SITES as readonly string[]).includes(requested)) {
 
 const targets: readonly SiteId[] = requested ? [requested as SiteId] : SITES;
 
+// Launched builds read release data fetched now from GitHub (committed data as
+// the per-product fallback), unless RELEASE_DATA_DIR points elsewhere (tests).
+const env = { ...process.env };
+if (env.LAUNCHED === 'true' && !env.RELEASE_DATA_DIR) {
+  const { fetchAll, CACHE } = await import('./fetch-releases.ts');
+  const n = await fetchAll();
+  if (n === 0) console.warn('release: no release fetched; every product will show Launching soon');
+  env.RELEASE_DATA_DIR = CACHE;
+}
+
 for (const site of targets) {
   console.log(`\n== building ${site}`);
   const res = spawnSync('npx', ['astro', 'build'], {
     stdio: 'inherit',
-    env: { ...process.env, SITE_ID: site },
+    env: { ...env, SITE_ID: site },
   });
   if (res.status !== 0) process.exit(res.status ?? 1);
 }

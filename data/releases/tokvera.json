@@ -1,0 +1,248 @@
+{
+  "product": "tokvera",
+  "name": "Tokvera",
+  "binary": "tokvera",
+  "source": {
+    "repo": "tokvera",
+    "ref": "f2a79068c4bd6f56c5c12410f26da5358b6fb251",
+    "commit": "f2a79068c4bd6f56c5c12410f26da5358b6fb251"
+  },
+  "release": null,
+  "next": [
+    {
+      "cmd": "tokvera scan --demo",
+      "note": "no endpoint needed"
+    },
+    {
+      "cmd": "tokvera scan --target URL"
+    }
+  ],
+  "scripts": {
+    "install.sh": {
+      "path": "scripts/install.sh",
+      "sha256": "46ac0186f42d8f35f6e5baee4a67047a7ea6217dc4c180ec481858f73dd73f02",
+      "bytes": 13367
+    },
+    "install.ps1": {
+      "path": "scripts/install.ps1",
+      "sha256": "dcc6bf1201b42ad50ec71677f587116a9da1068d8af52192f0a3139a9c67d798",
+      "bytes": 17665
+    }
+  },
+  "channels": [
+    {
+      "id": "script",
+      "label": "Install script",
+      "os": [
+        "macos",
+        "linux"
+      ],
+      "commands": [
+        "curl -fsSL https://tokvera.halotrcer.com/install.sh | sh"
+      ],
+      "what": "Downloads the latest release from GitHub, checks its SHA-256 (and its cosign signature when cosign is installed), and installs tokvera into ~/.local/bin. Run it again to upgrade.",
+      "whatCite": "docs/install.md \"The install scripts\"",
+      "verify": {
+        "text": "The script verifies the release before installing anything. To check the script itself, compare its SHA-256 with the one published on the install page.",
+        "cite": "docs/install.md \"The install scripts\" step 5",
+        "commands": []
+      }
+    },
+    {
+      "id": "powershell",
+      "label": "PowerShell",
+      "os": [
+        "windows"
+      ],
+      "commands": [
+        "irm https://tokvera.halotrcer.com/install.ps1 | iex"
+      ],
+      "what": "The same steps on Windows PowerShell 5.1 or PowerShell 7; installs tokvera.exe into your user profile.",
+      "whatCite": "docs/install.md \"install.ps1 (Windows)\"",
+      "verify": {
+        "text": "The script verifies the release before installing anything. To check the script itself, compare its SHA-256 with the one published on the install page.",
+        "cite": "docs/install.md \"The install scripts\" step 5",
+        "commands": []
+      }
+    },
+    {
+      "id": "brew",
+      "label": "Homebrew",
+      "os": [
+        "macos"
+      ],
+      "commands": [
+        "brew install --cask rajasatyajit/tap/tokvera"
+      ],
+      "what": "Installs the Tokvera cask from the rajasatyajit tap. The macOS binary is not notarized by Apple: the guarantee is the checksum and the cosign signature.",
+      "whatCite": "docs/install.md \"Homebrew (macOS)\"",
+      "verify": {
+        "text": "Check that checksums.txt was signed by the repository’s release workflow on a version tag, then compare your download’s SHA-256 with its line in checksums.txt.",
+        "cite": "docs/install.md \"Homebrew (macOS)\"",
+        "commands": [
+          "TAG={tag}   # the version you installed: tokvera version",
+          "curl -fsSLO \"https://github.com/rajasatyajit/tokvera/releases/download/$TAG/checksums.txt\"",
+          "curl -fsSLO \"https://github.com/rajasatyajit/tokvera/releases/download/$TAG/checksums.txt.sigstore.json\"",
+          "cosign verify-blob --bundle checksums.txt.sigstore.json \\\n  --certificate-identity-regexp '^https://github\\.com/rajasatyajit/tokvera/\\.github/workflows/release\\.yml@refs/tags/v' \\\n  --certificate-oidc-issuer https://token.actions.githubusercontent.com \\\n  checksums.txt"
+        ]
+      }
+    },
+    {
+      "id": "scoop",
+      "label": "Scoop",
+      "os": [
+        "windows"
+      ],
+      "commands": [
+        "scoop bucket add rajasatyajit https://github.com/rajasatyajit/scoop-bucket",
+        "scoop install rajasatyajit/tokvera"
+      ],
+      "what": "Adds the rajasatyajit bucket, then installs.",
+      "whatCite": "docs/install.md \"Scoop and winget (Windows)\"",
+      "verify": {
+        "text": "Check that checksums.txt was signed by the repository’s release workflow on a version tag, then compare your download’s SHA-256 with its line in checksums.txt.",
+        "cite": "docs/install.md \"Homebrew (macOS)\"",
+        "commands": [
+          "TAG={tag}   # the version you installed: tokvera version",
+          "curl -fsSLO \"https://github.com/rajasatyajit/tokvera/releases/download/$TAG/checksums.txt\"",
+          "curl -fsSLO \"https://github.com/rajasatyajit/tokvera/releases/download/$TAG/checksums.txt.sigstore.json\"",
+          "cosign verify-blob --bundle checksums.txt.sigstore.json \\\n  --certificate-identity-regexp '^https://github\\.com/rajasatyajit/tokvera/\\.github/workflows/release\\.yml@refs/tags/v' \\\n  --certificate-oidc-issuer https://token.actions.githubusercontent.com \\\n  checksums.txt"
+        ]
+      }
+    },
+    {
+      "id": "winget",
+      "label": "winget",
+      "os": [
+        "windows"
+      ],
+      "commands": [
+        "winget install -e --id Halotrcer.Tokvera"
+      ],
+      "what": "Installs from the winget community repository, which can show a new version later than GitHub while Microsoft reviews it.",
+      "whatCite": "docs/install.md \"Scoop and winget (Windows)\"",
+      "verify": {
+        "text": "Check that checksums.txt was signed by the repository’s release workflow on a version tag, then compare your download’s SHA-256 with its line in checksums.txt.",
+        "cite": "docs/install.md \"Homebrew (macOS)\"",
+        "commands": [
+          "TAG={tag}   # the version you installed: tokvera version",
+          "curl -fsSLO \"https://github.com/rajasatyajit/tokvera/releases/download/$TAG/checksums.txt\"",
+          "curl -fsSLO \"https://github.com/rajasatyajit/tokvera/releases/download/$TAG/checksums.txt.sigstore.json\"",
+          "cosign verify-blob --bundle checksums.txt.sigstore.json \\\n  --certificate-identity-regexp '^https://github\\.com/rajasatyajit/tokvera/\\.github/workflows/release\\.yml@refs/tags/v' \\\n  --certificate-oidc-issuer https://token.actions.githubusercontent.com \\\n  checksums.txt"
+        ]
+      }
+    },
+    {
+      "id": "apt",
+      "label": "apt",
+      "os": [
+        "linux"
+      ],
+      "commands": [
+        "sudo install -d -m 0755 /etc/apt/keyrings",
+        "sudo curl -fsSLo /etc/apt/keyrings/halotrcer-packages.asc \\\n  https://rajasatyajit.github.io/packages/halotrcer-packages.asc",
+        "echo \"deb [signed-by=/etc/apt/keyrings/halotrcer-packages.asc] https://rajasatyajit.github.io/packages/apt stable main\" |\n  sudo tee /etc/apt/sources.list.d/tokvera.list",
+        "sudo apt update && sudo apt install tokvera"
+      ],
+      "what": "Adds the signed apt repository, so apt installs and updates tokvera.",
+      "whatCite": "docs/install.md \"The apt and yum repositories\"",
+      "verify": {
+        "text": "The repository metadata and every package are signed with the OpenPGP key halotrcer-packages.asc (fingerprint D2D9 6618 831A C55B 81E2 4DA3 039B 5DA0 D3E3 9071).",
+        "cite": "docs/install.md \"The apt and yum repositories\"",
+        "commands": []
+      }
+    },
+    {
+      "id": "dnf",
+      "label": "dnf / yum",
+      "os": [
+        "linux"
+      ],
+      "commands": [
+        "sudo curl -fsSLo /etc/yum.repos.d/tokvera.repo https://rajasatyajit.github.io/packages/rpm/tokvera.repo",
+        "sudo dnf install tokvera"
+      ],
+      "what": "Adds the signed yum repository for Fedora, RHEL and Amazon Linux; dnf offers to import the key on first use.",
+      "whatCite": "docs/install.md \"The apt and yum repositories\"",
+      "verify": {
+        "text": "The repository metadata and every package are signed with the OpenPGP key halotrcer-packages.asc (fingerprint D2D9 6618 831A C55B 81E2 4DA3 039B 5DA0 D3E3 9071).",
+        "cite": "docs/install.md \"The apt and yum repositories\"",
+        "commands": []
+      }
+    },
+    {
+      "id": "apk",
+      "label": "apk",
+      "os": [
+        "linux"
+      ],
+      "commands": [
+        "wget -O /etc/apk/keys/satyajit.rajaraman@halotrcer.com-tokvera.rsa.pub \\\n  https://raw.githubusercontent.com/rajasatyajit/tokvera/main/packaging/keys/satyajit.rajaraman@halotrcer.com-tokvera.rsa.pub",
+        "apk add ./tokvera_{version}_{apkArch}.apk"
+      ],
+      "what": "Installs the apk signing key once, then a signed package from the release (Alpine).",
+      "whatCite": "docs/install.md \"Alpine (signed apk)\"",
+      "verify": {
+        "text": "With the key installed, apk verifies the package without --allow-untrusted.",
+        "cite": "docs/install.md \"Alpine (signed apk)\"",
+        "commands": []
+      }
+    },
+    {
+      "id": "docker",
+      "label": "Docker",
+      "os": "any",
+      "commands": [
+        "docker run --rm ghcr.io/rajasatyajit/tokvera:latest version"
+      ],
+      "what": "Runs the distroless, non-root image for linux/amd64 and linux/arm64.",
+      "whatCite": "docs/install.md \"Container image\"",
+      "verify": {
+        "text": "Each image is cosign-signed by the same release workflow.",
+        "cite": "docs/install.md \"Container image\"",
+        "commands": [
+          "cosign verify ghcr.io/rajasatyajit/tokvera:{tag} \\\n  --certificate-identity-regexp '^https://github\\.com/rajasatyajit/tokvera/\\.github/workflows/release\\.yml@refs/tags/v' \\\n  --certificate-oidc-issuer https://token.actions.githubusercontent.com"
+        ]
+      }
+    },
+    {
+      "id": "helm",
+      "label": "Helm",
+      "os": "any",
+      "commands": [
+        "helm install scan oci://ghcr.io/rajasatyajit/charts/tokvera --version {version} \\\n  --namespace inference \\\n  --set scan.confirm=true \\\n  --set scan.target=http://vllm.inference.svc.cluster.local:8000/v1 \\\n  --set scan.model=my-model"
+      ],
+      "what": "Runs tokvera scan on a schedule inside a Kubernetes cluster and keeps the latest report.",
+      "whatCite": "docs/helm.md introduction"
+    },
+    {
+      "id": "go",
+      "label": "go install",
+      "os": "any",
+      "commands": [
+        "go install github.com/rajasatyajit/tokvera/cmd/tokvera@latest"
+      ],
+      "what": "Builds from source with Go.",
+      "whatCite": "docs/install.md quick-start table"
+    },
+    {
+      "id": "releases",
+      "label": "GitHub Releases",
+      "os": "any",
+      "commands": [],
+      "link": "https://github.com/rajasatyajit/tokvera/releases/tag/{tag}",
+      "what": "Download the archive for your platform and checksums.txt from the release page.",
+      "whatCite": "docs/install.md introduction",
+      "verify": {
+        "text": "Check that checksums.txt was signed by the repository’s release workflow on a version tag, then compare your download’s SHA-256 with its line in checksums.txt.",
+        "cite": "docs/install.md \"Homebrew (macOS)\"",
+        "commands": [
+          "TAG={tag}   # the version you installed: tokvera version",
+          "curl -fsSLO \"https://github.com/rajasatyajit/tokvera/releases/download/$TAG/checksums.txt\"",
+          "curl -fsSLO \"https://github.com/rajasatyajit/tokvera/releases/download/$TAG/checksums.txt.sigstore.json\"",
+          "cosign verify-blob --bundle checksums.txt.sigstore.json \\\n  --certificate-identity-regexp '^https://github\\.com/rajasatyajit/tokvera/\\.github/workflows/release\\.yml@refs/tags/v' \\\n  --certificate-oidc-issuer https://token.actions.githubusercontent.com \\\n  checksums.txt"
+        ]
+      }
+    }
+  ]
+}
