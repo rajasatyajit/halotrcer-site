@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SyncedDoc from '../../../components/SyncedDoc.astro';
+import { BOOKING_URL } from '../../../config/site.ts';
+---
+
+<BaseLayout
+  title="Tokvera FAQ"
+  description="Is a scan safe on production? What does it cost? Why is the grade provisional? Answers from the Tokvera documentation."
+>
+  <header class="container page-head">
+    <h1>Frequently asked questions</h1>
+    <p class="lede">
+      From the Tokvera documentation. Not answered here? <a href={BOOKING_URL}>Book a call</a>.
+    </p>
+  </header>
+  <div class="container">
+    <SyncedDoc id="tokvera/faq" />
+  </div>
+</BaseLayout>

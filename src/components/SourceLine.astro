@@ -1,0 +1,39 @@
+---
+// "Simulated demo run" label for a sample, with where it came from and the
+// command that produced it. Repo links only when launched (private before).
+import { getFlags } from '../config/flags.ts';
+import type { SampleSource } from '../lib/samples.ts';
+
+interface Props {
+  source: SampleSource;
+  // false for data that is not a demo run (e.g. the OWASP mapping)
+  simulated?: boolean;
+}
+
+const { source, simulated = true } = Astro.props;
+const names = { tokvera: 'Tokvera', sievant: 'Sievant', halotrcer: 'Halotrcer' };
+const href = getFlags().launched
+  ? `https://github.com/rajasatyajit/${source.repo}/blob/${source.commit}/${source.path}`
+  : undefined;
+---
+
+<aside
+  class="note sample-source"
+  aria-label={`${simulated ? 'About this sample' : 'Source'}: ${source.path}`}
+>
+  <p>
+    {simulated && <strong class="badge-simulated">Simulated demo run</strong>}
+    {source.about}
+  </p>
+  <p class="source-note">
+    Source: the {names[source.repo]} repository,{' '}
+    {href ? (
+      <a href={href}>
+        <code>{source.path}</code>
+      </a>
+    ) : (
+      <code>{source.path}</code>
+    )}{' '}
+    at commit <code>{source.commit.slice(0, 7)}</code>. Produced by <code>{source.command}</code>.
+  </p>
+</aside>

@@ -9,6 +9,12 @@ export function parseHeaders(text: string): Map<string, Map<string, string>> {
       current = new Map();
       rules.set(line.trim(), current);
     } else if (current) {
+      // "! Name" detaches a header set by an earlier rule (Cloudflare Pages); kept as "!name".
+      const detach = /^\s*!\s*(\S+)\s*$/.exec(line);
+      if (detach?.[1]) {
+        current.set(`!${detach[1].toLowerCase()}`, '');
+        continue;
+      }
       const i = line.indexOf(':');
       current.set(line.slice(0, i).trim().toLowerCase(), line.slice(i + 1).trim());
     }
@@ -19,7 +25,8 @@ export function parseHeaders(text: string): Map<string, Map<string, string>> {
 export const FORBIDDEN: [RegExp, string][] = [
   [/curl\s+-[a-zA-Z]*\s+https?:\/\//, 'curl install command'],
   [/\birm\s+https?:\/\//, 'PowerShell install command'],
-  [/\|\s*(sh|bash|iex)\b/, 'pipe-to-shell command'],
+  // A URL piped to a shell. "curl … | sh" quoted as a risk (Sievant's SUP002 rule) is not a command.
+  [/https?:\/\/\S+\s*\|\s*(sh|bash|iex)\b/, 'pipe-to-shell command'],
   [/\bbrew install\b/, 'Homebrew command'],
   [/\bwinget install\b/, 'winget command'],
   [/\bscoop (install|bucket)\b/, 'Scoop command'],

@@ -1,0 +1,8 @@
+{
+  "repo": "sievant",
+  "path": "internal/defaults/packs/owasp-llm-2025.yaml",
+  "ref": "main",
+  "commit": "8529db16ad9ab178c7131966ba1c6fa5588047fc",
+  "command": "sievant policy owasp",
+  "about": "The mapping sievant policy owasp prints, embedded in the binary."
+}

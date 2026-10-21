@@ -74,6 +74,19 @@ for (const site of builtSites()) {
   need('cross-origin-resource-policy', (v) => v === 'same-origin', 'must be same-origin');
   need('x-frame-options', (v) => v === 'DENY', 'must be DENY');
 
+  // Docs pages may replace the CSP only to add 'wasm-unsafe-eval' (Pagefind search).
+  for (const docs of [rules.get('/docs'), rules.get('/docs/*'), rules.get('/pagefind/*')]) {
+    if (!docs) continue;
+    const docsCsp = docs.get('content-security-policy') ?? '';
+    if (!docs.has('!content-security-policy'))
+      report.error(`${site}: a docs rule sets a CSP without detaching the site one`);
+    if (docsCsp !== csp.replace("script-src 'self'", "script-src 'self' 'wasm-unsafe-eval'")) {
+      report.error(
+        `${site}: /docs/* CSP must equal the site CSP plus 'wasm-unsafe-eval' (got: ${docsCsp})`,
+      );
+    }
+  }
+
   for (const page of pages(site)) {
     const where = `${site}/${page.rel}`;
     for (const s of page.root.querySelectorAll('script')) {

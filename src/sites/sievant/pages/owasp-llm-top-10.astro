@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SourceLine from '../../../components/SourceLine.astro';
+import { sample } from '../../../lib/samples.ts';
+
+interface Mapping {
+  framework: string;
+  edition: string;
+  source: string;
+  retrieved: string;
+  disclaimer: string;
+  categories: { id: string; title: string; url: string }[];
+  not_addressed: Record<string, string>;
+  controls: { id: string; name: string; config: string; categories: string[]; how: string }[];
+}
+
+const { data: m, source } = sample<Mapping>('sievant-owasp');
+const controlsFor = (id: string) => m.controls.filter((c) => c.categories.includes(id));
+---
+
+<BaseLayout
+  title="Sievant and the OWASP LLM Top 10"
+  description="Which OWASP Top 10 for LLM Applications categories Sievant's controls address, and which they do not. A mapping of controls to categories, not a certification."
+>
+  <header class="container page-head">
+    <p class="eyebrow">OWASP LLM Top 10 ({m.edition})</p>
+    <h1>Sievant and the OWASP LLM Top 10</h1>
+    <p class="lede">
+      The mapping <code>sievant policy owasp</code> prints, rendered here.
+    </p>
+  </header>
+
+  <div class="container" data-sample={`${source.repo}:${source.path}@${source.commit}`}>
+    <p class="note">
+      <strong>{m.disclaimer}</strong>
+    </p>
+    <div class="table-wrap" tabindex="0">
+      <table>
+        <caption class="visually-hidden">Controls per OWASP category</caption>
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            <th scope="col">Sievant controls</th>
+          </tr>
+        </thead>
+        <tbody>
+          {m.categories.map((c) => (
+            <tr>
+              <td>
+                <a href={c.url}>
+                  {c.id} {c.title}
+                </a>
+              </td>
+              <td>
+                {m.not_addressed[c.id] ? (
+                  <>
+                    <strong>Not addressed.</strong> {m.not_addressed[c.id]}
+                  </>
+                ) : (
+                  <ul class="plain-list">
+                    {controlsFor(c.id).map((ctl) => (
+                      <li>{ctl.name}</li>
+                    ))}
+                  </ul>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <h2>How each control helps</h2>
+    <div class="table-wrap" tabindex="0">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Control</th>
+            <th scope="col">Configuration</th>
+            <th scope="col">How</th>
+          </tr>
+        </thead>
+        <tbody>
+          {m.controls.map((ctl) => (
+            <tr>
+              <td>{ctl.name}</td>
+              <td>
+                <code>{ctl.config}</code>
+              </td>
+              <td>{ctl.how}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="source-note">
+      Categories from <a href={m.source}>{m.framework}</a>, edition {m.edition}, retrieved{' '}
+      <time datetime={m.retrieved}>{m.retrieved}</time>.
+    </p>
+  </div>
+  <div class="container">
+    <SourceLine source={source} simulated={false} />
+  </div>
+</BaseLayout>

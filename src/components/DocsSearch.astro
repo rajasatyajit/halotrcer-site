@@ -1,0 +1,23 @@
+---
+// Docs search (Pagefind). Loads the index only when the visitor starts typing.
+// Without JavaScript it is hidden; the navigation lists every page.
+---
+
+<div class="docs-search" role="search" data-docs-search>
+  <label class="visually-hidden" for="docs-search-input">
+    Search the docs
+  </label>
+  <input
+    id="docs-search-input"
+    type="search"
+    placeholder="Search the docs"
+    autocomplete="off"
+    aria-controls="docs-search-results"
+  />
+  <p class="visually-hidden" aria-live="polite" data-docs-search-status></p>
+  <ul id="docs-search-results" class="docs-search__results" data-docs-search-results></ul>
+</div>
+
+<script>
+  import '../islands/docs-search.ts';
+</script>

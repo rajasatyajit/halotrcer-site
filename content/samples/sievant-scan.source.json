@@ -1,0 +1,8 @@
+{
+  "repo": "sievant",
+  "path": "testdata/scan/report.golden.json",
+  "ref": "main",
+  "commit": "8529db16ad9ab178c7131966ba1c6fa5588047fc",
+  "command": "SIEVANT_UPDATE_GOLDEN=1 go test ./pkg/scan",
+  "about": "Golden test output of sievant scan --json over synthetic MCP client configurations in the Sievant repository. Every token in them is made up."
+}

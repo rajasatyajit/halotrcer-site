@@ -1,0 +1,164 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import SourceLine from '../../../components/SourceLine.astro';
+import { sample } from '../../../lib/samples.ts';
+
+interface Pct {
+  p50: number;
+  p95: number;
+  p99: number;
+}
+interface Report {
+  score: {
+    grade: string;
+    points: number;
+    provisional: boolean;
+    caps_applied: { max_grade: string; reason: string }[];
+    pillars: { pillar: string; weight: number; points: number | null }[];
+  };
+  run: { requests: number; succeeded: number; failed: number };
+  findings: {
+    rank: number;
+    status: string;
+    title: string;
+    evidence: string;
+    why_it_matters: string;
+    suggested_fix: string;
+  }[];
+  levels: {
+    concurrency: number;
+    requests: number;
+    failed: number;
+    ttft_ms: Pct;
+    request_duration_ms: Pct;
+  }[];
+  cost: { note?: string };
+}
+
+const { data: r, source } = sample<Report>('tokvera-scan');
+---
+
+<BaseLayout
+  title="Tokvera sample report"
+  description="A sample Tokvera scan report: the A–F grade, the caps that applied, ranked findings with fixes, and latency at each concurrency level, from a simulated demo run."
+>
+  <header class="container page-head">
+    <p class="eyebrow">Sample report</p>
+    <h1>What a Tokvera report shows</h1>
+    <p class="lede">
+      The grade, why it is capped, the findings ranked by what they cost the grade, and the latency
+      table behind them. This is the JSON report of a scan of Tokvera’s built-in simulator, rendered
+      here.
+    </p>
+  </header>
+
+  <div class="container">
+    <SourceLine source={source} />
+  </div>
+
+  <div class="container" data-sample={`${source.repo}:${source.path}@${source.commit}`}>
+    <section class="section" aria-labelledby="grade">
+      <h2 id="grade">Efficiency Score</h2>
+      <p>
+        <span class="grade">{r.score.grade}</span>
+        {r.score.points} of 100 points; {r.run.succeeded} of {r.run.requests} requests succeeded.
+      </p>
+      {r.score.provisional && (
+        <p class="note" data-claim="tokvera.provisional-label">
+          <Claim id="tokvera.provisional-label" />
+        </p>
+      )}
+      <ul class="checklist">
+        {r.score.caps_applied.map((c) => (
+          <li>
+            Capped at {c.max_grade}: {c.reason}
+          </li>
+        ))}
+      </ul>
+      <div class="table-wrap" tabindex="0">
+        <table>
+          <caption class="visually-hidden">Points per pillar</caption>
+          <thead>
+            <tr>
+              <th scope="col">Pillar</th>
+              <th scope="col">Weight</th>
+              <th scope="col">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            {r.score.pillars.map((p) => (
+              <tr>
+                <td>{p.pillar.replace(/_/g, ' ')}</td>
+                <td>{p.weight}</td>
+                <td>{p.points ?? 'not graded'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="findings">
+      <h2 id="findings">Findings, ranked</h2>
+      <ol class="finding-list">
+        {r.findings.map((f) => (
+          <li>
+            <h3>
+              <span class="status">[{f.status}]</span> {f.title}
+            </h3>
+            <p>
+              <strong>Evidence:</strong> {f.evidence}
+            </p>
+            <p>
+              <strong>Why it matters:</strong> {f.why_it_matters}
+            </p>
+            <p>
+              <strong>Fix:</strong> {f.suggested_fix}
+            </p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="section" aria-labelledby="levels">
+      <h2 id="levels">Latency by concurrency</h2>
+      <div class="table-wrap" tabindex="0">
+        <table>
+          <caption class="visually-hidden">
+            Time to first token and request duration, in milliseconds
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Concurrency</th>
+              <th scope="col">Requests</th>
+              <th scope="col">Failed</th>
+              <th scope="col">TTFT p50 (ms)</th>
+              <th scope="col">TTFT p95 (ms)</th>
+              <th scope="col">TTFT p99 (ms)</th>
+              <th scope="col">Duration p95 (ms)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {r.levels.map((l) => (
+              <tr>
+                <td>{l.concurrency}</td>
+                <td>{l.requests}</td>
+                <td>{l.failed}</td>
+                <td>{l.ttft_ms.p50}</td>
+                <td>{l.ttft_ms.p95}</td>
+                <td>{l.ttft_ms.p99}</td>
+                <td>{l.request_duration_ms.p95}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {r.cost.note && (
+        <p>
+          <strong>Cost:</strong> {r.cost.note}
+        </p>
+      )}
+    </section>
+  </div>
+</BaseLayout>

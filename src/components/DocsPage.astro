@@ -1,0 +1,27 @@
+---
+import DocsLayout from './DocsLayout.astro';
+import SyncedDoc from './SyncedDoc.astro';
+import { describe, pageTitle, plainTitle, slugOf, type Doc } from '../lib/docs.ts';
+import { SITE_NAMES } from '../config/site.ts';
+
+interface Props {
+  product: 'tokvera' | 'sievant';
+  doc: Doc;
+}
+
+const { product, doc } = Astro.props;
+const name = SITE_NAMES[product];
+---
+
+<DocsLayout
+  product={product}
+  title={pageTitle(doc)}
+  description={describe(doc, name)}
+  current={`/docs/${slugOf(doc)}`}
+>
+  <article data-pagefind-body>
+    <p class="eyebrow">{name} docs</p>
+    <h1 data-pagefind-meta="title">{plainTitle(doc)}</h1>
+    <SyncedDoc id={doc.id} />
+  </article>
+</DocsLayout>

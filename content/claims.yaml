@@ -445,3 +445,409 @@
     lines: '2-4'
     commit: c19c0d91da6bbefd22ab80f3834cf65e2c57ce51
     quote: "It never contains either tool's code: it runs their released binaries and reads their documented JSON."
+
+# ---- Tokvera site ----
+
+- id: tokvera.demo-terminal
+  text: |-
+    $ tokvera scan --demo
+    Efficiency Score: D (60.8 / 100, provisional scoring 0.9.0)
+      capped at D: more than 5% of requests failed
+      capped at C: time to first token collapses under load
+      Provisional scoring. The weights and thresholds are provisional: they have not yet been calibrated against real pilot scans and may change before scoring 1.0.0.
+    Requests: 60 sent, 55 succeeded.
+      1. [fail] Time to first token collapses under load: p99 201 ms at concurrency 16 against 11 ms at concurrency 1
+      2. [fail] Requests are failing: 5 of 60 requests failed (HTTP 429 ×5)
+      3. [fail] Many prompts repeat exactly: 16 of 40 prompts in the demo sample repeat an earlier one exactly
+      4. [warn] No Prometheus metrics at /metrics: no Prometheus exposition answered at /metrics on the target's origin
+    Report: tokvera-scan/report.html
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '25-34'
+    commit: dc41c9702c312d245b5d43c089d99ba8a15d7149
+    quote: >-
+      Efficiency Score: D (60.8 / 100, provisional scoring 0.9.0) capped at D: more than 5% of
+      requests failed capped at C: time to first token collapses under load
+      Provisional scoring. The weights and thresholds are provisional: they have not yet been
+      calibrated against real pilot scans and may change before scoring 1.0.0. Requests: 60 sent, 55
+      succeeded. 1. [fail] Time to first token collapses under load: p99 201 ms at concurrency 16
+      against 11 ms at concurrency 1 2. [fail] Requests are failing: 5 of 60 requests failed (HTTP
+      429 ×5) 3. [fail] Many prompts repeat exactly: 16 of 40 prompts in the demo sample repeat an
+      earlier one exactly 4. [warn] No Prometheus metrics at /metrics: no Prometheus exposition
+      answered at /metrics on the target's origin Report: tokvera-scan/report.html
+
+- id: tokvera.target-terminal
+  text: |-
+    $ tokvera scan --target http://localhost:8000/v1 --dry-run   # what would be sent; contacts nothing
+    $ tokvera scan --target http://localhost:8000/v1             # shows the plan again and asks before sending
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '40-41'
+    commit: dc41c9702c312d245b5d43c089d99ba8a15d7149
+    quote: >-
+      tokvera scan --target http://localhost:8000/v1 --dry-run # what would be sent; contacts nothing
+      tokvera scan --target http://localhost:8000/v1 # shows the plan again and asks before sending
+
+- id: tokvera.load-warning
+  text: A scan sends real load, so it shows the plan first and asks before sending.
+  source:
+    {
+      repo: tokvera,
+      path: README.md,
+      lines: '37',
+      commit: dc41c9702c312d245b5d43c089d99ba8a15d7149,
+      quote: 'A scan sends real load, so look at the plan first',
+    }
+
+- id: tokvera.privacy-report
+  text: >-
+    Prompts and responses never appear in a report. Cost figures are estimates from a dated rate
+    sheet, and every report shows its date and source.
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '80-81'
+    commit: dc41c9702c312d245b5d43c089d99ba8a15d7149
+    quote: >-
+      Prompts and responses never appear in a report. Cost figures are estimates from a dated rate
+      sheet, and every report shows its date and source.
+
+- id: tokvera.ci
+  text: The GitHub Action fails a pull request whose latency or cost regressed against a baseline report.
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '67-68'
+    commit: dc41c9702c312d245b5d43c089d99ba8a15d7149
+    quote: 'the GitHub Action fails a pull request whose latency or cost regressed against a baseline report'
+
+- id: tokvera.k8s
+  text: A Helm chart scans an in-cluster endpoint on a schedule and keeps the latest report.
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '69-70'
+    commit: dc41c9702c312d245b5d43c089d99ba8a15d7149
+    quote: 'a Helm chart scans an in-cluster endpoint on a schedule and keeps the latest report'
+
+- id: tokvera.mcp
+  text: >-
+    tokvera mcp is an MCP server for coding agents. It sends load only to an endpoint you named, and
+    only after you agreed to it.
+  source:
+    repo: tokvera
+    path: docs/agents.md
+    lines: '8-9'
+    commit: dc41c9702c312d245b5d43c089d99ba8a15d7149
+    quote: All three send load only to an endpoint the user named, and only after the user agreed to it.
+
+- id: tokvera.mcp-tools
+  text: 'Its tools: scan_demo, scan_plan, scan (needs confirm: true), summarize_report, verify_report, list_suites and doctor.'
+  source:
+    {
+      repo: tokvera,
+      path: docs/agents.md,
+      lines: '24',
+      commit: dc41c9702c312d245b5d43c089d99ba8a15d7149,
+      quote: 'measure the endpoint and grade it; needs confirm: true',
+    }
+
+- id: tokvera.plugins
+  text: 'Claude Code: /plugin install tokvera --marketplace rajasatyajit/tokvera. Codex: codex plugin marketplace add rajasatyajit/tokvera.'
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '72-73'
+    commit: dc41c9702c312d245b5d43c089d99ba8a15d7149
+    quote: 'Claude Code: /plugin install tokvera --marketplace rajasatyajit/tokvera. - Codex: codex plugin marketplace add rajasatyajit/tokvera.'
+
+- id: tokvera.capture
+  text: >-
+    tokvera capture is a small reverse proxy for OpenAI-compatible chat completions that writes one
+    usage-log line per call, for clients with no OpenTelemetry instrumentation.
+  source:
+    repo: tokvera
+    path: docs/capture.md
+    lines: '8'
+    commit: dc41c9702c312d245b5d43c089d99ba8a15d7149
+    quote: It is a small reverse proxy for OpenAI-compatible chat completions
+
+- id: tokvera.audit-kit
+  text: >-
+    The audit kit adds OpenTelemetry GenAI instrumentation for Go, Python and Node (tokvera
+    instrument), a local observability stack (tokvera stack up) and a caching proxy (tokvera cache).
+  source:
+    {
+      repo: tokvera,
+      path: docs/audit-kit.md,
+      lines: '9',
+      commit: dc41c9702c312d245b5d43c089d99ba8a15d7149,
+      quote: 'tokvera instrument --lang go|python|node',
+    }
+
+- id: tokvera.audit
+  text: >-
+    The scan shows where the problems are. Fixing them, and auditing what your production traffic
+    actually does, is the paid audit from Halotrcer.
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '85-86'
+    commit: dc41c9702c312d245b5d43c089d99ba8a15d7149
+    quote: >-
+      The scan shows where the problems are. Fixing them, and auditing what your production traffic
+      actually does, is the paid audit from Halotrcer.
+
+# ---- Sievant site ----
+
+- id: sievant.local
+  text: >-
+    On a developer's machine, in front of the MCP servers that Claude Desktop, Claude Code, Cursor, VS
+    Code and Windsurf launch: sievant scan audits their configurations, sievant wrap routes the
+    servers through Sievant, and sievant ui shows what happened.
+  source:
+    repo: sievant
+    path: README.md
+    lines: '11-14'
+    commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
+    quote: >-
+      On a developer's machine, in front of the MCP servers that Claude Desktop, Claude Code, Cursor,
+      VS Code and Windsurf launch.
+
+- id: sievant.gateway
+  text: >-
+    As a gateway for a team or a cluster: one process, or a Kubernetes sidecar, that serves
+    databases, REST and gRPC APIs, Prometheus and Loki, and other MCP servers as tools, with
+    identity, per-agent policies and rate limits.
+  source:
+    repo: sievant
+    path: README.md
+    lines: '15-18'
+    commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
+    quote: >-
+      As a gateway for a team or a cluster: one process, or a Kubernetes sidecar, that serves
+      databases, REST and gRPC APIs, Prometheus and Loki, and other MCP servers as tools, with
+      identity, per-agent policies and rate limits.
+
+- id: sievant.speed
+  text: It adds about 0.25 ms per call at the 99th percentile (proxy overhead, measured on a development machine).
+  source:
+    repo: sievant
+    path: README.md
+    lines: '21-22'
+    commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
+    quote: It adds about 0.25 ms per call at the 99th percentile on a laptop
+
+- id: sievant.speed-basis
+  text: >-
+    The figure is the proxy-overhead p99 from the TestProxyOverheadBudget runs recorded in the
+    repository's BASELINE.md; the release gate is 2 ms.
+  source:
+    {
+      repo: sievant,
+      path: BASELINE.md,
+      lines: '428',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: 'TestProxyOverheadBudget p99 overhead',
+    }
+
+- id: sievant.quickstart-terminal
+  text: |-
+    $ sievant scan        # read-only: what is risky in your MCP client configurations
+    $ sievant wrap --all  # route those servers through Sievant (backs up every file first)
+    $ sievant ui          # calls, decisions, blocked actions and redactions (127.0.0.1, one-time link)
+    $ sievant unwrap      # restore the original configurations, byte for byte
+  source:
+    repo: sievant
+    path: README.md
+    lines: '34-42'
+    commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
+    quote: >-
+      sievant scan # read-only: what is risky in your MCP client configurations sievant wrap --all #
+      route those servers through Sievant (backs up every file first)
+
+- id: sievant.block-credential
+  text: A credential in a tool's arguments. The call never reaches the server.
+  source:
+    {
+      repo: sievant,
+      path: README.md,
+      lines: '53-54',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: "A credential in a tool's arguments. The call never reaches the server:",
+    }
+
+- id: sievant.block-credential-out
+  text: Arguments contain a credential (aws_access_key); call blocked.
+  source:
+    {
+      repo: sievant,
+      path: README.md,
+      lines: '57',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: Arguments contain a credential (aws_access_key); call blocked.,
+    }
+
+- id: sievant.block-secrets
+  text: Secrets in what a tool returns. Credentials, keys and the server's own secrets are redacted before the agent sees them.
+  source:
+    {
+      repo: sievant,
+      path: README.md,
+      lines: '60-62',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: "Secrets in what a tool returns. Credentials, keys and the server's own secrets (from its environment) are redacted before the agent sees them:",
+    }
+
+- id: sievant.block-secrets-out
+  text: 'the secret is [REDACTED:mcp_secret]'
+  source:
+    {
+      repo: sievant,
+      path: README.md,
+      lines: '65',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: 'the secret is [REDACTED:mcp_secret]',
+    }
+
+- id: sievant.block-rugpull
+  text: A tool that changes its definition after you started using it (a "rug pull") is withheld until you accept it.
+  source:
+    {
+      repo: sievant,
+      path: README.md,
+      lines: '68-71',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: 'A changed tool is withheld from the agent until you accept it',
+    }
+
+- id: sievant.block-rugpull-out
+  text: 'upstream tool withheld: its definition changed since it was pinned on first use'
+  source:
+    {
+      repo: sievant,
+      path: README.md,
+      lines: '74',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: 'upstream tool withheld: its definition changed since it was pinned on first use',
+    }
+
+- id: sievant.block-injection
+  text: Prompt injection in a tool's result. Every result is scored; the strict profile withholds the high-confidence tier.
+  source:
+    {
+      repo: sievant,
+      path: README.md,
+      lines: '77',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: "Prompt injection in a tool's result. Every result is scored",
+    }
+
+- id: sievant.block-injection-out
+  text: The tool's result looks like a prompt-injection attempt and was withheld.
+  source:
+    {
+      repo: sievant,
+      path: README.md,
+      lines: '91',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: "The tool's result looks like a prompt-injection attempt and was withheld.",
+    }
+
+- id: sievant.block-allowlist
+  text: Paths and URLs outside an allowlist. The agent learns only that the value is not permitted.
+  source:
+    {
+      repo: sievant,
+      path: README.md,
+      lines: '98-100',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: 'The agent learns only that the value is not permitted:',
+    }
+
+- id: sievant.block-allowlist-out
+  text: "Argument 'path': value not permitted by policy"
+  source:
+    {
+      repo: sievant,
+      path: README.md,
+      lines: '103',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: "Argument 'path': value not permitted by policy",
+    }
+
+- id: sievant.block-scan
+  text: Risky client configurations, before anything runs. Secrets are masked in every output.
+  source:
+    {
+      repo: sievant,
+      path: README.md,
+      lines: '120-133',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: 'Secrets are masked in every output: terminal, JSON and HTML.',
+    }
+
+- id: sievant.block-scan-out
+  text: |-
+    CRITICAL SEC001 github env.GITHUB_PERSONAL_ACCESS_TOKEN: Hard-coded GitHub token
+    HIGH PERM001 files args[2]: Access to the whole filesystem
+    HIGH SUP002 installer args: Server launched by a script downloaded at start
+  source:
+    repo: sievant
+    path: README.md
+    lines: '124-128'
+    commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
+    quote: 'CRITICAL SEC001 github env.GITHUB_PERSONAL_ACCESS_TOKEN: Hard-coded GitHub token'
+
+- id: sievant.privacy-trail
+  text: >-
+    The audit trail is a SQLite file on your machine. It never holds raw arguments, only a keyed hash
+    of them, and it never holds results. Exports (OTLP, syslog or a webhook) are off unless you
+    configure them.
+  source:
+    repo: sievant
+    path: README.md
+    lines: '145-149'
+    commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
+    quote: It never holds raw arguments, only a keyed hash of them, and it never holds results.
+
+- id: sievant.fail-on
+  text: 'sievant scan --fail-on high exits with code 3 when a finding is high or worse, so CI can stop on it.'
+  source:
+    {
+      repo: sievant,
+      path: docs/scan-and-wrap.md,
+      lines: '40',
+      commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
+      quote: 'sievant scan --fail-on high # exit 3 when a finding is high or worse',
+    }
+
+- id: sievant.exposure-score
+  text: >-
+    Planned (roadmap, not built): an exposure score, an A to F grade from weighted pillars (secrets,
+    permissions, supply chain, prompt-injection exposure, auditability), with the weights published
+    and versioned. It will be added beside the existing findings, and failing on a grade will be
+    opt-in.
+  source:
+    repo: sievant
+    path: docs/roadmap.md
+    lines: '30-33'
+    commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
+    quote: >-
+      An exposure score: an A to F grade from weighted pillars (secrets, permissions, supply chain,
+      prompt-injection exposure, auditability), with the weights published and versioned.
+
+- id: tokvera.provisional-label
+  text: >-
+    Provisional scoring. The weights and thresholds are provisional: they have not yet been
+    calibrated against real pilot scans and may change before scoring 1.0.0.
+  source:
+    repo: tokvera
+    path: docs/scoring.md
+    lines: '94'
+    commit: dc41c9702c312d245b5d43c089d99ba8a15d7149
+    quote: >-
+      Provisional scoring. The weights and thresholds are provisional: they have not yet been
+      calibrated against real pilot scans and may change before scoring 1.0.0.

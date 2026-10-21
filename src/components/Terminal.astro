@@ -1,6 +1,9 @@
 ---
 // A terminal panel: real text (copyable, LCP-friendly), never an image.
-// `note` says where the content comes from (e.g. "Output format, from the CLI source").
+// Pass `lines`, or `claimId` to render a sourced claim (lines starting "$ "
+// are commands). `note` says where the content comes from.
+import { claim } from '../lib/claims.ts';
+
 export interface Line {
   kind: 'cmd' | 'out' | 'comment';
   text: string;
@@ -8,19 +11,26 @@ export interface Line {
 
 interface Props {
   label: string;
-  lines: Line[];
+  lines?: Line[];
+  claimId?: string;
   note?: string;
 }
 
-const { label, lines, note } = Astro.props;
+const { label, claimId, note } = Astro.props;
+const lines: Line[] = claimId
+  ? claim(claimId)
+      .text.split('\n')
+      .map((t) =>
+        t.startsWith('$ ') ? { kind: 'cmd', text: t.slice(2) } : { kind: 'out', text: t },
+      )
+  : (Astro.props.lines ?? []);
 ---
 
-<figure class="terminal">
+<figure class="terminal" {...(claimId ? { 'data-claim': claimId } : {})}>
   <figcaption class="terminal__bar">
     <span>{label}</span>
     {note && <span class="terminal__note">{note}</span>}
   </figcaption>
-  <pre class="terminal__body" tabindex="0" aria-label={label}><code>{lines.map((l) => (
-    <span class={`terminal__line terminal__line--${l.kind}`}>{l.text}</span>
-  ))}</code></pre>
+  <!-- prettier-ignore -->
+  <pre class="terminal__body" tabindex="0" aria-label={label}><code>{lines.map((l) => <span class={`terminal__line terminal__line--${l.kind}`}>{l.text}</span>)}</code></pre>
 </figure>

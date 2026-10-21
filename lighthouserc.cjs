@@ -15,8 +15,14 @@ const PAGES = {
     '/book.html',
     '/404.html',
   ],
-  tokvera: ['/index.html', '/404.html'],
-  sievant: ['/index.html', '/404.html'],
+  tokvera: ['/index.html', '/scoring.html', '/sample-report.html', '/docs/scan.html', '/404.html'],
+  sievant: [
+    '/index.html',
+    '/owasp-llm-top-10.html',
+    '/sample-report.html',
+    '/docs/scan-and-wrap.html',
+    '/404.html',
+  ],
 };
 
 const NOINDEX = '/(404|book)\\.html$';

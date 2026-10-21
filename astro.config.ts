@@ -2,6 +2,8 @@ import { defineConfig } from 'astro/config';
 import { getFlags } from './src/config/flags.ts';
 import { origin } from './src/config/site.ts';
 import { sitesIntegration } from './integrations/sites.ts';
+import { satteri } from '@astrojs/markdown-satteri';
+import { docLinksPlugin } from './src/lib/doc-links.ts';
 
 const flags = getFlags();
 
@@ -19,8 +21,11 @@ export default defineConfig({
   vite: {
     build: { assetsInlineLimit: 0 },
   },
-  // Prism emits classes only; Shiki's inline styles would break the CSP.
-  markdown: { syntaxHighlight: 'prism' },
+  markdown: {
+    // Prism emits classes only; Shiki's inline styles would break the CSP.
+    syntaxHighlight: 'prism',
+    processor: satteri({ hastPlugins: [docLinksPlugin({ launched: flags.launched })] }),
+  },
   devToolbar: { enabled: false },
   integrations: [sitesIntegration(flags)],
 });

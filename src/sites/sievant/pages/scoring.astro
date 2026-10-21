@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import SourceNote from '../../../components/SourceNote.astro';
+import { docTable } from '../../../lib/md-table.ts';
+import { getEntry } from 'astro:content';
+import { url } from '../../../config/site.ts';
+
+const rules = docTable('sievant/scan-and-wrap', 'Scanning MCP client configurations');
+const doc = await getEntry('docs', 'sievant/scan-and-wrap');
+if (!doc) throw new Error('sievant/scan-and-wrap not synced');
+const src = doc.data.source;
+---
+
+<BaseLayout
+  title="How Sievant rates findings"
+  description="How Sievant rates what it finds: each scan rule's severity, --fail-on for CI, and the planned A to F exposure score (roadmap, not built yet)."
+>
+  <header class="container page-head">
+    <p class="eyebrow">Scoring</p>
+    <h1>How Sievant rates findings</h1>
+    <p class="lede">
+      Sievant has no overall grade today. Every finding carries a severity (critical, high, medium,
+      low or info), and CI can stop on a threshold.
+    </p>
+  </header>
+
+  <section class="container section" aria-labelledby="severity">
+    <h2 id="severity">Severity per scan rule</h2>
+    <div class="table-wrap" tabindex="0" data-source-doc={`${src.repo}:${src.path}@${src.commit}`}>
+      <table>
+        <thead>
+          <tr>
+            {rules.head.map((h) => (
+              <th scope="col">{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rules.rows.map((r) => (
+            <tr>
+              {r.map((c) => (
+                <td>{c}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <SourceNote repo={src.repo} path={src.path} commit={src.commit} />
+  </section>
+
+  <section class="container section" aria-labelledby="ci">
+    <h2 id="ci">Failing CI on a threshold</h2>
+    <p>
+      <Claim id="sievant.fail-on" />
+    </p>
+    <p>
+      When Halotrcer combines Sievant’s findings with Tokvera’s, some rules carry a{' '}
+      <em>deal risk</em> tag and rank first. See{' '}
+      <a href={url('www', '/scoring')}>how Halotrcer ranks findings</a>.
+    </p>
+  </section>
+
+  <section class="container section" aria-labelledby="planned">
+    <h2 id="planned">Planned: an exposure score</h2>
+    <p class="note">
+      <Claim id="sievant.exposure-score" />
+    </p>
+  </section>
+</BaseLayout>

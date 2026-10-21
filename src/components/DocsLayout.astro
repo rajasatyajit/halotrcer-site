@@ -1,0 +1,39 @@
+---
+// Docs shell: navigation of the product's built docs, search, and the page body.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DocsSearch from './DocsSearch.astro';
+import { plainTitle, productDocs } from '../lib/docs.ts';
+
+interface Props {
+  product: 'tokvera' | 'sievant';
+  title: string;
+  description: string;
+  current?: string; // href of the current page
+}
+
+const { product, title, description, current } = Astro.props;
+const { built } = await productDocs(product);
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="container docs">
+    <nav class="docs__nav" aria-label="Documentation">
+      <p class="docs__nav-title">
+        <a href="/docs">Documentation</a>
+      </p>
+      <DocsSearch />
+      <ul>
+        {built.map(({ doc, href }) => (
+          <li>
+            <a href={href} aria-current={href === current ? 'page' : undefined}>
+              {plainTitle(doc)}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <div class="docs__main">
+      <slot />
+    </div>
+  </div>
+</BaseLayout>

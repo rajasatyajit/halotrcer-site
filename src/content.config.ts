@@ -13,6 +13,9 @@ const docs = defineCollection({
       ref: z.string(),
       commit: z.string().regex(/^[0-9a-f]{40}$/),
     }),
+    // false: contains install commands, versions or GitHub links; built only when launched
+    prelaunch: z.boolean(),
+    order: z.number().int(),
   }),
 });
 

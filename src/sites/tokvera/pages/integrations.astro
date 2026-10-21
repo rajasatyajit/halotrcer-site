@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import { docLink } from '../../../lib/docs.ts';
+import { getFlags } from '../../../config/flags.ts';
+
+const { launched } = getFlags();
+const doc_scan = await docLink('tokvera', 'scan');
+const doc_agents = await docLink('tokvera', 'agents');
+const doc_capture = await docLink('tokvera', 'capture');
+const doc_audit_kit = await docLink('tokvera', 'audit-kit');
+---
+
+<BaseLayout
+  title="Tokvera integrations"
+  description="Tokvera in CI, in Kubernetes and in coding agents, plus the servers and APIs it measures and the audit kit: instrumentation, an observability stack and a caching proxy."
+>
+  <header class="container page-head">
+    <h1>Integrations</h1>
+    <p class="lede">
+      <Claim id="tokvera.summary" />
+    </p>
+  </header>
+  <div class="container">
+    <ul class="feature-grid">
+      <li>
+        <h2>CI</h2>
+        <p>
+          <Claim id="tokvera.ci" />
+        </p>
+        {doc_scan && (
+          <p>
+            <a href={doc_scan}>Regression checks in the scan docs</a>
+          </p>
+        )}
+      </li>
+      <li>
+        <h2>Kubernetes</h2>
+        <p>
+          <Claim id="tokvera.k8s" />
+        </p>
+      </li>
+      <li>
+        <h2>Coding agents</h2>
+        <p>
+          <Claim id="tokvera.mcp" />
+        </p>
+        <p>
+          <Claim id="tokvera.mcp-tools" />
+        </p>
+        {launched && (
+          <p>
+            <Claim id="tokvera.plugins" />
+          </p>
+        )}
+        {doc_agents && (
+          <p>
+            <a href={doc_agents}>Agents docs</a>
+          </p>
+        )}
+      </li>
+      <li>
+        <h2>Usage logs</h2>
+        <p>
+          <Claim id="tokvera.capture" />
+        </p>
+        {doc_capture && (
+          <p>
+            <a href={doc_capture}>Capture docs</a>
+          </p>
+        )}
+      </li>
+      <li>
+        <h2>Audit kit</h2>
+        <p>
+          <Claim id="tokvera.audit-kit" />
+        </p>
+        {doc_audit_kit && (
+          <p>
+            <a href={doc_audit_kit}>Audit kit docs</a>
+          </p>
+        )}
+      </li>
+    </ul>
+  </div>
+</BaseLayout>

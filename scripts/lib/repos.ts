@@ -32,3 +32,10 @@ export const showFileBytes = (repo: RepoId, commit: string, path: string): Buffe
     stdio: ['ignore', 'pipe', 'pipe'],
     maxBuffer: 16 * 1024 * 1024,
   });
+
+// Files directly in `dir` at a commit (read-only: git ls-tree).
+export const listFiles = (repo: RepoId, commit: string, dir: string): string[] =>
+  git(repo, ['ls-tree', '--name-only', `${commit}:${dir}`])
+    .split('\n')
+    .filter(Boolean)
+    .map((name) => `${dir}/${name}`);

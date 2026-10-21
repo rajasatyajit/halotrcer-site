@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SyncedDoc from '../../../components/SyncedDoc.astro';
+import { BOOKING_URL } from '../../../config/site.ts';
+---
+
+<BaseLayout
+  title="Sievant FAQ"
+  description="Does Sievant send anything anywhere? Will it slow my agent down? What does sievant wrap change? Answers from the Sievant documentation."
+>
+  <header class="container page-head">
+    <h1>Frequently asked questions</h1>
+    <p class="lede">
+      From the Sievant documentation. Not answered here? <a href={BOOKING_URL}>Book a call</a>.
+    </p>
+  </header>
+  <div class="container">
+    <SyncedDoc id="sievant/faq" />
+  </div>
+</BaseLayout>

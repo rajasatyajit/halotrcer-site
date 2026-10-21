@@ -1,31 +1,117 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Claim from '../../../components/Claim.astro';
+import Hero from '../../../components/Hero.astro';
 import InstallOrSoon from '../../../components/InstallOrSoon.astro';
+import Terminal from '../../../components/Terminal.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
+import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+
+const audit = serviceFor('performance-audit');
 ---
 
 <BaseLayout
   title="Tokvera: LLM latency and cost scanner"
-  description="Tokvera measures LLM inference endpoints: time to first token, latency at rising concurrency, error rates and cost per request, graded A–F in a self-contained report."
+  description="Tokvera measures LLM inference endpoints the way users feel them: time to first token, latency at rising concurrency, error rates and cost per 1,000 requests, graded A–F."
   bareTitle
 >
-  <section class="container hero">
-    <p class="eyebrow">Tokvera</p>
-    <h1>
-      <Claim id="tokvera.headline" />
-    </h1>
-    <p class="lede">
-      <Claim id="tokvera.summary" />
+  <Hero eyebrow="Tokvera">
+    <a class="button" href="/sample-report">
+      See a sample report
+    </a>
+    <a class="button button--ghost" href="/docs">
+      Read the docs
+    </a>
+  </Hero>
+
+  <section class="container section split" aria-labelledby="measures">
+    <div>
+      <h2 id="measures">What it measures</h2>
+      <p>
+        <Claim id="tokvera.measures" />
+      </p>
+      <p>
+        <Claim id="tokvera.summary" />
+      </p>
+      <p>
+        The grade is labelled provisional until it is calibrated.{' '}
+        <a href="/scoring">How the grade works</a>.
+      </p>
+    </div>
+    <Terminal
+      label="tokvera scan --demo"
+      claimId="tokvera.demo-terminal"
+      note="Simulated demo run, from the README"
+    />
+  </section>
+
+  <section class="container section split" aria-labelledby="own">
+    <div>
+      <h2 id="own">Then your own endpoint</h2>
+      <p>
+        <Claim id="tokvera.load-warning" />
+      </p>
+      <p>
+        <Claim id="tokvera.privacy-report" />
+      </p>
+      <p>
+        <Claim id="tokvera.no-telemetry" />
+      </p>
+    </div>
+    <Terminal label="Scan your endpoint" claimId="tokvera.target-terminal" note="From the README" />
+  </section>
+
+  <section class="container section" aria-labelledby="runs">
+    <h2 id="runs">Where else it runs</h2>
+    <ul class="feature-grid">
+      <li>
+        <h3>In CI</h3>
+        <p>
+          <Claim id="tokvera.ci" />
+        </p>
+      </li>
+      <li>
+        <h3>In Kubernetes</h3>
+        <p>
+          <Claim id="tokvera.k8s" />
+        </p>
+      </li>
+      <li>
+        <h3>In your coding agent</h3>
+        <p>
+          <Claim id="tokvera.mcp" />
+        </p>
+      </li>
+    </ul>
+    <p>
+      <a href="/integrations">All integrations</a> · <a href="/faq">FAQ</a>
+    </p>
+  </section>
+
+  <section class="container section" aria-labelledby="audit">
+    <h2 id="audit">Want it fixed?</h2>
+    <p>
+      <Claim id="tokvera.audit" />
+    </p>
+    <p data-owner-source="content/pricing.md">
+      {audit.name}: from {formatPrice(audit.from)}, {audit.duration.toLowerCase()}.
     </p>
     <div class="button-row">
       <a class="button" href={BOOKING_URL}>
         Book a call
       </a>
-      <a class="button button--ghost" href={url('www')}>
-        Part of Halotrcer
+      <a class="button button--ghost" href={url('www', '/pricing')}>
+        Pricing
       </a>
     </div>
+  </section>
+
+  <section class="container section" aria-labelledby="sievant-cta">
+    <h2 id="sievant-cta">Running AI agents too?</h2>
+    <p>
+      <a href={url('sievant')}>Sievant</a> checks every tool call your agents make.{' '}
+      <a href={url('www')}>Halotrcer</a> runs both and writes one report.
+    </p>
   </section>
 
   <section class="container section">
