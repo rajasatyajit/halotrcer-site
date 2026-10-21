@@ -1,0 +1,19 @@
+---
+// The install picker once launched; the Launching soon block before.
+import InstallPicker from './InstallPicker.astro';
+import LaunchingSoon from './LaunchingSoon.astro';
+import { getFlags } from '../config/flags.ts';
+import type { ProductId } from '../lib/releases.ts';
+
+interface Props {
+  product: ProductId;
+}
+
+const { product } = Astro.props;
+---
+
+{getFlags().launched ? (
+  <InstallPicker defaultProduct={product} />
+) : (
+  <LaunchingSoon product={product === 'halotrcer' ? 'www' : product} />
+)}

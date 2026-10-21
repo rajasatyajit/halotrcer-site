@@ -34,7 +34,11 @@ export function pages(site: SiteId): Page[] {
       site,
       file,
       rel: relative(dir, file),
-      root: parse(readFileSync(file, 'utf8'), { comment: false }),
+      // pre is parsed as markup (not raw text) so <code> inside it is reachable.
+      root: parse(readFileSync(file, 'utf8'), {
+        comment: false,
+        blockTextElements: { script: true, noscript: true, style: true },
+      }),
     }));
 }
 

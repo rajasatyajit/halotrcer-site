@@ -15,6 +15,7 @@ export const KEY_PAGES: [keyof typeof ORIGINS, string][] = [
   ['www', '/about'],
   ['www', '/privacy'],
   ['www', '/terms'],
+  ['www', '/install'],
   ['www', '/book'],
   ['www', '/no-such-page'],
   ['tokvera', '/'],

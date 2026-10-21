@@ -443,3 +443,246 @@ th {
 .page-head .lede {
   max-width: 60ch;
 }
+
+/* Copy buttons (shown only with JS; html.js is set before first paint) */
+.copy-button,
+.text-button {
+  min-height: 2.75rem;
+  padding: var(--s-1) var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.text-button {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+html:not(.js) .copy-button,
+html:not(.js) .text-button,
+html:not(.js) .picker__tabs,
+html:not(.js) .picker__variants {
+  display: none;
+}
+
+/* Install picker */
+.picker {
+  padding: var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.picker__note {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.picker__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
+}
+
+.picker__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 2.75rem;
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+/* The marker's space is always reserved, so marking the recommended tab never shifts layout. */
+.picker__tab::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.picker__tab[data-recommended]::after {
+  background: var(--accent);
+}
+
+/* Selection never changes a tab's width (no bold), so selecting moves nothing. */
+.picker__tab[aria-selected='true'] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  color: var(--accent);
+}
+
+.picker__tabs--channels .picker__tab::after {
+  margin-inline-start: auto;
+}
+
+.picker__product-name {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+  font-size: var(--text-lg);
+}
+
+.picker__version {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.picker__product + .picker__product {
+  margin-top: var(--s-6);
+}
+
+.picker__channel {
+  border-top: 1px solid var(--line);
+}
+
+.picker__channel > summary {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  min-height: 2.75rem;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.picker__os {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  font-weight: 400;
+}
+
+.picker__panel {
+  padding-block: var(--s-3) var(--s-4);
+}
+
+.picker pre {
+  margin: 0 0 var(--s-3);
+  padding: var(--s-4);
+  border-radius: var(--radius);
+  background: var(--term-bg);
+  color: var(--term-ink);
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+/* A bar above the command holds the copy button, so it never covers the text. */
+.picker__cmd-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  min-height: 2.75rem;
+  padding: var(--s-1) var(--s-2) var(--s-1) var(--s-4);
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: #22252a;
+  color: var(--term-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+/* Without JS there is no copy button: drop an unlabelled bar. */
+html:not(.js) .picker__cmd-bar:has(span:empty) {
+  display: none;
+}
+
+.picker__cmd-bar + pre {
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.picker__cmd .copy-button {
+  min-height: 2.25rem;
+  border-color: #3a3d43;
+  background: #2c2f35;
+  color: var(--term-ink);
+}
+
+.picker__verify {
+  margin-bottom: var(--s-3);
+}
+
+.picker__verify > summary {
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.picker__hash {
+  word-break: break-all;
+}
+
+.picker__variants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-bottom: var(--s-3);
+}
+
+.picker__variant-button {
+  min-height: 2.75rem;
+  padding: var(--s-1) var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.picker__variant-button[aria-pressed='true'] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  color: var(--accent);
+}
+
+.picker__variant-label,
+.picker__next-label {
+  margin-bottom: var(--s-2);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.picker__more {
+  margin: var(--s-5) 0 0;
+  font-size: var(--text-sm);
+}
+
+/* Enhanced (JS) layout, decided before first paint */
+html.js .picker__product:not([data-active]),
+html.js .picker__channel:not([data-active]),
+html.js .picker__variant:not([data-active]),
+html.js .picker__channel > summary,
+html.js .picker__variant-label {
+  display: none;
+}
+
+html.js .picker__channel {
+  border-top: 0;
+}
+
+/* Room for the tallest panel, so switching to the detected channel moves nothing below. */
+html.js .picker__channels {
+  min-height: 24rem;
+}

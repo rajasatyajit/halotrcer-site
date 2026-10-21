@@ -3,16 +3,22 @@
 import { BOOKING_URL, CONTACT_EMAIL, SITE_NAMES, type SiteId } from '../config/site.ts';
 
 interface Props {
-  product?: SiteId;
-  headingLevel?: 'h2' | 'h3';
+  // 'www' means all three; 'halotrcer' means the bundle alone.
+  product?: SiteId | 'halotrcer';
+  headingLevel?: 'h2' | 'h3' | 'h4';
 }
 
 const { product, headingLevel = 'h2' } = Astro.props;
 const Heading = headingLevel;
-const subject =
-  product && product !== 'www'
-    ? `${SITE_NAMES[product]} isn’t released yet`
-    : 'Tokvera, Sievant and Halotrcer aren’t released yet';
+const name =
+  product === 'halotrcer'
+    ? 'Halotrcer'
+    : product && product !== 'www'
+      ? SITE_NAMES[product]
+      : undefined;
+const subject = name
+  ? `${name} isn’t released yet`
+  : 'Tokvera, Sievant and Halotrcer aren’t released yet';
 const id = `launching-soon-${product ?? 'all'}`;
 ---
 
