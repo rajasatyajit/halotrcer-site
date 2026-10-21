@@ -1,0 +1,13 @@
+---
+import DocsPage from '../../../../components/DocsPage.astro';
+import { productDocs, slugOf } from '../../../../lib/docs.ts';
+
+export async function getStaticPaths() {
+  const { routed } = await productDocs('tokvera');
+  return routed.map((doc) => ({ params: { slug: slugOf(doc) }, props: { doc } }));
+}
+
+const { doc } = Astro.props;
+---
+
+<DocsPage product="tokvera" doc={doc} />

@@ -1,0 +1,45 @@
+---
+import DocsLayout from './DocsLayout.astro';
+import { describe, plainTitle, productDocs } from '../lib/docs.ts';
+import { SITE_NAMES } from '../config/site.ts';
+
+interface Props {
+  product: 'tokvera' | 'sievant';
+}
+
+const { product } = Astro.props;
+const name = SITE_NAMES[product];
+const { built, later } = await productDocs(product);
+---
+
+<DocsLayout
+  product={product}
+  title="Documentation"
+  description={`${name} documentation, from the ${name} repository: every command, report, setting and guarantee, in one place.`}
+  current="/docs"
+>
+  <h1>{name} documentation</h1>
+  <p class="lede">
+    These pages are the documentation in the {name} repository, unchanged. Each one says the commit
+    it was copied from.
+  </p>
+  <ul class="docs-index">
+    {built.map(({ doc, href }) => (
+      <li>
+        <a href={href}>{plainTitle(doc)}</a>
+        <p>{describe(doc, name)}</p>
+      </li>
+    ))}
+  </ul>
+  {later.length > 0 && (
+    <section aria-labelledby="later">
+      <h2 id="later">Published at release</h2>
+      <p>These pages describe installing and versioned releases, so they appear on release day:</p>
+      <ul>
+        {later.map((d) => (
+          <li>{plainTitle(d)}</li>
+        ))}
+      </ul>
+    </section>
+  )}
+</DocsLayout>
