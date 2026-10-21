@@ -260,7 +260,7 @@ Cross-Origin-Resource-Policy: same-origin
 X-Frame-Options: DENY
 ```
 
-`clipboard-write` stays allowed for the copy buttons. The install scripts get `Content-Type: text/plain; charset=utf-8` and `Cache-Control: public, max-age=300`. `Cross-Origin-Resource-Policy: cross-origin` applies to them only, so `curl` and other origins can fetch them; CORP doesn't affect curl, but browsers would block cross-origin fetches without it.
+`clipboard-write` stays allowed for the copy buttons. The install scripts get `Content-Type: text/plain; charset=utf-8` and `Cache-Control: public, max-age=300`, and keep the site-wide `nosniff` and same-origin CORP: curl ignores CORP, and no page embeds the scripts cross-origin (decided in M3).
 
 **JSON-LD and CSP**: `<script type="application/ld+json">` is a data block. Browsers don't execute it, so `script-src 'self'` doesn't block it and no hash is needed for it to work. You asked for hashes. Cloudflare Pages `_headers` allows 100 rules per project, so per-page header hashes don't scale. I recommend the global policy above plus a CI assertion that every inline `<script>` is `application/ld+json`. The alternative is a generated per-path CSP with SHA-256 hashes, kept within the 100-rule limit. See Q9.
 
