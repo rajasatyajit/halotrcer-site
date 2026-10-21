@@ -1,0 +1,149 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SourceLine from '../../../components/SourceLine.astro';
+import { sample } from '../../../lib/samples.ts';
+
+interface Posture {
+  organization: string;
+  period: { label: string };
+  summary: { coverage: { headline: string; policy: string } };
+  controls: { id: string; name: string; status: string; detail: string }[];
+  activity: {
+    requests: number;
+    blocked: number;
+    input_redactions: number;
+    output_redactions: number;
+  };
+  gaps: { severity: string; title: string; detail: string; fix: string }[];
+  disclaimer: string;
+}
+interface Scan {
+  counts: Record<string, number>;
+  findings: {
+    rule: string;
+    severity: string;
+    title: string;
+    client: string;
+    server: string;
+    where: string;
+    fix: string;
+  }[];
+}
+
+const posture = sample<Posture>('sievant-posture');
+const scan = sample<Scan>('sievant-scan');
+const p = posture.data;
+const s = scan.data;
+const SEVERITIES = ['critical', 'high', 'medium', 'low', 'info'];
+---
+
+<BaseLayout
+  title="Sievant sample reports"
+  description="Sample Sievant reports from simulated runs: a posture report for a customer's security review, and a scan of risky MCP client configurations."
+>
+  <header class="container page-head">
+    <p class="eyebrow">Sample reports</p>
+    <h1>What Sievant reports</h1>
+    <p class="lede">
+      Two reports, rendered from their JSON: the posture report (<code>sievant report</code>),
+      written for a customer’s security review, and a client-configuration scan (
+      <code>sievant scan</code>).
+    </p>
+  </header>
+
+  <div class="container">
+    <SourceLine source={posture.source} />
+  </div>
+
+  <div
+    class="container"
+    data-sample={`${posture.source.repo}:${posture.source.path}@${posture.source.commit}`}
+  >
+    <section class="section" aria-labelledby="posture">
+      <h2 id="posture">
+        Posture report: {p.organization}, last {p.period.label}
+      </h2>
+      <p class="note">
+        <strong>{p.summary.coverage.headline}</strong> {p.summary.coverage.policy}
+      </p>
+      <p>
+        {p.activity.requests} calls recorded; {p.activity.blocked} blocked;{' '}
+        {p.activity.input_redactions} argument redactions and {p.activity.output_redactions} result
+        redactions.
+      </p>
+      <h3>Coverage gaps</h3>
+      <ul class="checklist">
+        {p.gaps.map((g) => (
+          <li>
+            <span class="status">[{g.severity}]</span> <strong>{g.title}.</strong> {g.detail}{' '}
+            <em>Fix:</em> {g.fix}
+          </li>
+        ))}
+      </ul>
+      <h3>Controls</h3>
+      <div class="table-wrap" tabindex="0">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Control</th>
+              <th scope="col">Status</th>
+              <th scope="col">Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            {p.controls.map((c) => (
+              <tr>
+                <td>{c.name}</td>
+                <td class="status">{c.status}</td>
+                <td>{c.detail}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="note">{p.disclaimer}</p>
+    </section>
+  </div>
+
+  <div class="container">
+    <SourceLine source={scan.source} />
+  </div>
+
+  <div
+    class="container"
+    data-sample={`${scan.source.repo}:${scan.source.path}@${scan.source.commit}`}
+  >
+    <section class="section" aria-labelledby="scan">
+      <h2 id="scan">Client-configuration scan</h2>
+      <p>{SEVERITIES.map((sev) => `${s.counts[sev] ?? 0} ${sev}`).join(', ')}.</p>
+      <div class="table-wrap" tabindex="0">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Severity</th>
+              <th scope="col">Rule</th>
+              <th scope="col">Finding</th>
+              <th scope="col">Where</th>
+              <th scope="col">Fix</th>
+            </tr>
+          </thead>
+          <tbody>
+            {s.findings.map((f) => (
+              <tr>
+                <td class="status">{f.severity}</td>
+                <td>
+                  <code>{f.rule}</code>
+                </td>
+                <td>{f.title}</td>
+                <td>
+                  {f.client} · {f.server} · <code>{f.where}</code>
+                </td>
+                <td>{f.fix}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

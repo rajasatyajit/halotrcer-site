@@ -1,0 +1,31 @@
+{
+  "$comment": "Sample reports and data shown on the product sites, copied read-only (git show) by npm run sync:samples. Owner decision Q4: only committed simulated outputs, labelled 'Simulated demo run', each with its source and the command that produced it.",
+  "tokvera-scan": {
+    "repo": "halotrcer",
+    "ref": "main",
+    "path": "testdata/fixtures/tokvera-b97e278/demo.report.json",
+    "command": "tokvera --json scan --demo --yes --no-cta --out demo",
+    "about": "Real output of an unreleased Tokvera build (commit b97e278) scanning its built-in simulator, captured as a test fixture in the Halotrcer repository. The simulator has planted defects; no real endpoint was measured."
+  },
+  "sievant-posture": {
+    "repo": "sievant",
+    "ref": "main",
+    "path": "pkg/report/testdata/golden/gateway.json",
+    "command": "go test ./pkg/report -update",
+    "about": "Golden test output of sievant report for a fictional organization (Example Co), generated from synthetic test data in the Sievant repository."
+  },
+  "sievant-scan": {
+    "repo": "sievant",
+    "ref": "main",
+    "path": "testdata/scan/report.golden.json",
+    "command": "SIEVANT_UPDATE_GOLDEN=1 go test ./pkg/scan",
+    "about": "Golden test output of sievant scan --json over synthetic MCP client configurations in the Sievant repository. Every token in them is made up."
+  },
+  "sievant-owasp": {
+    "repo": "sievant",
+    "ref": "main",
+    "path": "internal/defaults/packs/owasp-llm-2025.yaml",
+    "command": "sievant policy owasp",
+    "about": "The mapping sievant policy owasp prints, embedded in the binary."
+  }
+}

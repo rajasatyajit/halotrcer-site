@@ -6,6 +6,7 @@
     "node": ">=22.18"
   },
   "dependencies": {
+    "@astrojs/markdown-satteri": "0.4.4",
     "astro": "7.4.1",
     "yaml": "2.9.1",
     "zod": "4.6.7"
@@ -20,6 +21,7 @@
     "eslint-plugin-astro": "1.7.0",
     "html-validate": "11.17.0",
     "node-html-parser": "9.0.5",
+    "pagefind": "1.5.2",
     "prettier": "3.9.10",
     "prettier-plugin-astro": "1.1.1",
     "stylelint": "17.16.0",
@@ -53,6 +55,7 @@
     "fixtures:releases": "node scripts/fixture-releases.ts",
     "build:launched-fixture": "node scripts/fixture-releases.ts && RELEASE_DATA_DIR=.cache/fixture-releases LAUNCHED=true ALLOW_CANDIDATE_SCRIPTS=1 node scripts/build.ts",
     "check:launched": "node scripts/check-launched.ts",
-    "verify:scripts": "node scripts/verify-scripts.ts"
+    "verify:scripts": "node scripts/verify-scripts.ts",
+    "sync:samples": "node scripts/sync-samples.ts"
   }
 }

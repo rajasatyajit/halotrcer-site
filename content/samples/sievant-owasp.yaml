@@ -1,0 +1,103 @@
+# Mapping of Sievant controls to the OWASP Top 10 for LLM Applications.
+# Versioned data: change mapping_version when a control or category
+# changes. The categories, titles and URLs were read from the source on
+# the retrieval date; check them against it before changing the edition.
+mapping_version: 1
+framework: OWASP Top 10 for LLM Applications
+edition: "2025"
+source: https://genai.owasp.org/llm-top-10/
+retrieved: "2026-10-18"
+disclaimer: >-
+  This maps Sievant's controls to the OWASP Top 10 for LLM Applications
+  categories they address. It is not a compliance certification, an audit
+  or an assessment of any system, and it does not mean a category's risk
+  is fully mitigated: each control addresses part of a category, within
+  what an MCP gateway can see.
+categories:
+  - {id: "LLM01:2025", title: Prompt Injection, url: "https://genai.owasp.org/llmrisk/llm01-prompt-injection/"}
+  - {id: "LLM02:2025", title: Sensitive Information Disclosure, url: "https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/"}
+  - {id: "LLM03:2025", title: Supply Chain, url: "https://genai.owasp.org/llmrisk/llm032025-supply-chain/"}
+  - {id: "LLM04:2025", title: Data and Model Poisoning, url: "https://genai.owasp.org/llmrisk/llm042025-data-and-model-poisoning/"}
+  - {id: "LLM05:2025", title: Improper Output Handling, url: "https://genai.owasp.org/llmrisk/llm052025-improper-output-handling/"}
+  - {id: "LLM06:2025", title: Excessive Agency, url: "https://genai.owasp.org/llmrisk/llm062025-excessive-agency/"}
+  - {id: "LLM07:2025", title: System Prompt Leakage, url: "https://genai.owasp.org/llmrisk/llm072025-system-prompt-leakage/"}
+  - {id: "LLM08:2025", title: Vector and Embedding Weaknesses, url: "https://genai.owasp.org/llmrisk/llm082025-vector-and-embedding-weaknesses/"}
+  - {id: "LLM09:2025", title: Misinformation, url: "https://genai.owasp.org/llmrisk/llm092025-misinformation/"}
+  - {id: "LLM10:2025", title: Unbounded Consumption, url: "https://genai.owasp.org/llmrisk/llm102025-unbounded-consumption/"}
+not_addressed:
+  "LLM04:2025": Training and fine-tuning data are outside an MCP gateway's view.
+  "LLM07:2025": System prompts stay between the client and the model; Sievant does not see them.
+  "LLM08:2025": Sievant does not manage vector stores or embeddings (a retrieval tool behind it is subject to its other controls).
+  "LLM09:2025": Whether model output is true is outside what a gateway can check.
+controls:
+  - id: policies
+    name: Deny-by-default policies for tools, prompts and resources, per agent
+    config: policies
+    categories: ["LLM06:2025"]
+    how: An agent can call only the tools its policy allows, so a steered model cannot reach the rest.
+  - id: argument-constraints
+    name: Schema validation and argument constraints (min, max, in, matches, path_under, url_hosts)
+    config: policies[].constraints
+    categories: ["LLM05:2025", "LLM06:2025"]
+    how: Tool arguments are model output sent to a backend; they are validated against the tool's schema and the policy before the backend sees them.
+  - id: argument-rules
+    name: Path and URL argument rules for every tool
+    config: arguments
+    packs: [fs-paths, egress]
+    categories: ["LLM02:2025", "LLM06:2025"]
+    how: Path arguments must stay under listed roots and URL arguments must go to listed hosts, narrowing what a steered agent can read or send out.
+  - id: input-sanitization
+    name: Credentials and personal data in tool arguments blocked or redacted
+    config: sanitization.input_credentials, sanitization.input_pii
+    packs: [secrets-pii]
+    categories: ["LLM02:2025"]
+    how: Secrets and personal data the model puts into arguments do not reach the backend (or reach it redacted).
+  - id: output-redaction
+    name: Credentials and personal data redacted from tool results
+    config: sanitization.detectors
+    packs: [secrets-pii]
+    categories: ["LLM02:2025"]
+    how: Results are redacted before the model sees them, so they cannot be repeated to the user or sent elsewhere.
+  - id: injection-detection
+    name: Prompt-injection detection on arguments and results (flag, annotate, block)
+    config: injection
+    packs: [injection]
+    categories: ["LLM01:2025"]
+    how: Instruction-like text in tool results (indirect injection) and arguments is scored, recorded, and annotated or blocked.
+  - id: tool-pinning
+    name: Tool definitions read once, pinned, and pinned on first use
+    config: connectors.mcp[].tools[].sha256, pinning
+    packs: [description-pinning]
+    categories: ["LLM01:2025", "LLM03:2025"]
+    how: A server cannot change a tool's description (instructions the model reads) or schema after it was reviewed without the tool being withheld.
+  - id: withheld-primitives
+    name: Upstream resources and prompts not served unchecked
+    config: connectors.mcp[].serve_resources, serve_prompts
+    categories: ["LLM01:2025", "LLM02:2025"]
+    how: Upstream resources and prompts are withheld, and the withholding reported, unless the connector sets serve_resources or serve_prompts; served ones pass the output checks tool results pass (budgets, redaction, injection detection), and prompt arguments pass input sanitization.
+  - id: rate-limits
+    name: Rate limits per agent and per tool
+    config: rate_limit
+    packs: [rate-limits]
+    categories: ["LLM10:2025"]
+    how: A runaway or steered agent cannot call tools without bound.
+  - id: output-budgets
+    name: Row, byte and response-memory budgets
+    config: output, server.limits
+    categories: ["LLM10:2025"]
+    how: Results are bounded in size and over time, limiting cost and context flooding.
+  - id: ssrf-guard
+    name: SSRF guard on outbound connectors
+    config: connectors.*.allow_private_networks
+    categories: ["LLM06:2025"]
+    how: Connectors cannot be pointed at private networks unless allowed.
+  - id: scan
+    name: Client configuration audit (sievant scan)
+    config: (command)
+    categories: ["LLM02:2025", "LLM03:2025", "LLM06:2025"]
+    how: Finds hard-coded secrets, unpinned or remotely fetched servers, and over-broad access before they are used.
+  - id: audit-trail
+    name: Audit trail of every call and security event
+    config: audit
+    categories: []
+    how: Supports investigating every category above; it does not prevent any by itself.

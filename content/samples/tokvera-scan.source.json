@@ -1,0 +1,8 @@
+{
+  "repo": "halotrcer",
+  "path": "testdata/fixtures/tokvera-b97e278/demo.report.json",
+  "ref": "main",
+  "commit": "c19c0d91da6bbefd22ab80f3834cf65e2c57ce51",
+  "command": "tokvera --json scan --demo --yes --no-cta --out demo",
+  "about": "Real output of an unreleased Tokvera build (commit b97e278) scanning its built-in simulator, captured as a test fixture in the Halotrcer repository. The simulator has planted defects; no real endpoint was measured."
+}

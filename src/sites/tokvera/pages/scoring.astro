@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SyncedDoc from '../../../components/SyncedDoc.astro';
+import { url } from '../../../config/site.ts';
+---
+
+<BaseLayout
+  title="How Tokvera grades an endpoint"
+  description="How Tokvera's A–F Efficiency Score works: checks, weights, bands and caps. Provisional scoring: not yet calibrated against real pilot scans."
+>
+  <header class="container page-head">
+    <p class="eyebrow">Scoring</p>
+    <h1>How Tokvera grades an endpoint</h1>
+    <p class="lede">
+      This is the scoring documentation from the Tokvera repository, unchanged. When Halotrcer
+      combines it with Sievant's findings, the ranking is explained on{' '}
+      <a href={url('www', '/scoring')}>how Halotrcer ranks findings</a>.
+    </p>
+  </header>
+  <div class="container">
+    <SyncedDoc id="tokvera/scoring" />
+  </div>
+</BaseLayout>

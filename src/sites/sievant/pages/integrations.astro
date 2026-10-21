@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import { docLink } from '../../../lib/docs.ts';
+const doc_scan_and_wrap = await docLink('sievant', 'scan-and-wrap');
+const doc_connectors = await docLink('sievant', 'connectors');
+const doc_telemetry = await docLink('sievant', 'telemetry');
+---
+
+<BaseLayout
+  title="Sievant integrations"
+  description="The MCP clients Sievant scans and wraps, the backends its gateway serves as tools, Kubernetes sidecar mode, and audit exports to OTLP, syslog and webhooks."
+>
+  <header class="container page-head">
+    <h1>Integrations</h1>
+    <p class="lede">
+      <Claim id="sievant.summary" />
+    </p>
+  </header>
+  <div class="container">
+    <ul class="feature-grid">
+      <li>
+        <h2>MCP clients</h2>
+        <p>
+          <Claim id="sievant.local" />
+        </p>
+        {doc_scan_and_wrap && (
+          <p>
+            <a href={doc_scan_and_wrap}>Scan and wrap docs</a>
+          </p>
+        )}
+      </li>
+      <li>
+        <h2>Gateway and Kubernetes</h2>
+        <p>
+          <Claim id="sievant.gateway" />
+        </p>
+        {doc_connectors && (
+          <p>
+            <a href={doc_connectors}>Connectors docs</a>
+          </p>
+        )}
+      </li>
+      <li>
+        <h2>Audit exports</h2>
+        <p>
+          <Claim id="sievant.privacy-trail" />
+        </p>
+        {doc_telemetry && (
+          <p>
+            <a href={doc_telemetry}>Telemetry docs</a>
+          </p>
+        )}
+      </li>
+      <li>
+        <h2>Compliance mapping</h2>
+        <p>
+          Which OWASP LLM Top 10 categories Sievant’s controls address:{' '}
+          <a href="/owasp-llm-top-10">the mapping</a>.
+        </p>
+      </li>
+    </ul>
+  </div>
+</BaseLayout>

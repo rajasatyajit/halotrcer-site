@@ -7,3 +7,5 @@ package-lock.json
 data/
 vendor/
 .cache/
+content/samples/
+content/docs/

@@ -1,0 +1,543 @@
+{
+  "report_version": 1,
+  "generator": "sievant test",
+  "generated_at": "2026-10-19T12:00:00Z",
+  "organization": "Example Co",
+  "period": {
+    "from": "2026-09-19T12:00:00Z",
+    "to": "2026-10-19T12:00:00Z",
+    "label": "30d"
+  },
+  "sources": {
+    "configuration": "testdata/gateway.yaml",
+    "configuration_source": "flag",
+    "audit_store": "/var/lib/sievant/audit.db",
+    "clients_read": true,
+    "client_files": [
+      {
+        "client": "claude-desktop",
+        "path": "testdata/clients/claude_desktop_config.json",
+        "scope": "file",
+        "servers": 2
+      }
+    ]
+  },
+  "summary": {
+    "coverage": {
+      "state": "some",
+      "through_sievant": 1,
+      "servers": 2,
+      "headline": "Only 1 of the 2 MCP servers on this machine runs through Sievant; the other bypasses every control below.",
+      "wrapped_with_policy": 0,
+      "wrapped_proxy_defaults": 1,
+      "policy": "The server wrapped by sievant wrap runs under sievant proxy's defaults (credentials in arguments blocked, secrets redacted, prompt injection scored; no path or URL allowlists); sievant wrap --all --policy \u003cfile\u003e applies a profile written by sievant init."
+    },
+    "requests": 19,
+    "blocked": 13,
+    "limited": 1,
+    "would_block": 0,
+    "redactions": 5,
+    "withheld": 0,
+    "controls_enforced": 0,
+    "controls_total": 15,
+    "gaps": {
+      "high": 1,
+      "info": 1,
+      "low": 0,
+      "medium": 3
+    }
+  },
+  "architecture": {
+    "deployment": "Gateway: agents connect to Sievant over Streamable HTTP",
+    "transport": "http",
+    "listen": "0.0.0.0:8443/mcp",
+    "tls": "TLS terminated by Sievant",
+    "identity": "API keys: 2 keys for 2 agents, stored as SHA-256 digests",
+    "mode": "enforce",
+    "agents": [
+      "support-bot",
+      "ops-bot"
+    ],
+    "connectors": [
+      {
+        "name": "crm",
+        "kind": "mcp",
+        "transport": "stdio",
+        "tools": "2 listed tools, each pinned by SHA-256",
+        "serves": "tools; resources and prompts withheld"
+      },
+      {
+        "name": "docs",
+        "kind": "mcp",
+        "transport": "Streamable HTTP",
+        "tools": "every tool the server offers, not pinned",
+        "serves": "tools; resources and prompts withheld"
+      }
+    ],
+    "client_servers": [
+      {
+        "client": "claude-desktop",
+        "name": "notes",
+        "transport": "stdio",
+        "through_sievant": true
+      },
+      {
+        "client": "claude-desktop",
+        "name": "search",
+        "transport": "stdio",
+        "through_sievant": false
+      }
+    ],
+    "stages": [
+      "Authenticate the agent",
+      "Policy: is this agent allowed this tool, prompt or resource, with these arguments",
+      "Rate limit",
+      "Input checks: credentials and personal data in the arguments",
+      "Prompt-injection scoring of the arguments",
+      "Forward to the MCP server (SSRF guard, response size cap)",
+      "Output checks: redaction, prompt-injection scoring, row and byte budgets",
+      "Audit record (inputs sanitized and HMAC-keyed)"
+    ]
+  },
+  "controls": [
+    {
+      "id": "enforcement-mode",
+      "name": "Enforcement mode (enforce or observe)",
+      "config": "mode",
+      "status": "partial",
+      "detail": "Mode enforce: policy decisions stop the calls they refuse. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+    },
+    {
+      "id": "agent-identity",
+      "name": "Agent authentication and identity",
+      "config": "identity",
+      "status": "partial",
+      "detail": "API keys: 2 keys for 2 agents, stored as SHA-256 digests. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+    },
+    {
+      "id": "transport-security",
+      "name": "Transport security for agent connections",
+      "config": "server.transport, server.http.tls",
+      "status": "partial",
+      "detail": "TLS terminated by Sievant. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+    },
+    {
+      "id": "client-coverage",
+      "name": "MCP client servers routed through Sievant",
+      "config": "(sievant wrap)",
+      "status": "partial",
+      "detail": "1 of 2 MCP servers in the client configurations run through Sievant."
+    },
+    {
+      "id": "policies",
+      "name": "Deny-by-default policies for tools, prompts and resources, per agent",
+      "config": "policies",
+      "status": "partial",
+      "detail": "2 policies; ops-bot may call every tool (allow: \"*\"). Applies to the 1 of 2 MCP servers on this machine that run through Sievant.",
+      "owasp": [
+        "LLM06"
+      ]
+    },
+    {
+      "id": "argument-constraints",
+      "name": "Schema validation and argument constraints (min, max, in, matches, path_under, url_hosts)",
+      "config": "policies[].constraints",
+      "status": "partial",
+      "detail": "1 argument constraint, on top of input-schema validation. Applies to the 1 of 2 MCP servers on this machine that run through Sievant.",
+      "owasp": [
+        "LLM05",
+        "LLM06"
+      ]
+    },
+    {
+      "id": "argument-rules",
+      "name": "Path and URL argument rules for every tool",
+      "config": "arguments",
+      "status": "partial",
+      "detail": "Path arguments must be under 1 listed root; the other rule is not configured. Applies to the 1 of 2 MCP servers on this machine that run through Sievant.",
+      "owasp": [
+        "LLM02",
+        "LLM06"
+      ]
+    },
+    {
+      "id": "input-sanitization",
+      "name": "Credentials and personal data in tool arguments blocked or redacted",
+      "config": "sanitization.input_credentials, sanitization.input_pii",
+      "status": "partial",
+      "detail": "Credentials in arguments: block; personal data in arguments: redact. Applies to the 1 of 2 MCP servers on this machine that run through Sievant.",
+      "owasp": [
+        "LLM02"
+      ]
+    },
+    {
+      "id": "output-redaction",
+      "name": "Credentials and personal data redacted from tool results",
+      "config": "sanitization.detectors",
+      "status": "partial",
+      "detail": "Results are redacted before the agent sees them: email, credit_card, us_ssn, jwt, aws_access_key, pem_private_key, password. Applies to the 1 of 2 MCP servers on this machine that run through Sievant.",
+      "owasp": [
+        "LLM02"
+      ]
+    },
+    {
+      "id": "injection-detection",
+      "name": "Prompt-injection detection on arguments and results (flag, annotate, block)",
+      "config": "injection",
+      "status": "partial",
+      "detail": "Arguments and results are scored; suspect results are annotated for the model and recorded, not blocked. Applies to the 1 of 2 MCP servers on this machine that run through Sievant.",
+      "owasp": [
+        "LLM01"
+      ]
+    },
+    {
+      "id": "tool-pinning",
+      "name": "Tool definitions read once, pinned, and pinned on first use",
+      "config": "connectors.mcp[].tools[].sha256, pinning",
+      "status": "partial",
+      "detail": "1 of 2 MCP connectors pin their tools. Applies to the 1 of 2 MCP servers on this machine that run through Sievant.",
+      "owasp": [
+        "LLM01",
+        "LLM03"
+      ]
+    },
+    {
+      "id": "withheld-primitives",
+      "name": "Upstream resources and prompts not served unchecked",
+      "config": "connectors.mcp[].serve_resources, serve_prompts",
+      "status": "partial",
+      "detail": "Upstream resources and prompts are withheld unless a connector serves them, and served ones pass the output checks. Applies to the 1 of 2 MCP servers on this machine that run through Sievant.",
+      "owasp": [
+        "LLM01",
+        "LLM02"
+      ]
+    },
+    {
+      "id": "rate-limits",
+      "name": "Rate limits per agent and per tool",
+      "config": "rate_limit",
+      "status": "partial",
+      "detail": "Rate limits: 5 calls a second per agent by default (bursts of 10). Applies to the 1 of 2 MCP servers on this machine that run through Sievant.",
+      "owasp": [
+        "LLM10"
+      ]
+    },
+    {
+      "id": "output-budgets",
+      "name": "Row, byte and response-memory budgets",
+      "config": "output, server.limits",
+      "status": "partial",
+      "detail": "Results are capped at 65536 bytes and 1000 rows; row and byte budgets limit what an agent reads over time. Applies to the 1 of 2 MCP servers on this machine that run through Sievant.",
+      "owasp": [
+        "LLM10"
+      ]
+    },
+    {
+      "id": "ssrf-guard",
+      "name": "SSRF guard on outbound connectors",
+      "config": "connectors.*.allow_private_networks",
+      "status": "partial",
+      "detail": "1 network connector; private addresses are refused. Applies to the 1 of 2 MCP servers on this machine that run through Sievant.",
+      "owasp": [
+        "LLM06"
+      ]
+    },
+    {
+      "id": "scan",
+      "name": "Client configuration audit (sievant scan)",
+      "config": "(command)",
+      "status": "partial",
+      "detail": "1 client configuration file scanned; findings: 1 medium, 1 info (sievant scan lists them).",
+      "owasp": [
+        "LLM02",
+        "LLM03",
+        "LLM06"
+      ]
+    },
+    {
+      "id": "audit-trail",
+      "name": "Audit trail of every call and security event",
+      "config": "audit",
+      "status": "partial",
+      "detail": "Every call and security event is recorded in the local audit store, kept 30 days; inputs are sanitized and keyed with an HMAC, so a record can be matched to its input without storing it. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+    }
+  ],
+  "activity": {
+    "requests": 19,
+    "by_status": {
+      "blocked": 1,
+      "denied": 12,
+      "error": 1,
+      "ok": 5
+    },
+    "blocked": 13,
+    "limited": 1,
+    "withheld": 0,
+    "would_block": 0,
+    "input_redactions": 2,
+    "output_redactions": 3,
+    "auth_failures": 2,
+    "events": [
+      {
+        "name": "POLICY_DENIED",
+        "count": 12
+      },
+      {
+        "name": "AUTH_FAILURE",
+        "count": 2
+      },
+      {
+        "name": "CREDENTIAL_BLOCKED",
+        "count": 1
+      },
+      {
+        "name": "INJECTION_SUSPECTED",
+        "count": 1
+      },
+      {
+        "name": "OUTPUT_REDACTED",
+        "count": 1
+      }
+    ],
+    "top_blocked": [
+      {
+        "name": "admin_delete",
+        "count": 12
+      },
+      {
+        "name": "crm_update",
+        "count": 1
+      }
+    ],
+    "agents": [
+      {
+        "name": "ops-bot",
+        "count": 12
+      },
+      {
+        "name": "support-bot",
+        "count": 7
+      }
+    ],
+    "upstreams": [
+      {
+        "connector": "",
+        "agent": "ops-bot",
+        "requests": 12,
+        "blocked": 12,
+        "limited": 0
+      },
+      {
+        "connector": "crm",
+        "agent": "support-bot",
+        "requests": 7,
+        "blocked": 1,
+        "limited": 1,
+        "source": "configuration"
+      }
+    ],
+    "first_record": "2026-10-10T09:00:00Z"
+  },
+  "gaps": [
+    {
+      "id": "unwrapped-servers",
+      "severity": "high",
+      "title": "1 MCP server bypasses Sievant on this machine",
+      "detail": "These client servers talk to their agent directly, with no policy, redaction or audit: search (claude-desktop).",
+      "fix": "sievant wrap --all routes them through Sievant (sievant unwrap restores the files)."
+    },
+    {
+      "id": "client-findings",
+      "severity": "medium",
+      "title": "1 medium finding in client configurations",
+      "detail": "sievant scan found issues such as unpinned server versions in the MCP client configurations.",
+      "fix": "Run sievant scan and apply each finding's fix."
+    },
+    {
+      "id": "unpinned-tools",
+      "severity": "medium",
+      "title": "MCP tool definitions are not pinned",
+      "detail": "Connector docs serves tools whose descriptions and schemas are not pinned, so a server could change what the model reads without review.",
+      "fix": "Turn on pinning.first_use (pack description-pinning), or list each tool with its sha256 (sievant proxy --list-tools prints them)."
+    },
+    {
+      "id": "wildcard-policy",
+      "severity": "medium",
+      "title": "An agent may call every tool",
+      "detail": "The policy of ops-bot allows \"*\": a steered agent can reach every tool, including ones it never needs.",
+      "fix": "Replace the wildcard with the tools the agent uses: sievant policy suggest --since 30d drafts that list from the audit trail."
+    },
+    {
+      "id": "short-history",
+      "severity": "info",
+      "title": "The audit trail covers part of the period",
+      "detail": "The oldest record in the period is from 2026-10-10; the period starts 2026-09-19.",
+      "fix": "Keep records for at least the reporting period (audit.local.retention), or report on a shorter --period."
+    }
+  ],
+  "questionnaire": {
+    "mapping_version": 1,
+    "disclaimer": "This section maps Sievant's controls to topics that security questionnaires commonly ask about, with the status this report found for each. It describes controls and observed activity; it is not a certification, an audit or an attestation, and it covers only the MCP tool traffic that passes through Sievant.",
+    "topics": [
+      {
+        "id": "access-control",
+        "title": "Access control",
+        "question": "How do you control which tools and data your AI agents can reach, and how are agents authenticated?",
+        "status": "partly in place",
+        "controls": [
+          {
+            "id": "agent-identity",
+            "name": "Agent authentication and identity",
+            "status": "partial",
+            "detail": "API keys: 2 keys for 2 agents, stored as SHA-256 digests. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          },
+          {
+            "id": "policies",
+            "name": "Deny-by-default policies for tools, prompts and resources, per agent",
+            "status": "partial",
+            "detail": "2 policies; ops-bot may call every tool (allow: \"*\"). Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          },
+          {
+            "id": "argument-constraints",
+            "name": "Schema validation and argument constraints (min, max, in, matches, path_under, url_hosts)",
+            "status": "partial",
+            "detail": "1 argument constraint, on top of input-schema validation. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          },
+          {
+            "id": "argument-rules",
+            "name": "Path and URL argument rules for every tool",
+            "status": "partial",
+            "detail": "Path arguments must be under 1 listed root; the other rule is not configured. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          },
+          {
+            "id": "enforcement-mode",
+            "name": "Enforcement mode (enforce or observe)",
+            "status": "partial",
+            "detail": "Mode enforce: policy decisions stop the calls they refuse. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          }
+        ]
+      },
+      {
+        "id": "logging-monitoring",
+        "title": "Logging and monitoring",
+        "question": "Are the actions of your AI agents logged, and could you investigate an incident from the logs?",
+        "status": "partly in place",
+        "controls": [
+          {
+            "id": "audit-trail",
+            "name": "Audit trail of every call and security event",
+            "status": "partial",
+            "detail": "Every call and security event is recorded in the local audit store, kept 30 days; inputs are sanitized and keyed with an HMAC, so a record can be matched to its input without storing it. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          }
+        ]
+      },
+      {
+        "id": "data-protection",
+        "title": "Data protection",
+        "question": "How do you keep credentials and personal data out of what AI agents send to tools and receive from them, and how is that traffic protected in transit?",
+        "status": "partly in place",
+        "controls": [
+          {
+            "id": "input-sanitization",
+            "name": "Credentials and personal data in tool arguments blocked or redacted",
+            "status": "partial",
+            "detail": "Credentials in arguments: block; personal data in arguments: redact. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          },
+          {
+            "id": "output-redaction",
+            "name": "Credentials and personal data redacted from tool results",
+            "status": "partial",
+            "detail": "Results are redacted before the agent sees them: email, credit_card, us_ssn, jwt, aws_access_key, pem_private_key, password. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          },
+          {
+            "id": "withheld-primitives",
+            "name": "Upstream resources and prompts not served unchecked",
+            "status": "partial",
+            "detail": "Upstream resources and prompts are withheld unless a connector serves them, and served ones pass the output checks. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          },
+          {
+            "id": "transport-security",
+            "name": "Transport security for agent connections",
+            "status": "partial",
+            "detail": "TLS terminated by Sievant. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          }
+        ]
+      },
+      {
+        "id": "third-party-components",
+        "title": "Third-party components",
+        "question": "How do you vet and control the third-party MCP servers and tools your agents use?",
+        "status": "partly in place",
+        "controls": [
+          {
+            "id": "tool-pinning",
+            "name": "Tool definitions read once, pinned, and pinned on first use",
+            "status": "partial",
+            "detail": "1 of 2 MCP connectors pin their tools. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          },
+          {
+            "id": "scan",
+            "name": "Client configuration audit (sievant scan)",
+            "status": "partial",
+            "detail": "1 client configuration file scanned; findings: 1 medium, 1 info (sievant scan lists them)."
+          },
+          {
+            "id": "client-coverage",
+            "name": "MCP client servers routed through Sievant",
+            "status": "partial",
+            "detail": "1 of 2 MCP servers in the client configurations run through Sievant."
+          },
+          {
+            "id": "ssrf-guard",
+            "name": "SSRF guard on outbound connectors",
+            "status": "partial",
+            "detail": "1 network connector; private addresses are refused. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          }
+        ]
+      },
+      {
+        "id": "ai-agent-safeguards",
+        "title": "AI agent safeguards",
+        "question": "How do you limit prompt injection and runaway or excessive agent behaviour?",
+        "status": "partly in place",
+        "controls": [
+          {
+            "id": "injection-detection",
+            "name": "Prompt-injection detection on arguments and results (flag, annotate, block)",
+            "status": "partial",
+            "detail": "Arguments and results are scored; suspect results are annotated for the model and recorded, not blocked. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          },
+          {
+            "id": "rate-limits",
+            "name": "Rate limits per agent and per tool",
+            "status": "partial",
+            "detail": "Rate limits: 5 calls a second per agent by default (bursts of 10). Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          },
+          {
+            "id": "output-budgets",
+            "name": "Row, byte and response-memory budgets",
+            "status": "partial",
+            "detail": "Results are capped at 65536 bytes and 1000 rows; row and byte budgets limit what an agent reads over time. Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          },
+          {
+            "id": "policies",
+            "name": "Deny-by-default policies for tools, prompts and resources, per agent",
+            "status": "partial",
+            "detail": "2 policies; ops-bot may call every tool (allow: \"*\"). Applies to the 1 of 2 MCP servers on this machine that run through Sievant."
+          }
+        ]
+      }
+    ]
+  },
+  "owasp_mapping": {
+    "framework": "OWASP Top 10 for LLM Applications",
+    "edition": "2025",
+    "mapping_version": 1,
+    "source": "https://genai.owasp.org/llm-top-10/"
+  },
+  "disclaimer": "This report describes how Sievant is configured and what its audit trail recorded in the period. It is generated by the software from local data; it is not a certification, an audit or an attestation, and it covers only the MCP traffic that passes through Sievant.",
+  "cta": {
+    "text": "Want a professional review of this setup?",
+    "url": "https://www.halotrcer.com/book"
+  }
+}

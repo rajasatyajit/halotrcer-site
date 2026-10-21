@@ -1,0 +1,8 @@
+{
+  "repo": "sievant",
+  "path": "pkg/report/testdata/golden/gateway.json",
+  "ref": "main",
+  "commit": "8529db16ad9ab178c7131966ba1c6fa5588047fc",
+  "command": "go test ./pkg/report -update",
+  "about": "Golden test output of sievant report for a fictional organization (Example Co), generated from synthetic test data in the Sievant repository."
+}
