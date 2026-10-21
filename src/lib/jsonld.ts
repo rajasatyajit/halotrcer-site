@@ -89,6 +89,34 @@ export function service(s: Service): JsonLd {
   };
 }
 
+export interface Post {
+  slug: string;
+  title: string;
+  description: string;
+  published: Date;
+  updated?: Date | undefined;
+}
+
+const isoDate = (d: Date) => d.toISOString().slice(0, 10);
+
+// A published blog post (drafts carry no structured data: they are noindex).
+export function blogPosting(p: Post): JsonLd {
+  const href = url('www', `/blog/${p.slug}`);
+  return {
+    '@type': 'BlogPosting',
+    '@id': `${href}#post`,
+    headline: p.title,
+    description: p.description,
+    datePublished: isoDate(p.published),
+    ...(p.updated ? { dateModified: isoDate(p.updated) } : {}),
+    author: { '@id': ORG_ID },
+    publisher: { '@id': ORG_ID },
+    url: href,
+    mainEntityOfPage: href,
+    isPartOf: { '@id': WEBSITE_ID },
+  };
+}
+
 export interface Crumb {
   name: string;
   path: string;

@@ -17,6 +17,8 @@ export const KEY_PAGES: [keyof typeof ORIGINS, string][] = [
   ['www', '/terms'],
   ['www', '/install'],
   ['www', '/calculator'],
+  ['www', '/blog'],
+  ['www', '/blog/what-an-mcp-config-scan-looks-for'],
   ['www', '/book'],
   ['www', '/no-such-page'],
   ['tokvera', '/'],

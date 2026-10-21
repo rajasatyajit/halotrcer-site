@@ -13,6 +13,7 @@ const PAGES = {
     '/security.html',
     '/install.html',
     '/calculator.html',
+    '/blog.html',
     '/book.html',
     '/404.html',
   ],

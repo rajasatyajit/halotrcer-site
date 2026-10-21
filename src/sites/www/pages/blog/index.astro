@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import { posts } from '../../../../lib/blog.ts';
+import { FEED } from '../../../../lib/feeds.ts';
+
+const all = await posts();
+const date = (d: Date) => d.toISOString().slice(0, 10);
+---
+
+<BaseLayout
+  title="Blog"
+  description="Notes on measuring LLM inference cost and latency, and on securing MCP agents, from the people who build Tokvera, Sievant and Halotrcer."
+>
+  <link slot="head" rel="alternate" type="application/rss+xml" title={FEED.title} href={FEED.rss} />
+  <link
+    slot="head"
+    rel="alternate"
+    type="application/atom+xml"
+    title={FEED.title}
+    href={FEED.atom}
+  />
+  <header class="container page-head">
+    <p class="eyebrow">Blog</p>
+    <h1>Blog</h1>
+    <p class="lede">{FEED.description}</p>
+    <p>
+      Follow with <a href={FEED.rss}>RSS</a> or <a href={FEED.atom}>Atom</a>.
+    </p>
+  </header>
+
+  <section class="container section" aria-labelledby="posts">
+    <h2 id="posts" class="visually-hidden">
+      Posts
+    </h2>
+    <ul class="post-list">
+      {all.map((p) => (
+        <li>
+          <h3>
+            <a href={`/blog/${p.id}`}>{p.data.title}</a>
+          </h3>
+          <p class="post-list__meta">
+            {p.data.draft ? (
+              'Draft outline'
+            ) : (
+              <time datetime={date(p.data.published as Date)}>
+                {date(p.data.published as Date)}
+              </time>
+            )}
+          </p>
+          <p>{p.data.description}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

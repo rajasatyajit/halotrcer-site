@@ -33,6 +33,7 @@ async function body(): Promise<string> {
         url('www', '/calculator'),
         'monthly spend and repeated, uncached input, estimated from your own numbers',
       ),
+      link('Blog', url('www', '/blog'), 'notes on inference cost, latency and MCP security'),
       link(
         'Install',
         url('www', '/install'),
