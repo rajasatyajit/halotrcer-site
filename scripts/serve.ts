@@ -1,13 +1,21 @@
 // Serves the built sites the way Cloudflare Pages does, for e2e tests: clean URLs,
 // 404.html with status 404, _redirects, and the _headers rules (so the real CSP
-// applies in the browser). Usage: node scripts/serve.ts  (www :4321, tokvera :4322, sievant :4323)
+// applies in the browser). Usage: node scripts/serve.ts  (www :4321, tokvera :4322, sievant :4323;
+// SERVE_PORT_BASE=4521 moves all three, e.g. when another checkout already serves 4321-4323)
 import { createServer } from 'node:http';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, normalize } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { parseHeaders } from './lib/rules.ts';
 import { SITES, type SiteId } from '../src/config/site.ts';
 
-export const PORTS: Record<SiteId, number> = { www: 4321, tokvera: 4322, sievant: 4323 };
+export const portsFrom = (base: number): Record<SiteId, number> => ({
+  www: base,
+  tokvera: base + 1,
+  sievant: base + 2,
+});
+
+export const PORTS = portsFrom(Number(process.env.SERVE_PORT_BASE ?? 4321));
 
 const TYPES: Record<string, string> = {
   '.html': 'text/html; charset=utf-8',
@@ -78,4 +86,5 @@ function serve(site: SiteId): void {
   console.log(`${site}: http://127.0.0.1:${PORTS[site]}`);
 }
 
-for (const site of SITES) if (existsSync(join(process.cwd(), 'dist', site))) serve(site);
+if (process.argv[1] === fileURLToPath(import.meta.url))
+  for (const site of SITES) if (existsSync(join(process.cwd(), 'dist', site))) serve(site);

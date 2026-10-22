@@ -57,6 +57,7 @@
     "urls:record": "node scripts/record-urls.ts",
     "e2e": "playwright test",
     "serve": "node scripts/serve.ts",
+    "shots": "node scripts/shots.ts",
     "sync:releases": "node scripts/sync-releases.ts",
     "fixtures:releases": "node scripts/fixture-releases.ts",
     "build:launched-fixture": "node scripts/fixture-releases.ts && RELEASE_DATA_DIR=.cache/fixture-releases LAUNCHED=true ALLOW_CANDIDATE_SCRIPTS=1 node scripts/build.ts",

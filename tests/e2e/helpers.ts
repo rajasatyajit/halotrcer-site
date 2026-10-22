@@ -28,10 +28,12 @@ export async function recordClipboard(page: Page): Promise<void> {
 export const copied = (page: Page) =>
   page.evaluate(() => (window as unknown as { __copied?: string }).__copied ?? '');
 
+// SERVE_PORT_BASE (default 4321) matches scripts/serve.ts.
+const BASE = Number(process.env.SERVE_PORT_BASE ?? 4321);
 export const ORIGINS = {
-  www: 'http://127.0.0.1:4321',
-  tokvera: 'http://127.0.0.1:4322',
-  sievant: 'http://127.0.0.1:4323',
+  www: `http://127.0.0.1:${BASE}`,
+  tokvera: `http://127.0.0.1:${BASE + 1}`,
+  sievant: `http://127.0.0.1:${BASE + 2}`,
 } as const;
 
 export const KEY_PAGES: [keyof typeof ORIGINS, string][] = [
