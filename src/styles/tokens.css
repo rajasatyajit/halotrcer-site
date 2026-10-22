@@ -26,6 +26,13 @@
   --accent: var(--halotrcer);
   --accent-ink: light-dark(#fff, #121315);
 
+  /* Severity: text-safe on every surface, always paired with the word. */
+  --sev-critical: light-dark(#a1121f, #ff8a8a);
+  --sev-high: light-dark(#9a3d00, #ffab70);
+  --sev-medium: light-dark(#6b5a00, #e3cc5c);
+  --sev-low: light-dark(#1f5f99, #8cc2ff);
+  --sev-info: light-dark(#55524b, #a6a39c);
+
   /* Type */
   --font-sans:
     system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
@@ -36,6 +43,8 @@
   --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
   --text-2xl: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
   --text-3xl: clamp(2rem, 1.5rem + 2.4vw, 3.25rem);
+  --text-4xl: clamp(2.5rem, 1.6rem + 3.6vw, 4rem);
+  --tracking-tight: -0.02em;
   --leading: 1.6;
   --leading-tight: 1.15;
   --measure: 68ch;

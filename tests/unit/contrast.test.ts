@@ -41,6 +41,10 @@ const PAIRS: [string, string, number][] = [
   ['term-muted', 'term-bg', 4.5],
   ['term-prompt', 'term-bg', 4.5],
   ['focus', 'bg', 3],
+  // Severity words (always shown with the word, never colour alone).
+  ...['sev-critical', 'sev-high', 'sev-medium', 'sev-low', 'sev-info'].flatMap((fg) =>
+    TEXT_ON.map((bg) => [fg, bg, 4.5] as [string, string, number]),
+  ),
 ];
 
 describe.each([

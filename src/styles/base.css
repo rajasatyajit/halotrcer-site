@@ -28,13 +28,13 @@ h4 {
 }
 
 h1 {
-  font-size: var(--text-3xl);
-  letter-spacing: -0.02em;
+  font-size: var(--text-4xl);
+  letter-spacing: var(--tracking-tight);
 }
 
 h2 {
   font-size: var(--text-2xl);
-  letter-spacing: -0.01em;
+  letter-spacing: var(--tracking-tight);
 }
 
 h3 {
@@ -114,4 +114,33 @@ svg {
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: var(--s-3);
+}
+
+/* Layout utilities */
+.layout-split {
+  display: grid;
+  gap: var(--s-7);
+}
+
+.grid-3 {
+  display: grid;
+  gap: var(--s-5);
+}
+
+@media (width >= 48rem) {
+  .grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (width >= 64rem) {
+  .layout-split {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
