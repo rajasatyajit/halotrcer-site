@@ -198,11 +198,15 @@ For segment 2. Sections:
 
 1. "Run it for your clients": the check runs on the client's system, and the report is a
    self-contained HTML/PDF/JSON file you hand over.
-2. **What you can and can't brand, stated exactly.** Sievant's report takes the client's name in
-   its title (`sievant report --org <name>`, sievant `cmd/sievant/report.go:46`). The Halotrcer
-   and Tokvera reports have no white-label option today, and their footers link to
-   `www.halotrcer.com/book` (halotrcer `internal/report/model.go:21`). The page says that, not
-   "white-label".
+2. **What you can and can't brand, stated exactly.**
+   - All three reports can leave out the footer that links to `www.halotrcer.com/book` with
+     `--no-cta`: halotrcer `cmd/halotrcer/check.go:52`, tokvera `cmd/tokvera/scan.go:65`, sievant
+     `cmd/sievant/report.go` (the `--no-cta` line).
+   - Sievant's report also takes the client's name in its title (`--org <name>`,
+     `cmd/sievant/report.go:46`).
+   - No tool has a logo or branding option, so the page says exactly this and never says
+     "white-label".
+   - (Corrected 2026-10-22: an earlier draft said the footers couldn't be removed.)
 3. Referral arrangement: **wording comes from the owner** (O1). Until then the section reads
    "Talk to us about referrals" plus the booking link.
 4. Link to the sample reports and pricing.
