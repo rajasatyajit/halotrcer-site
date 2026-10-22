@@ -1,0 +1,20 @@
+---
+// A severity shown as word + shape + colour, so colour is never the only signal.
+interface Props {
+  level: string;
+}
+
+const MARKS: Record<string, string> = {
+  critical: '◆',
+  high: '▲',
+  medium: '■',
+  low: '●',
+  info: '○',
+};
+const { level } = Astro.props;
+const key = level.toLowerCase();
+---
+
+<span class={`sev sev--${key in MARKS ? key : 'info'}`}>
+  <span aria-hidden="true">{MARKS[key] ?? '○'}</span> {key}
+</span>

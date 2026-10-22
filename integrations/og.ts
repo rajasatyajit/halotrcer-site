@@ -10,6 +10,7 @@ import { SITE_NAMES } from '../src/config/site.ts';
 import { canonicalPath } from '../src/lib/paths.ts';
 import { ogImagePath, ogSvg } from '../src/lib/og.ts';
 import { faviconSvg } from '../src/lib/favicon.ts';
+import { formatPrice, loadPricing } from '../src/lib/pricing.ts';
 
 const require = createRequire(import.meta.url);
 const fontDir = join(dirname(require.resolve('dejavu-fonts-ttf/package.json')), 'ttf');
@@ -31,12 +32,28 @@ export function renderOgImages(out: string, htmlFiles: string[], flags: Flags): 
       continue;
     const title = root.querySelector('title')?.textContent.split(' · ')[0] ?? '';
     const description = root.querySelector('meta[name=description]')?.getAttribute('content') ?? '';
+    const body = root.querySelector('body');
+    const stamp = body?.getAttribute('data-og-stamp') || undefined;
+    const prices =
+      body?.getAttribute('data-og-template') === 'pricing'
+        ? loadPricing().services.map((s) => ({
+            name: s.name,
+            label: `From ${formatPrice(s.from)}`,
+          }))
+        : undefined;
     const target = join(out, ogImagePath(canonicalPath(`/${relative(out, file)}`)));
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(
       target,
       render(
-        ogSvg({ site: flags.site, siteName: SITE_NAMES[flags.site], title, description }),
+        ogSvg({
+          site: flags.site,
+          siteName: SITE_NAMES[flags.site],
+          title,
+          description,
+          stamp,
+          prices,
+        }),
         1200,
       ),
     );

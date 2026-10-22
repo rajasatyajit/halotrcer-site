@@ -1008,3 +1008,179 @@ html.js .calc__nojs {
   font-size: var(--text-sm);
   color: var(--ink-muted);
 }
+
+/* Stamps: the "Simulated demo run" label inside every sample frame (SimulatedStamp). */
+.stamp {
+  display: inline-block;
+  padding: 0.1em var(--s-2);
+  border: 2px solid currentcolor;
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+
+.stamp__path {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  align-items: center;
+  margin-bottom: var(--s-4);
+}
+
+.section-head h2 {
+  margin: 0;
+}
+
+caption,
+.card-list__caption {
+  caption-side: top;
+  padding-block: var(--s-2);
+  font-weight: 600;
+  text-align: left;
+}
+
+/* Severity: word + shape + colour (Severity.astro). */
+.sev {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sev--critical {
+  color: var(--sev-critical);
+}
+
+.sev--high {
+  color: var(--sev-high);
+}
+
+.sev--medium {
+  color: var(--sev-medium);
+}
+
+.sev--low {
+  color: var(--sev-low);
+}
+
+.sev--info {
+  color: var(--sev-info);
+}
+
+/* Tables on wide screens, card lists on phones; one of the two is display:none. */
+.only-wide {
+  display: none;
+}
+
+@media (width >= 48rem) {
+  .only-wide {
+    display: block;
+  }
+
+  .only-narrow {
+    display: none;
+  }
+}
+
+.card-list,
+.plain-list {
+  margin: 0 0 var(--s-4);
+  padding: 0;
+  list-style: none;
+}
+
+.card-list li {
+  padding-block: var(--s-3);
+  border-bottom: 1px solid var(--line);
+}
+
+.card-list p {
+  margin: var(--s-1) 0 0;
+  font-size: var(--text-sm);
+}
+
+.plain-list li {
+  padding-block: var(--s-1);
+}
+
+.panel {
+  padding: var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.panel--sample {
+  border-style: dashed;
+  border-width: 2px;
+}
+
+.panel h3 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  align-items: center;
+}
+
+/* Long sample reports: a section index, sticky beside the report on wide screens. */
+.report-index ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  margin: 0 0 var(--s-5);
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+
+@media (width >= 64rem) {
+  .report-layout {
+    display: grid;
+    grid-template-columns: 12rem minmax(0, 1fr);
+    gap: var(--s-6);
+    align-items: start;
+  }
+
+  .report-index {
+    position: sticky;
+    top: var(--s-5);
+    padding-top: var(--s-7);
+  }
+
+  .report-index ul {
+    flex-direction: column;
+  }
+}
+
+.finding-card {
+  margin-block: var(--s-5);
+  padding: var(--s-5);
+  border: 2px dashed var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.finding-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-3);
+  align-items: center;
+}
+
+.finding-card h3 {
+  margin-top: var(--s-3);
+}

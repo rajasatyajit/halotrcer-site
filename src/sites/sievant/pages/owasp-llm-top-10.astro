@@ -34,7 +34,11 @@ const controlsFor = (id: string) => m.controls.filter((c) => c.categories.includ
     </div>
   </header>
 
-  <div class="container" data-sample={`${source.repo}:${source.path}@${source.commit}`}>
+  <div
+    class="container"
+    data-sample={`${source.repo}:${source.path}@${source.commit}`}
+    data-simulated="false"
+  >
     <p class="note">
       <strong>{m.disclaimer}</strong>
     </p>

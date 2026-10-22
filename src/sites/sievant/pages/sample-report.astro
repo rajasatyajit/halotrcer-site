@@ -2,7 +2,10 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ShareButton from '../../../components/ShareButton.astro';
 import SourceLine from '../../../components/SourceLine.astro';
+import SimulatedStamp from '../../../components/SimulatedStamp.astro';
+import Severity from '../../../components/Severity.astro';
 import { sample } from '../../../lib/samples.ts';
+import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
 
 interface Posture {
   organization: string;
@@ -36,24 +39,65 @@ const scan = sample<Scan>('sievant-scan');
 const p = posture.data;
 const s = scan.data;
 const SEVERITIES = ['critical', 'high', 'medium', 'low', 'info'];
+const review = serviceFor('agent-security-review');
 ---
 
 <BaseLayout
-  title="Sievant sample reports"
-  description="Sample Sievant reports from simulated runs: a posture report for a customer's security review, and a scan of risky MCP client configurations."
+  title="Sample Agent Security Review report"
+  description="What an Agent Security Review delivers, and a sample Sievant posture report from a simulated run for a fictional organization, plus a scan of risky MCP client configurations."
+  ogStamp="Simulated demo run"
 >
   <header class="container page-head">
-    <p class="eyebrow">Sample reports</p>
-    <h1>What Sievant reports</h1>
+    <p class="eyebrow">Sample report</p>
+    <h1>Sample Agent Security Review report</h1>
     <p class="lede">
-      Two reports, rendered from their JSON: the posture report (<code>sievant report</code>),
-      written for a customer’s security review, and a client-configuration scan (
-      <code>sievant scan</code>).
+      The posture report (<code>sievant report</code>) is what you attach to a customer’s security
+      review. Here it is rendered from a simulated run for a fictional organization, followed by a
+      client-configuration scan (<code>sievant scan</code>).
     </p>
     <div class="button-row">
       <ShareButton />
     </div>
   </header>
+
+  <section class="container section" id="review" aria-labelledby="review-h">
+    <h2 id="review-h">What the review delivers, and what this sample shows</h2>
+    <div class="layout-split">
+      <div class="panel" data-owner-source="content/pricing.md">
+        <h3>The review</h3>
+        <ul>
+          {review.deliverables.map((d) => (
+            <li>{d}</li>
+          ))}
+        </ul>
+        <p>
+          {review.name}: from {formatPrice(review.from)}, {review.duration.toLowerCase()}.
+        </p>
+      </div>
+      <div
+        class="panel panel--sample"
+        data-sample={`${posture.source.repo}:${posture.source.path}@${posture.source.commit}`}
+      >
+        <h3>
+          This sample <SimulatedStamp />
+        </h3>
+        <p>
+          <strong>{p.summary.coverage.headline}</strong>
+        </p>
+        <ul class="plain-list">
+          {p.gaps.map((g) => (
+            <li>
+              <Severity level={g.severity} /> {g.title}
+            </li>
+          ))}
+        </ul>
+        <p class="source-note">
+          The statuses here describe {p.organization}’s simulated deployment, not the scope of the
+          review.
+        </p>
+      </div>
+    </div>
+  </section>
 
   <div class="container">
     <SourceLine source={posture.source} />
@@ -63,10 +107,13 @@ const SEVERITIES = ['critical', 'high', 'medium', 'low', 'info'];
     class="container"
     data-sample={`${posture.source.repo}:${posture.source.path}@${posture.source.commit}`}
   >
-    <section class="section" aria-labelledby="posture">
-      <h2 id="posture">
-        Posture report: {p.organization}, last {p.period.label}
-      </h2>
+    <section class="section" id="posture-report" aria-labelledby="posture">
+      <div class="section-head">
+        <h2 id="posture">
+          Posture report: {p.organization}, last {p.period.label}
+        </h2>
+        <SimulatedStamp path={posture.source.path} />
+      </div>
       <p class="note">
         <strong>{p.summary.coverage.headline}</strong> {p.summary.coverage.policy}
       </p>
@@ -79,14 +126,18 @@ const SEVERITIES = ['critical', 'high', 'medium', 'low', 'info'];
       <ul class="checklist">
         {p.gaps.map((g) => (
           <li>
-            <span class="status">[{g.severity}]</span> <strong>{g.title}.</strong> {g.detail}{' '}
-            <em>Fix:</em> {g.fix}
+            <Severity level={g.severity} /> <strong>{g.title}.</strong> {g.detail} <em>Fix:</em>{' '}
+            {g.fix}
           </li>
         ))}
       </ul>
       <h3>Controls</h3>
-      <div class="table-wrap" tabindex="0">
+      <div class="table-wrap only-wide" tabindex="0">
         <table>
+          <caption>
+            {`Controls, ${p.organization}`}
+            <SimulatedStamp />
+          </caption>
           <thead>
             <tr>
               <th scope="col">Control</th>
@@ -105,6 +156,19 @@ const SEVERITIES = ['critical', 'high', 'medium', 'low', 'info'];
           </tbody>
         </table>
       </div>
+      <div class="only-narrow">
+        <p class="card-list__caption">
+          {`Controls, ${p.organization}`} <SimulatedStamp />
+        </p>
+        <ul class="card-list">
+          {p.controls.map((c) => (
+            <li>
+              <strong>{c.name}</strong> <span class="status">{c.status}</span>
+              <p>{c.detail}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
       <p class="note">{p.disclaimer}</p>
     </section>
   </div>
@@ -117,11 +181,18 @@ const SEVERITIES = ['critical', 'high', 'medium', 'low', 'info'];
     class="container"
     data-sample={`${scan.source.repo}:${scan.source.path}@${scan.source.commit}`}
   >
-    <section class="section" aria-labelledby="scan">
-      <h2 id="scan">Client-configuration scan</h2>
+    <section class="section" id="scan-report" aria-labelledby="scan">
+      <div class="section-head">
+        <h2 id="scan">Client-configuration scan</h2>
+        <SimulatedStamp path={scan.source.path} />
+      </div>
       <p>{SEVERITIES.map((sev) => `${s.counts[sev] ?? 0} ${sev}`).join(', ')}.</p>
-      <div class="table-wrap" tabindex="0">
+      <div class="table-wrap only-wide" tabindex="0">
         <table>
+          <caption>
+            Scan findings
+            <SimulatedStamp />
+          </caption>
           <thead>
             <tr>
               <th scope="col">Severity</th>
@@ -134,7 +205,9 @@ const SEVERITIES = ['critical', 'high', 'medium', 'low', 'info'];
           <tbody>
             {s.findings.map((f) => (
               <tr>
-                <td class="status">{f.severity}</td>
+                <td>
+                  <Severity level={f.severity} />
+                </td>
                 <td>
                   <code>{f.rule}</code>
                 </td>
@@ -147,6 +220,24 @@ const SEVERITIES = ['critical', 'high', 'medium', 'low', 'info'];
             ))}
           </tbody>
         </table>
+      </div>
+      <div class="only-narrow">
+        <p class="card-list__caption">
+          Scan findings <SimulatedStamp />
+        </p>
+        <ul class="card-list">
+          {s.findings.map((f) => (
+            <li>
+              <Severity level={f.severity} /> <code>{f.rule}</code> <strong>{f.title}</strong>
+              <p>
+                {f.client} · {f.server} · <code>{f.where}</code>
+              </p>
+              <p>
+                <em>Fix:</em> {f.fix}
+              </p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   </div>

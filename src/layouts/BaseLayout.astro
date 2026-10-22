@@ -19,9 +19,22 @@ interface Props {
   // Structured data for this page; breadcrumbs are added for every page but the home.
   jsonld?: JsonLd[];
   crumbs?: Crumb[];
+  // Open Graph image: a label drawn into the image (e.g. "Simulated demo run"),
+  // or the pricing template that lists the services and their prices.
+  ogStamp?: string;
+  ogTemplate?: 'pricing';
 }
 
-const { title, description, bareTitle = false, noindex = false, jsonld = [], crumbs } = Astro.props;
+const {
+  title,
+  description,
+  bareTitle = false,
+  noindex = false,
+  jsonld = [],
+  crumbs,
+  ogStamp,
+  ogTemplate,
+} = Astro.props;
 const { site } = getFlags();
 const siteName = SITE_NAMES[site];
 const fullTitle = bareTitle ? title : `${title} · ${siteName}`;
@@ -68,7 +81,7 @@ const graph = [
     <script is:inline src="/theme-init.js"></script>
     <slot name="head" />
   </head>
-  <body>
+  <body data-og-stamp={ogStamp} data-og-template={ogTemplate}>
     <a class="skip-link" href="#main">
       Skip to content
     </a>

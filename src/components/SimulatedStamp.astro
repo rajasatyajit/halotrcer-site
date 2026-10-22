@@ -1,0 +1,16 @@
+---
+// A label that travels with whatever gets cropped: placed inside each sample
+// frame, table caption and report card, never only in the text around it.
+// scripts/check-stamps.ts requires one in every table and section of a [data-sample].
+interface Props {
+  label?: 'Simulated demo run' | 'Example' | 'Estimate';
+  path?: string;
+}
+
+const { label = 'Simulated demo run', path } = Astro.props;
+---
+
+<span class="stamp" data-stamp>
+  {label}
+  {path && <span class="stamp__path"> · {path}</span>}
+</span>
