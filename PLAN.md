@@ -354,7 +354,7 @@ Each milestone ends with an acceptance table and your manual steps.
 
 1. Cloudflare: add the `halotrcer.com` zone (if not already) and create the three Pages projects from `rajasatyajit/halotrcer-site` with the build commands, output dirs and env vars from §1–2.
 2. DNS: custom domains `www`, `tokvera` and `sievant` on the respective projects (Pages creates the CNAMEs). Apex: a proxied placeholder record plus a Redirect Rule `halotrcer.com/*` → `https://www.halotrcer.com/${1}` (301).
-3. SSL/TLS: Full (strict), "Always Use HTTPS" on, minimum TLS 1.2, and zone HSTS off (the site sends its own). Submit to hstspreload.org only after every subdomain serves HTTPS.
+3. SSL/TLS: Full (strict), "Always Use HTTPS" on, minimum TLS 1.2, and zone HSTS off (the site sends its own). Submit to hstspreload.org only after every subdomain serves HTTPS. Amended 2026-10-22: the apex 301 is Cloudflare's and carries no HSTS, so zone HSTS goes on at launch before submitting (docs/acceptance.md, manual step 5).
 4. Booking: create the Cal.com event and send me the URL for `BOOKING_URL`.
 5. Search Console: add a Domain property for `halotrcer.com` (DNS TXT) and submit `https://www.halotrcer.com/sitemap-index.xml`.
 6. Cloudflare Web Analytics: leave off until you decide (Q15).

@@ -75,3 +75,14 @@ Lighthouse, and the browser tests in Chromium, Firefox and WebKit, both modes).
 3. The Cal.com link for `BOOKING_TARGET`.
 4. After employer approval and launch: `LAUNCHED=true`, Search Console, publishing the blog posts,
    and hstspreload.org once every subdomain serves HTTPS.
+5. Before submitting to hstspreload.org:
+   1. Turn on Cloudflare zone HSTS (SSL/TLS → Edge Certificates → HSTS): max-age at least 12
+      months, includeSubDomains, preload. The apex 301 comes from a Cloudflare Redirect Rule, before
+      Pages, so `_headers` cannot add the header there.
+   2. Check that the apex 301 carries it:
+      `curl -sI https://halotrcer.com/ | grep -i strict-transport-security` should show
+      `max-age=31536000` or more, `includeSubDomains` and `preload`.
+   3. Re-run `npm run check:live`. It compares HSTS on every page with `_headers` (2 years), so a
+      zone value that replaces the site's header shows up there.
+   4. Preload is hard to reverse: removal from the list takes months to reach browsers, and until
+      then every subdomain of halotrcer.com must serve HTTPS or be unreachable.
