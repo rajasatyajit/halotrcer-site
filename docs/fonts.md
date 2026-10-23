@@ -42,14 +42,19 @@ Downloaded once from `github.com/google/fonts` at commit
 ## Subsetting
 
 `npm run fonts:subset -- <dir with the TTF>` (fonttools 4.66.1 and `woff2_compress`, both
-local). The range is `MARKER_UNICODES` in `src/lib/fonts.ts`: printable ASCII plus
-`· × – — ‘ ’ “ ” … →`. A clue title from the samples with a character outside it is set in
+local). The range is `MARKER_UNICODES` in `src/lib/fonts.ts`: the 90 characters the built
+pages of all three hosts set in Marker (both modes, `node scripts/check-marker.ts --print`)
+plus digits, A–F, common punctuation, `→ × % $` and the no-break space.
+`npm run check:marker` (in `check:dist` and CI) fails if Marker text on any page uses a
+character outside it. A clue title from the samples with a character outside it is set in
 the body face (`inMarkerSubset`); other headings fall back glyph by glyph to the metric-matched
 fallback face.
 
 | Output                                    | Bytes  | SHA-256                                                            |
 | ----------------------------------------- | ------ | ------------------------------------------------------------------ |
-| `src/assets/fonts/permanent-marker.woff2` | 18,720 | `2a3e8b7a97ab40689ccdd4e53466405dc8d7591474ff6906896edd7743e70b09` |
+| `src/assets/fonts/permanent-marker.woff2` | 16,196 | `18bfcfb5a7f60aab1e01db474a955d1d895321a75b9328de509b9257d5353c70` |
+
+The earlier ASCII-plus-punctuation cut was 18,720 bytes.
 
 ## Loading
 

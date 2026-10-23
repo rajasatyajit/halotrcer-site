@@ -1,18 +1,22 @@
 // The one web font: a Permanent Marker subset (owner decisions 2026-10-23; docs/fonts.md).
-// scripts/subset-fonts.ts cuts the file to MARKER_UNICODES; text from the samples that
+// scripts/subset-fonts.ts cuts the file to MARKER_UNICODES; scripts/check-marker.ts fails the
+// build if Marker text on any page uses a character outside it; text from the samples that
 // falls outside it is set in the body face instead (ClueCard).
 
-// Printable ASCII plus the punctuation the copy uses: · × – — ‘ ’ “ ” … →
-export const MARKER_UNICODES =
-  'U+0020-007E,U+00B7,U+00D7,U+2013-2014,U+2018-2019,U+201C-201D,U+2026,U+2192';
+// What the built pages of all three hosts set in Marker, both modes
+// (`node scripts/check-marker.ts --print`, 2026-10-23).
+const USED = "#$&'()+,-./012345679:;?ABCDEFGHIKLMNOPQRSTUVWY[]abcdefghijklmnopqrstuvwxy|—’“”→";
+// Agreed extras: digits, A–F (grades), common punctuation, → × % $, the space and the
+// no-break space (written as a code point so it stays visible here).
+const EXTRA = '0123456789ABCDEF.,:;!?\'"()-–—‘’“”&/…·→×%$ ' + String.fromCodePoint(0xa0);
 
-const RANGES = MARKER_UNICODES.split(',').map((r) => {
-  const [lo, hi = lo] = r.replace(/U\+/g, '').split('-');
-  return [parseInt(lo ?? '0', 16), parseInt(hi ?? '0', 16)] as const;
-});
+export const MARKER_CHARS = [...new Set([...USED, ...EXTRA])]
+  .sort((a, b) => (a.codePointAt(0) ?? 0) - (b.codePointAt(0) ?? 0))
+  .join('');
+
+export const MARKER_UNICODES = [...MARKER_CHARS]
+  .map((c) => `U+${(c.codePointAt(0) ?? 0).toString(16).toUpperCase().padStart(4, '0')}`)
+  .join(',');
 
 export const inMarkerSubset = (text: string): boolean =>
-  [...text].every((c) => {
-    const cp = c.codePointAt(0) ?? 0;
-    return RANGES.some(([lo, hi]) => cp >= lo && cp <= hi);
-  });
+  [...text].every((c) => MARKER_CHARS.includes(c));

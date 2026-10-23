@@ -76,6 +76,8 @@ jobs:
         run: npm run check:claims
       - name: Budgets
         run: npm run budget
+      - name: Sample stamps and Marker glyphs
+        run: npm run check:stamps && npm run check:marker
       - name: Pre-launch mode
         if: matrix.launched == 'false'
         run: npm run check:prelaunch

@@ -1,20 +1,31 @@
 // The Marker subset (src/lib/fonts.ts) drives both the font file and which text may use it.
 import { describe, expect, it } from 'vitest';
-import { inMarkerSubset, MARKER_UNICODES } from '../../src/lib/fonts.ts';
+import { inMarkerSubset, MARKER_CHARS, MARKER_UNICODES } from '../../src/lib/fonts.ts';
 import { SITES } from '../../src/config/site.ts';
 import { board } from '../../src/lib/clues.ts';
 
 describe('Marker subset', () => {
-  it('is printable ASCII plus the punctuation the copy uses', () => {
-    expect(MARKER_UNICODES).toBe(
-      'U+0020-007E,U+00B7,U+00D7,U+2013-2014,U+2018-2019,U+201C-201D,U+2026,U+2192',
-    );
+  it('is the characters the site sets in Marker plus the agreed extras', () => {
+    for (const c of '0123456789ABCDEF.,:;!?\'"()-–—‘’“”&/…·→×%$ ')
+      expect(MARKER_CHARS).toContain(c);
+    expect(MARKER_CHARS).toContain('\u00a0');
+    // Only what is used: letters the site never sets in Marker are left out.
+    expect(MARKER_CHARS).not.toContain('z');
+    expect(MARKER_CHARS.length).toBeLessThan(100);
   });
 
-  it('covers ASCII, curly quotes and dashes, and nothing else', () => {
+  it('lists the same characters as code points for pyftsubset', () => {
+    const fromUnicodes = MARKER_UNICODES.split(',').map((u) =>
+      String.fromCodePoint(parseInt(u.replace('U+', ''), 16)),
+    );
+    expect(fromUnicodes.join('')).toBe(MARKER_CHARS);
+  });
+
+  it('covers the copy, curly quotes and dashes, and nothing else', () => {
     expect(inMarkerSubset('MCP server “search” – 5 of 60 → Grade D')).toBe(true);
     expect(inMarkerSubset('Who’s draining your AI?')).toBe(true);
     expect(inMarkerSubset('Café')).toBe(false);
+    expect(inMarkerSubset('zebra')).toBe(false);
     expect(inMarkerSubset('服务器')).toBe(false);
   });
 
