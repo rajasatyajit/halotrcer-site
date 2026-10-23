@@ -337,13 +337,17 @@
 .terminal__body {
   margin: 0;
   padding: var(--s-4);
-  overflow-x: auto;
   line-height: 1.7;
 }
 
+/* Lines wrap instead of running off the panel: nothing is hidden. Wrapped continuations hang
+   2ch in, so the "$ " prompt and each line's start stay easy to see. */
 .terminal__line {
   display: block;
-  white-space: pre;
+  padding-left: 2ch;
+  text-indent: -2ch;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .terminal__line--cmd::before {
@@ -376,9 +380,18 @@
   align-items: start;
 }
 
+.split > * {
+  min-width: 0;
+}
+
 @media (width >= 60rem) {
   .split {
     grid-template-columns: 1fr 1fr;
+  }
+
+  /* A section with a terminal stacks: text above, the terminal across the full width. */
+  .split:has(> .terminal) {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -912,6 +925,7 @@ mark {
 .block-list {
   display: grid;
   gap: var(--s-5);
+  max-width: none;
   margin: 0;
   padding: 0;
   list-style: none;
