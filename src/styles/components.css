@@ -1628,8 +1628,18 @@ caption,
   margin-top: var(--s-5);
 }
 
+@media (width >= 48rem) {
+  .case-hero--long h1 {
+    font-size: var(--text-3xl);
+  }
+}
+
 /* Phones: both case buttons stay in the first screen, down to 320 × 640. */
 @media (width < 48rem) {
+  .case-hero--long h1 {
+    font-size: 2rem;
+  }
+
   .case-hero {
     padding-block: var(--s-4);
   }
@@ -1725,4 +1735,9 @@ html:not(.js) .js-only {
   font-family: var(--font-type);
   letter-spacing: var(--type-tracking);
   user-select: all;
+}
+
+/* A product home's existing sections, stacked on one sheet of paper under the board. */
+.paper-section--stack {
+  padding-block: var(--s-4) var(--s-7);
 }

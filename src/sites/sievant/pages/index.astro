@@ -2,16 +2,19 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Proof from '../../../components/Proof.astro';
 import Claim from '../../../components/Claim.astro';
-import Hero from '../../../components/Hero.astro';
+import CaseOpening from '../../../components/board/CaseOpening.astro';
 import InstallOrSoon from '../../../components/InstallOrSoon.astro';
 import Terminal from '../../../components/Terminal.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
 import { priceLabel, serviceFor } from '../../../lib/pricing.ts';
 import { softwareApplication } from '../../../lib/jsonld.ts';
+import { hero } from '../../../lib/heroes.ts';
 
 const review = serviceFor('agent-security-review');
 const blocks = ['credential', 'secrets', 'rugpull', 'injection', 'allowlist', 'scan'];
 const jsonld = [softwareApplication('sievant')];
+// The approved headline variant for this host (content/heroes), on the case board's wood.
+const h = hero('sievant');
 ---
 
 <BaseLayout
@@ -19,109 +22,113 @@ const jsonld = [softwareApplication('sievant')];
   description="Sievant is an open-source MCP security gateway and sidecar: it checks every tool call between AI agents and MCP servers and records it in a local audit trail."
   bareTitle
   jsonld={jsonld}
+  ogStamp="Simulated demo run"
 >
-  <Hero eyebrow="Sievant">
-    <a class="button" href="#blocks">
-      What it blocks
-    </a>
-    <a class="button button--ghost" href="/owasp-llm-top-10">
-      OWASP LLM Top 10 mapping
-    </a>
-  </Hero>
+  <CaseOpening site="sievant" long>
+    <h1 id="case-title">
+      <span data-claim={h.title.id}>{h.title.text}</span>
+    </h1>
+    <p class="lede">
+      <span data-claim={h.lede.id}>{h.lede.text}</span> Here's what it pinned up after a simulated
+      demo run.
+    </p>
+  </CaseOpening>
 
-  <section class="container section split" aria-labelledby="modes">
-    <div>
-      <h2 id="modes">Two ways to run it</h2>
-      <ul class="checklist">
-        <li>
-          <Claim id="sievant.local" />
-        </li>
-        <li>
-          <Claim id="sievant.gateway" />
-        </li>
+  <div class="paper-section paper-section--stack">
+    <section class="container section split" aria-labelledby="modes">
+      <div>
+        <h2 id="modes">Two ways to run it</h2>
+        <ul class="checklist">
+          <li>
+            <Claim id="sievant.local" />
+          </li>
+          <li>
+            <Claim id="sievant.gateway" />
+          </li>
+        </ul>
+        <p>
+          <Claim id="sievant.speed" /> <Claim id="sievant.speed-basis" />
+        </p>
+      </div>
+      <Terminal
+        label="On your machine"
+        claimId="sievant.quickstart-terminal"
+        note="From the README"
+      />
+    </section>
+
+    <section class="container section" aria-labelledby="blocks">
+      <h2 id="blocks">What it blocks</h2>
+      <p>Real responses, recorded against the synthetic MCP server in Sievant’s tests.</p>
+      <ul class="block-list">
+        {blocks.map((b) => (
+          <li>
+            <p>
+              <Claim id={`sievant.block-${b}`} />
+            </p>
+            <Terminal label="Sievant" claimId={`sievant.block-${b}-out`} />
+          </li>
+        ))}
       </ul>
+    </section>
+
+    <section class="container section" aria-labelledby="leaking">
+      <h2 id="leaking">Is your MCP setup leaking?</h2>
       <p>
-        <Claim id="sievant.speed" /> <Claim id="sievant.speed-basis" />
+        <Claim id="sievant.scan-reads" />
       </p>
-    </div>
-    <Terminal
-      label="On your machine"
-      claimId="sievant.quickstart-terminal"
-      note="From the README"
-    />
-  </section>
+      <p>
+        <a class="button" href="/scan">
+          What the scan checks
+        </a>
+      </p>
+    </section>
 
-  <section class="container section" aria-labelledby="blocks">
-    <h2 id="blocks">What it blocks</h2>
-    <p>Real responses, recorded against the synthetic MCP server in Sievant’s tests.</p>
-    <ul class="block-list">
-      {blocks.map((b) => (
-        <li>
-          <p>
-            <Claim id={`sievant.block-${b}`} />
-          </p>
-          <Terminal label="Sievant" claimId={`sievant.block-${b}-out`} />
-        </li>
-      ))}
-    </ul>
-  </section>
+    <section class="container section" aria-labelledby="privacy">
+      <h2 id="privacy">What stays on your machine</h2>
+      <p>
+        <Claim id="sievant.no-telemetry" />
+      </p>
+      <p>
+        <Claim id="sievant.privacy-trail" />
+      </p>
+      <p>
+        <a href="/sample-report">See a sample posture report</a> ·{' '}
+        <a href="/scoring">How findings are rated</a> · <a href="/faq">FAQ</a>
+      </p>
+    </section>
 
-  <section class="container section" aria-labelledby="leaking">
-    <h2 id="leaking">Is your MCP setup leaking?</h2>
-    <p>
-      <Claim id="sievant.scan-reads" />
-    </p>
-    <p>
-      <a class="button" href="/scan">
-        What the scan checks
-      </a>
-    </p>
-  </section>
+    <Proof />
 
-  <section class="container section" aria-labelledby="privacy">
-    <h2 id="privacy">What stays on your machine</h2>
-    <p>
-      <Claim id="sievant.no-telemetry" />
-    </p>
-    <p>
-      <Claim id="sievant.privacy-trail" />
-    </p>
-    <p>
-      <a href="/sample-report">See a sample posture report</a> ·{' '}
-      <a href="/scoring">How findings are rated</a> · <a href="/faq">FAQ</a>
-    </p>
-  </section>
+    <section class="container section" aria-labelledby="review">
+      <h2 id="review">Want a review of your setup?</h2>
+      <p>
+        The {review.name} delivers a threat model, Sievant deployed (observe first, then enforce)
+        and a posture report for your customer’s security review.
+      </p>
+      <p data-owner-source="content/pricing.md">
+        {priceLabel(review)}, {review.duration}.
+      </p>
+      <div class="button-row">
+        <a class="button" href={BOOKING_URL}>
+          Book a call
+        </a>
+        <a class="button button--ghost" href={url('www', '/pricing')}>
+          Pricing
+        </a>
+      </div>
+    </section>
 
-  <Proof />
+    <section class="container section" aria-labelledby="tokvera-cta">
+      <h2 id="tokvera-cta">Paying for inference too?</h2>
+      <p>
+        <a href={url('tokvera')}>Tokvera</a> measures what your LLM endpoint costs and how it
+        behaves under load. <a href={url('www')}>Halotrcer</a> runs both and writes one report.
+      </p>
+    </section>
 
-  <section class="container section" aria-labelledby="review">
-    <h2 id="review">Want a review of your setup?</h2>
-    <p>
-      The {review.name} delivers a threat model, Sievant deployed (observe first, then enforce) and
-      a posture report for your customer’s security review.
-    </p>
-    <p data-owner-source="content/pricing.md">
-      {priceLabel(review)}, {review.duration}.
-    </p>
-    <div class="button-row">
-      <a class="button" href={BOOKING_URL}>
-        Book a call
-      </a>
-      <a class="button button--ghost" href={url('www', '/pricing')}>
-        Pricing
-      </a>
-    </div>
-  </section>
-
-  <section class="container section" aria-labelledby="tokvera-cta">
-    <h2 id="tokvera-cta">Paying for inference too?</h2>
-    <p>
-      <a href={url('tokvera')}>Tokvera</a> measures what your LLM endpoint costs and how it behaves
-      under load. <a href={url('www')}>Halotrcer</a> runs both and writes one report.
-    </p>
-  </section>
-
-  <section class="container section">
-    <InstallOrSoon product="sievant" />
-  </section>
+    <section class="container section">
+      <InstallOrSoon product="sievant" />
+    </section>
+  </div>
 </BaseLayout>

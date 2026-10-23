@@ -1,0 +1,55 @@
+---
+// The top of a board page, on wood: the hero (h1 and lede from the page's slot), "Open your
+// case" and "Copy this case file" under it and again under the board, and the copied text
+// in a closed disclosure that works without JS. Used by the three home pages.
+import CopyButtons from '../CopyButtons.astro';
+import CaseBoard from './CaseBoard.astro';
+import { BOOKING_URL, type SiteId } from '../../config/site.ts';
+import { board } from '../../lib/clues.ts';
+
+interface Props {
+  site: SiteId;
+  // A sentence-long headline (the product homes) is set a size smaller, so the case buttons
+  // stay in a phone's first screen.
+  long?: boolean;
+}
+
+const { site, long = false } = Astro.props;
+const { summary } = board(site);
+---
+
+<div class="wood">
+  <section
+    class:list={['container case-hero', { 'case-hero--long': long }]}
+    aria-labelledby="case-title"
+  >
+    <slot />
+    <div class="button-row case-hero__actions">
+      <a class="button" href={BOOKING_URL}>
+        Open your case
+      </a>
+      <button class="button button--ghost js-only" type="button" data-copy="case-file-text">
+        Copy this case file
+      </button>
+    </div>
+  </section>
+
+  <div class="container case-body">
+    <CaseBoard site={site} />
+    <div class="button-row case-actions">
+      <a class="button" href={BOOKING_URL}>
+        Open your case
+      </a>
+      <button class="button button--ghost js-only" type="button" data-copy="case-file-text">
+        Copy this case file
+      </button>
+    </div>
+    <details class="case-file-copy">
+      <summary>What gets copied</summary>
+      <p id="case-file-text" class="case-file-text" data-sample="case-file">
+        {summary}
+      </p>
+    </details>
+  </div>
+</div>
+<CopyButtons />

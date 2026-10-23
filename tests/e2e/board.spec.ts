@@ -131,8 +131,7 @@ test.describe('www board', () => {
 for (const width of [320, 390, 768, 800, 1024, 1280, 1440])
   test.describe(`board fit at ${width} px`, () => {
     test.use({ viewport: { width, height: 900 }, isMobile: false, hasTouch: false });
-    // Task 8 adds tokvera and sievant.
-    for (const site of ['www'] as const)
+    for (const site of ['www', 'tokvera', 'sievant'] as const)
       test(`${site}: cards inside the frame, no overflow`, async ({ page }) => {
         await page.goto(`${ORIGINS[site]}/`, { waitUntil: 'networkidle' });
         await page.goto(`${ORIGINS[site]}/`, { waitUntil: 'networkidle' });
@@ -235,3 +234,63 @@ test.describe('contact email on a phone', () => {
     expect(pieces.map((p) => p.text).join('')).toBe('satyajit.rajaraman@halotrcer.com');
   });
 });
+
+// The product homes: the same case file, with four clues.
+for (const [site, subject] of [
+  ['tokvera', 'Your LLM endpoint'],
+  ['sievant', "Your agents' tools"],
+] as const)
+  test.describe(`${site} board`, () => {
+    test('four stamped clues; tag, subject, clues, sticky in order', async ({ page }) => {
+      await page.goto(`${ORIGINS[site]}/`);
+      const list = region(page).getByRole('list').first();
+      await expect(list.locator(':scope > li')).toHaveCount(7);
+      const cards = list.locator('article[data-clue]');
+      await expect(cards).toHaveCount(4);
+      for (const card of await cards.all()) await expect(card).toContainText('Simulated demo run');
+      await expect(list.locator(':scope > li').nth(0).locator('.case-tag')).toBeVisible();
+      await expect(list.locator(':scope > li').nth(1)).toContainText(subject);
+      await expect(list.locator(':scope > li').nth(6).locator('.sticky-note')).toBeVisible();
+      if (site === 'tokvera') await expect(cards.nth(3)).toContainText('Provisional scoring.');
+    });
+
+    test('Open your case under the hero and under the board', async ({ page }) => {
+      await page.goto(`${ORIGINS[site]}/`);
+      await expect(page.getByRole('link', { name: 'Open your case' })).toHaveCount(2);
+      await expect(page.getByRole('button', { name: 'Copy this case file' })).toHaveCount(2);
+    });
+
+    test.describe('phone first screen', () => {
+      test.use({ viewport: { width: 320, height: 640 } });
+      test('both case buttons are in it', async ({ page }) => {
+        await page.goto(`${ORIGINS[site]}/`);
+        for (const loc of [
+          page.locator('.case-hero').getByRole('link', { name: 'Open your case' }),
+          page.locator('.case-hero').getByRole('button', { name: 'Copy this case file' }),
+        ]) {
+          const box = await loc.boundingBox();
+          expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(640);
+        }
+      });
+    });
+
+    test.describe('without JavaScript', () => {
+      test.use({ javaScriptEnabled: false });
+      test('the case file text opens from its disclosure', async ({ page }) => {
+        await page.goto(`${ORIGINS[site]}/`);
+        await expect(page.locator('#case-file-text')).toBeHidden();
+        await page.getByText('What gets copied', { exact: true }).click();
+        await expect(page.locator('#case-file-text')).toHaveText(board(site).summary);
+      });
+    });
+
+    test.describe('with JavaScript', () => {
+      test.use({ permissions: CLIPBOARD_PERMISSIONS });
+      test('Copy this case file copies the summary', async ({ page }) => {
+        await recordClipboard(page);
+        await page.goto(`${ORIGINS[site]}/`);
+        await page.getByRole('button', { name: 'Copy this case file' }).first().click();
+        await expect.poll(() => copied(page)).toBe(board(site).summary);
+      });
+    });
+  });
