@@ -1,0 +1,18 @@
+Halotrcer websites (www.halotrcer.com, tokvera.halotrcer.com, sievant.halotrcer.com)
+
+This repository ships three third-party fonts, self-hosted as Latin-subset WOFF2 files
+in src/assets/fonts/. They are unmodified apart from subsetting and, for Karla, limiting
+the weight axis to 400-800. Sources and checksums: docs/fonts.md.
+
+Permanent Marker
+  Copyright (c) 2010 by Font Diner, Inc. All rights reserved.
+  Licensed under the Apache License, Version 2.0: LICENSES/fonts/Apache-2.0.txt
+
+Special Elite
+  Copyright (c) 2010 by Brian J. Bonislawsky DBA Astigmatic (AOETI). All rights reserved.
+  Licensed under the Apache License, Version 2.0: LICENSES/fonts/Apache-2.0.txt
+
+Karla
+  Copyright 2019 The Karla Project Authors (https://github.com/googlefonts/karla)
+  Licensed under the SIL Open Font License, Version 1.1: LICENSES/fonts/OFL-1.1.txt
+  The subset keeps the Reserved Font Name policy of the original; no name is changed.

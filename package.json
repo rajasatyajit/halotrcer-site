@@ -65,6 +65,7 @@
     "check:launched": "node scripts/check-launched.ts",
     "verify:scripts": "node scripts/verify-scripts.ts",
     "sync:samples": "node scripts/sync-samples.ts",
-    "check:jsonld": "node scripts/check-jsonld.ts"
+    "check:jsonld": "node scripts/check-jsonld.ts",
+    "fonts:subset": "node scripts/subset-fonts.ts"
   }
 }

@@ -1,4 +1,5 @@
 ---
+import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/components.css';
@@ -9,6 +10,8 @@ import { getFlags } from '../config/flags.ts';
 import { canonicalPath } from '../lib/paths.ts';
 import { breadcrumbs, serialize, type Crumb, type JsonLd } from '../lib/jsonld.ts';
 import { ogImagePath } from '../lib/og.ts';
+// The hero heading's face; the other two load on demand (DESIGN.md §3).
+import markerFont from '../assets/fonts/permanent-marker.woff2?url';
 
 interface Props {
   title: string;
@@ -58,8 +61,9 @@ const graph = [
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f6f3" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121315" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f2e2" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1f1a14" />
+    <link rel="preload" href={markerFont} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteName} />

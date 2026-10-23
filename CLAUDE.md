@@ -44,7 +44,7 @@ Other sessions own them. Only read them: no writes, builds or binaries, and no g
 - Astro static output, zero JS by default. Vanilla-TS islands only: install picker, copy buttons, calculator, share, theme toggle.
 - Every feature works with JavaScript disabled.
 - Hand-written CSS with tokens; light and dark themes; no CSS framework.
-- System font stack. No web fonts shipped.
+- Three self-hosted WOFF2 fonts only (Permanent Marker, Special Elite, Karla; owner decision 2026-10-23); preload only Permanent Marker. No other fonts.
 - No third-party scripts, fonts or trackers. Cloudflare Web Analytics is the only exception, and only when `ANALYTICS=true`.
 - Strict CSP: no inline executable scripts, no `style=` attributes, no `unsafe-inline` or `unsafe-eval`. The only allowed inline script is `application/ld+json`.
 - WCAG 2.2 AA, full keyboard support, `prefers-reduced-motion` and `prefers-color-scheme`. Never use colour alone for meaning.

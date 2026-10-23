@@ -796,7 +796,7 @@ mark {
   padding: 0 var(--s-2);
   border: 1px solid var(--ink-muted);
   border-radius: var(--radius);
-  font-family: var(--font-mono);
+  font-family: var(--font-type);
   font-size: var(--text-sm);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -1016,7 +1016,7 @@ html.js .calc__nojs {
   border: 2px solid currentcolor;
   border-radius: var(--radius);
   color: var(--accent);
-  font-family: var(--font-mono);
+  font-family: var(--font-type);
   font-size: var(--text-sm);
   font-weight: 700;
   letter-spacing: 0.04em;

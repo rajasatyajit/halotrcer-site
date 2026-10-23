@@ -4,14 +4,35 @@
 :root {
   color-scheme: light dark;
 
-  /* Surfaces and ink: warm paper by day, graphite by night. */
-  --bg: light-dark(#f7f6f3, #121315);
-  --surface: light-dark(#fff, #1a1c1f);
-  --surface-sunken: light-dark(#efede8, #0d0e10);
-  --ink: light-dark(#1b1a17, #ecebe7);
-  --ink-muted: light-dark(#55524b, #a6a39c);
-  --line: light-dark(#d6d2c8, #33363b);
-  --focus: light-dark(#1b1a17, #ecebe7);
+  /* Paper, the Case File's reading surface: cream by day, dark paper by night. */
+  --bg: light-dark(#f7f2e2, #1f1a14);
+  --surface: light-dark(#fffdf6, #2a231b);
+  --surface-sunken: light-dark(#efe7d3, #17130e);
+  --ink: light-dark(#1f1a14, #f3ebdd);
+  --ink-muted: light-dark(#5e544a, #c9b79e);
+  --line: light-dark(#d8cbb0, #4a3f33);
+  --focus: light-dark(#1f1a14, #ffe45c);
+  --paper: light-dark(#fffdf6, #1f1a14);
+  --paper-ink: light-dark(#1f1a14, #f3ebdd);
+
+  /* Kind labels and other red text on paper; the board's red is too dark on dark paper. */
+  --label: light-dark(#c1121f, #ff8a8a);
+
+  /* The board is an object: the same in both themes (DESIGN.md §2). */
+  --frame: #3b2a1a;
+  --frame-edge: #5a3d22;
+  --cork: #b98a55;
+  --cork-dot: #a2763f;
+  --card: #fffdf6;
+  --board-ink: #1f1a14;
+  --faded: #5e544a;
+  --yarn: #c1121f;
+  --on-yarn: #fff;
+  --pin: #d62828;
+  --sticky: #ffe45c;
+  --tag: #f7f2e2;
+  --on-frame: #fffdf6;
+  --on-frame-muted: #e6d9c6;
 
   /* Terminal panels stay dark in both themes. */
   --term-bg: #16171a;
@@ -33,17 +54,23 @@
   --sev-low: light-dark(#1f5f99, #8cc2ff);
   --sev-info: light-dark(#55524b, #a6a39c);
 
-  /* Type */
-  --font-sans:
-    system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
+  /* Type: three self-hosted faces (src/styles/fonts.css), each with a metric-matched
+     fallback face so a late font does not move the layout. */
+  --font-marker: 'Permanent Marker', 'Permanent Marker fallback', cursive;
+  --font-type: 'Special Elite', 'Special Elite fallback', 'Courier New', monospace;
+  --font-body: 'Karla', 'Karla fallback', system-ui, sans-serif;
+  --font-sans: var(--font-body);
   --font-mono: ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
-  --text-2xl: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
-  --text-3xl: clamp(2rem, 1.5rem + 2.4vw, 3.25rem);
-  --text-4xl: clamp(2.5rem, 1.6rem + 3.6vw, 4rem);
+
+  /* Scale (DESIGN.md §3): display 96/68/40/24, body 19/17/15, small 13. */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.1875rem;
+  --text-xl: 1.5rem;
+  --text-2xl: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+  --text-3xl: clamp(2.25rem, 1.4rem + 3.6vw, 4.25rem);
+  --text-4xl: clamp(2.75rem, 1.4rem + 5.6vw, 6rem);
   --tracking-tight: -0.02em;
   --leading: 1.6;
   --leading-tight: 1.15;

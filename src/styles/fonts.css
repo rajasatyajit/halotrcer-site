@@ -1,0 +1,56 @@
+/* The three Case File faces, self-hosted Latin WOFF2 (sources and licences: docs/fonts.md,
+   NOTICE). Each has a local fallback face scaled to its metrics (npm run fonts:subset
+   prints them). font-display is optional, not swap: a face that misses the first paint is
+   not swapped in later, because a heading that rewraps moves the page (CLS must stay 0).
+   The preloaded Marker normally makes it; the cached fonts always do on the next page. */
+
+@font-face {
+  font-family: 'Permanent Marker';
+  src: url('../assets/fonts/permanent-marker.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Special Elite';
+  src: url('../assets/fonts/special-elite.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: Karla;
+  src: url('../assets/fonts/karla.woff2') format('woff2');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Permanent Marker fallback';
+  src: local('Arial'), local('Liberation Sans'), local('Arimo'), local('Helvetica');
+  size-adjust: 112.05%;
+  ascent-override: 99.01%;
+  descent-override: 28.33%;
+  line-gap-override: 2.7%;
+}
+
+@font-face {
+  font-family: 'Special Elite fallback';
+  src: local('Arial'), local('Liberation Sans'), local('Arimo'), local('Helvetica');
+  size-adjust: 113.47%;
+  ascent-override: 61.97%;
+  descent-override: 26.16%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Karla fallback';
+  src: local('Arial'), local('Liberation Sans'), local('Arimo'), local('Helvetica');
+  size-adjust: 100.6%;
+  ascent-override: 91.16%;
+  descent-override: 25.05%;
+  line-gap-override: 0%;
+}
