@@ -43,6 +43,6 @@ test.describe('fonts on www/', () => {
       await document.fonts.ready;
       return [...document.fonts].filter((f) => f.status === 'loaded').map((f) => f.family);
     });
-    expect(loaded).toEqual(expect.arrayContaining(['Permanent Marker', 'Karla']));
+    expect(loaded).toEqual(expect.arrayContaining(['Case Marker', 'Case Karla']));
   });
 });

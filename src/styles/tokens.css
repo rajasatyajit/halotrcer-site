@@ -18,6 +18,9 @@
   /* Kind labels and other red text on paper; the board's red is too dark on dark paper. */
   --label: light-dark(#c1121f, #ff8a8a);
 
+  /* Inverted paper (the "Both detectives" card): ink background, paper text. */
+  --label-inverse: light-dark(#ffe45c, #a50f1a);
+
   /* The board is an object: the same in both themes (DESIGN.md §2). */
   --frame: #3b2a1a;
   --frame-edge: #5a3d22;
@@ -56,9 +59,9 @@
 
   /* Type: three self-hosted faces (src/styles/fonts.css), each with a metric-matched
      fallback face so a late font does not move the layout. */
-  --font-marker: 'Permanent Marker', 'Permanent Marker fallback', cursive;
-  --font-type: 'Special Elite', 'Special Elite fallback', 'Courier New', monospace;
-  --font-body: 'Karla', 'Karla fallback', system-ui, sans-serif;
+  --font-marker: 'Case Marker', 'Case Marker fallback', cursive;
+  --font-type: 'Case Typewriter', 'Case Typewriter fallback', 'Courier New', monospace;
+  --font-body: 'Case Karla', 'Case Karla fallback', system-ui, sans-serif;
   --font-sans: var(--font-body);
   --font-mono: ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
 

@@ -6,7 +6,7 @@ import Hero from '../../../components/Hero.astro';
 import InstallOrSoon from '../../../components/InstallOrSoon.astro';
 import Terminal from '../../../components/Terminal.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
-import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+import { priceLabel, serviceFor } from '../../../lib/pricing.ts';
 import { softwareApplication } from '../../../lib/jsonld.ts';
 
 const audit = serviceFor('performance-audit');
@@ -109,7 +109,7 @@ const jsonld = [softwareApplication('tokvera')];
       <Claim id="tokvera.audit" />
     </p>
     <p data-owner-source="content/pricing.md">
-      {audit.name}: from {formatPrice(audit.from)}, {audit.duration.toLowerCase()}.
+      {audit.name}: {priceLabel(audit, { inSentence: true })}, {audit.duration.toLowerCase()}.
     </p>
     <div class="button-row">
       <a class="button" href={BOOKING_URL}>

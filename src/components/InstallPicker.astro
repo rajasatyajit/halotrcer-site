@@ -64,6 +64,7 @@ const fill = (text: string, release: Release, v: Variant) =>
 const scriptName = (c: Channel) => (c.id === 'script' ? 'install.sh' : 'install.ps1');
 const nextText = (next: { cmd: string; note?: string | undefined }[]) =>
   next.map((n) => (n.note ? `${n.cmd}    # ${n.note}` : n.cmd)).join('\n');
+import CopyButtons from './CopyButtons.astro';
 ---
 
 <section
@@ -242,7 +243,8 @@ const nextText = (next: { cmd: string; note?: string | undefined }[]) =>
   <p class="visually-hidden" aria-live="polite" data-copy-status></p>
 </section>
 
+<CopyButtons />
+
 <script>
   import '../islands/install/picker.ts';
-  import '../islands/copy.ts';
 </script>

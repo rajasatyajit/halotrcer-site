@@ -46,5 +46,9 @@ still rewraps a heading when a font arrives after the first paint: with every fo
 With `optional`, a late font is not swapped in, so the page never moves. The preloaded Marker
 normally arrives in time, and cached fonts always do (`tests/e2e/fonts.spec.ts`).
 
+The CSS family names are our own (`Case Marker`, `Case Typewriter`, `Case Karla`). With the
+fonts' real names, a visitor who has Special Elite or Karla installed got the system copy
+swapped in after the first paint, which moved the layout.
+
 `npm run budget` charges all three files (101,272 bytes) to every page, and fails on any
 other font file.

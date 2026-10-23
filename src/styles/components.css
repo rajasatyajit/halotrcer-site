@@ -388,41 +388,53 @@
 .price-card {
   display: flex;
   flex-direction: column;
+  gap: var(--s-1);
   padding: var(--s-5);
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--halotrcer);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
+  border: 2px solid var(--paper-ink);
+  background: var(--paper);
+  color: var(--paper-ink);
 }
 
-.price-card--tokvera {
-  border-top-color: var(--tokvera);
+.price-card p {
+  margin: 0;
 }
 
-.price-card--sievant {
-  border-top-color: var(--sievant);
+/* The combined service is the inverted card. */
+.price-card--www {
+  background: var(--paper-ink);
+  color: var(--paper);
+}
+
+.price-card__kicker {
+  color: var(--label);
+  font-family: var(--font-marker);
+  font-size: var(--text-sm);
+}
+
+.price-card--www .price-card__kicker {
+  color: var(--label-inverse);
 }
 
 .price-card__name {
-  font-size: var(--text-xl);
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  font-weight: 800;
 }
 
 .price-card__price {
-  margin-bottom: var(--s-1);
-  font-size: var(--text-2xl);
-  font-weight: 700;
-  line-height: var(--leading-tight);
-}
-
-.price-card__from {
-  display: block;
-  font-size: var(--text-sm);
-  font-weight: 400;
-  color: var(--ink-muted);
+  font-family: var(--font-marker);
+  font-size: 2.125rem;
+  line-height: 1.2;
 }
 
 .price-card__duration {
-  color: var(--ink-muted);
+  font-family: var(--font-type);
+  font-size: var(--text-sm);
+}
+
+.price-card .checklist {
+  margin-top: var(--s-3);
 }
 
 .price-card .button {
@@ -1563,4 +1575,80 @@ caption,
   .sticky-note {
     transform: none;
   }
+}
+
+/* Wood: the top of a board page, the same in both themes. */
+.wood {
+  background: var(--frame);
+  color: var(--on-frame);
+  padding-bottom: var(--s-7);
+}
+
+.case-hero {
+  padding-block: var(--s-6) var(--s-5);
+}
+
+.case-hero h1 {
+  color: var(--on-frame);
+}
+
+.case-hero .lede {
+  margin: 0;
+  color: var(--on-frame-muted);
+}
+
+.case-actions {
+  margin-top: var(--s-6);
+}
+
+.case-file-text {
+  margin-top: var(--s-3);
+  color: var(--on-frame-muted);
+  font-family: var(--font-type);
+  font-size: var(--text-xs);
+}
+
+html:not(.js) .js-only {
+  display: none;
+}
+
+/* Paper: sections below the board. Switches with the theme. */
+.paper-section {
+  padding-block: var(--s-8);
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+
+.price-band {
+  display: grid;
+  gap: var(--s-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
+  margin: var(--s-5) 0 var(--s-4);
+  padding: 0;
+  list-style: none;
+  max-width: none;
+}
+
+.case-notes {
+  margin-top: var(--s-7);
+}
+
+.case-notes h3 {
+  font-size: var(--text-xl);
+}
+
+.contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: center;
+  margin-top: var(--s-6);
+}
+
+.contact-email {
+  padding: 10px 14px;
+  border: 2px dashed currentcolor;
+  font-family: var(--font-type);
+  overflow-wrap: anywhere;
+  user-select: all;
 }

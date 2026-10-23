@@ -62,6 +62,8 @@ const PAIRS: [string, string, number][] = [
   // Paper sections switch with the theme.
   ['paper-ink', 'paper', 4.5],
   ['label', 'paper', 4.5],
+  ['paper', 'paper-ink', 4.5],
+  ['label-inverse', 'paper-ink', 4.5],
 ];
 
 // Two-tone focus ring (ink outline, yellow halo): one of the two reaches 3:1 on every surface.

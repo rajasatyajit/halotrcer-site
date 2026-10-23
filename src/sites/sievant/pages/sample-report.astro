@@ -5,7 +5,7 @@ import SourceLine from '../../../components/SourceLine.astro';
 import SimulatedStamp from '../../../components/SimulatedStamp.astro';
 import Severity from '../../../components/Severity.astro';
 import { sample } from '../../../lib/samples.ts';
-import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+import { priceLabel, serviceFor } from '../../../lib/pricing.ts';
 
 interface Posture {
   organization: string;
@@ -71,7 +71,8 @@ const review = serviceFor('agent-security-review');
           ))}
         </ul>
         <p>
-          {review.name}: from {formatPrice(review.from)}, {review.duration.toLowerCase()}.
+          {review.name}: {priceLabel(review, { inSentence: true })}, {review.duration.toLowerCase()}
+          .
         </p>
       </div>
       <div

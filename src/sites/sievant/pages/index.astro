@@ -6,7 +6,7 @@ import Hero from '../../../components/Hero.astro';
 import InstallOrSoon from '../../../components/InstallOrSoon.astro';
 import Terminal from '../../../components/Terminal.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
-import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+import { priceLabel, serviceFor } from '../../../lib/pricing.ts';
 import { softwareApplication } from '../../../lib/jsonld.ts';
 
 const review = serviceFor('agent-security-review');
@@ -101,7 +101,7 @@ const jsonld = [softwareApplication('sievant')];
       a posture report for your customer’s security review.
     </p>
     <p data-owner-source="content/pricing.md">
-      From {formatPrice(review.from)}, {review.duration}.
+      {priceLabel(review)}, {review.duration}.
     </p>
     <div class="button-row">
       <a class="button" href={BOOKING_URL}>

@@ -82,7 +82,7 @@ export function service(s: Service): JsonLd {
       url: url('www', '/pricing'),
       priceSpecification: {
         '@type': 'PriceSpecification',
-        minPrice: s.from,
+        ...(s.price === undefined ? { minPrice: s.from } : { price: s.price }),
         priceCurrency: loadPricing().currency,
       },
     },

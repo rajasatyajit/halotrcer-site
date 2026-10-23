@@ -4,10 +4,12 @@
    not swapped in later, because a heading that rewraps moves the page (CLS must stay 0).
    The preloaded Marker normally makes it; Karla and Special Elite often miss it on a first
    visit and show from the next page on, once cached. swap measured CLS above 0 even for
-   Karla alone (button labels change width). */
+   Karla alone (button labels change width).
+   The family names are our own ("Case …"), never the fonts' names: a visitor who has
+   Special Elite or Karla installed would otherwise get the system copy swapped in late. */
 
 @font-face {
-  font-family: 'Permanent Marker';
+  font-family: 'Case Marker';
   src: url('../assets/fonts/permanent-marker.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
@@ -15,7 +17,7 @@
 }
 
 @font-face {
-  font-family: 'Special Elite';
+  font-family: 'Case Typewriter';
   src: url('../assets/fonts/special-elite.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
@@ -23,7 +25,7 @@
 }
 
 @font-face {
-  font-family: Karla;
+  font-family: 'Case Karla';
   src: url('../assets/fonts/karla.woff2') format('woff2');
   font-weight: 400 800;
   font-style: normal;
@@ -31,7 +33,7 @@
 }
 
 @font-face {
-  font-family: 'Permanent Marker fallback';
+  font-family: 'Case Marker fallback';
   src: local('Arial'), local('Liberation Sans'), local('Arimo'), local('Helvetica');
   size-adjust: 112.05%;
   ascent-override: 99.01%;
@@ -40,7 +42,7 @@
 }
 
 @font-face {
-  font-family: 'Special Elite fallback';
+  font-family: 'Case Typewriter fallback';
   src: local('Arial'), local('Liberation Sans'), local('Arimo'), local('Helvetica');
   size-adjust: 113.47%;
   ascent-override: 61.97%;
@@ -49,7 +51,7 @@
 }
 
 @font-face {
-  font-family: 'Karla fallback';
+  font-family: 'Case Karla fallback';
   src: local('Arial'), local('Liberation Sans'), local('Arimo'), local('Helvetica');
   size-adjust: 100.6%;
   ascent-override: 91.16%;

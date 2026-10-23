@@ -9,7 +9,7 @@ import SimulatedStamp from '../../../components/SimulatedStamp.astro';
 import Severity from '../../../components/Severity.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
 import { docTable } from '../../../lib/md-table.ts';
-import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+import { priceLabel, serviceFor } from '../../../lib/pricing.ts';
 import { sample } from '../../../lib/samples.ts';
 import { getEntry } from 'astro:content';
 
@@ -140,7 +140,7 @@ if (!example) throw new Error('sievant-scan sample has no findings');
       agents (observe first, then enforce) and a posture report for your customer’s security review.
     </p>
     <p data-owner-source="content/pricing.md">
-      From {formatPrice(review.from)}, {review.duration.toLowerCase()}.
+      {priceLabel(review)}, {review.duration.toLowerCase()}.
     </p>
     <div class="button-row">
       <a class="button" href={BOOKING_URL}>

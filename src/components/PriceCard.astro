@@ -1,33 +1,40 @@
 ---
 // One service from content/pricing.md (owner-set prices: data-owner-source).
 import { BOOKING_URL } from '../config/site.ts';
-import { formatPrice, type Service } from '../lib/pricing.ts';
+import { priceLabel, type Service } from '../lib/pricing.ts';
 
 interface Props {
   service: Service;
   headingLevel?: 'h2' | 'h3';
+  // The home page's short form: kicker, name, price and duration, no deliverables.
+  compact?: boolean;
 }
 
-const { service, headingLevel = 'h3' } = Astro.props;
+const { service, headingLevel = 'h3', compact = false } = Astro.props;
 const Heading = headingLevel;
 ---
 
-<article class={`price-card price-card--${service.product}`} data-owner-source="content/pricing.md">
+<article
+  class:list={['price-card', `price-card--${service.product}`, { 'price-card--compact': compact }]}
+  data-owner-source="content/pricing.md"
+>
+  <p class="price-card__kicker">{service.kicker}</p>
   <Heading class="price-card__name" id={`service-${service.id}`}>
     {service.name}
   </Heading>
-  <p class="price-card__price">
-    <span class="price-card__from">From</span>
-    {formatPrice(service.from)}
-  </p>
+  <p class="price-card__price">{priceLabel(service)}</p>
   <p class="price-card__duration">{service.duration}</p>
-  <p>{service.summary}</p>
-  <ul class="checklist">
-    {service.deliverables.map((d) => (
-      <li>{d}</li>
-    ))}
-  </ul>
-  <a class="button" href={BOOKING_URL} aria-describedby={`service-${service.id}`}>
-    Book a call
-  </a>
+  {!compact && (
+    <>
+      <p>{service.summary}</p>
+      <ul class="checklist">
+        {service.deliverables.map((d) => (
+          <li>{d}</li>
+        ))}
+      </ul>
+      <a class="button" href={BOOKING_URL} aria-describedby={`service-${service.id}`}>
+        Book a call
+      </a>
+    </>
+  )}
 </article>

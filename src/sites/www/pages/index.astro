@@ -2,164 +2,115 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Proof from '../../../components/Proof.astro';
 import Claim from '../../../components/Claim.astro';
-import Hero from '../../../components/Hero.astro';
+import CopyButtons from '../../../components/CopyButtons.astro';
 import InstallOrSoon from '../../../components/InstallOrSoon.astro';
-import Terminal from '../../../components/Terminal.astro';
-import { BOOKING_URL, url } from '../../../config/site.ts';
-import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+import PriceCard from '../../../components/PriceCard.astro';
+import CaseBoard from '../../../components/board/CaseBoard.astro';
+import { BOOKING_URL, CONTACT_EMAIL, url } from '../../../config/site.ts';
+import { board } from '../../../lib/clues.ts';
+import { loadPricing } from '../../../lib/pricing.ts';
 import { organization, softwareApplication, website } from '../../../lib/jsonld.ts';
 
-const audit = serviceFor('cost-security-audit');
+const { services } = loadPricing();
+const { summary } = board('www');
 const jsonld = [organization(), website(), softwareApplication('halotrcer')];
 ---
 
 <BaseLayout
   title="Halotrcer: find AI spend leaks and agent exposures"
-  description="Halotrcer runs Tokvera and Sievant together: one check for LLM inference cost and latency and for MCP agent security, with one combined report and a ranked fix plan."
+  description="Is your AI slow, expensive or leaking? Halotrcer puts two detectives on the case, on your own system: Tokvera on your LLM endpoint and Sievant on your agents' tools."
   bareTitle
   jsonld={jsonld}
+  ogStamp="Simulated demo runs"
 >
-  <Hero eyebrow="Halotrcer">
-    <a class="button" href={url('www', '/audit')}>
-      See the audit
-    </a>
-    <a class="button button--ghost" href={BOOKING_URL}>
-      Book a call
-    </a>
-  </Hero>
-
-  <section class="container section" aria-labelledby="what">
-    <h2 id="what">What one check covers</h2>
-    <ul class="feature-grid">
-      <li>
-        <h3>Cost and latency</h3>
-        <p>
-          <a href={url('tokvera')}>Tokvera</a> measures your inference endpoint:{' '}
-          <Claim id="tokvera.measures" />
-        </p>
-      </li>
-      <li>
-        <h3>Agent exposure</h3>
-        <p>
-          <a href={url('sievant')}>Sievant</a> reads your MCP client configuration and reports what
-          a customer security review would flag: <Claim id="sievant.scan-finds" />
-        </p>
-      </li>
-      <li>
-        <h3>One fix plan</h3>
-        <p>
-          <Claim id="halotrcer.fix-plan" />
-        </p>
-      </li>
-    </ul>
-  </section>
-
-  <section class="container section split" aria-labelledby="how">
-    <div>
-      <h2 id="how">How it runs</h2>
-      <p>
-        <Claim id="halotrcer.check-flow" />
+  <div class="wood">
+    <section class="container case-hero" aria-labelledby="case-title">
+      <h1 id="case-title">
+        <Claim id="www.case.title" />
+      </h1>
+      <p class="lede">
+        <Claim id="www.case.lede" /> Here's what they pinned up after their simulated demo runs.
       </p>
-      <p>
-        <Claim id="halotrcer.no-savings" /> See{' '}
-        <a href={url('www', '/scoring')}>how findings are ranked</a>.
+    </section>
+
+    <div class="container case-body">
+      <CaseBoard site="www" />
+      <div class="button-row case-actions">
+        <a class="button" href={BOOKING_URL}>
+          Open your case
+        </a>
+        <button class="button button--ghost js-only" type="button" data-copy="case-file-text">
+          Copy this case file
+        </button>
+      </div>
+      <p id="case-file-text" class="case-file-text" data-sample="case-file">
+        {summary}
       </p>
     </div>
-    <Terminal
-      label="halotrcer check"
-      note="Output format, from the CLI source"
-      lines={[
-        { kind: 'cmd', text: 'halotrcer check --target https://your-endpoint/v1' },
-        { kind: 'out', text: 'Efficiency grade (Tokvera): <grade> (Provisional scoring)' },
-        { kind: 'out', text: 'Cost per 1,000 requests: <measured>' },
-        {
-          kind: 'out',
-          text: 'Agent security (Sievant): <critical>, <high>, <medium>; deal risk: <n>',
-        },
-        { kind: 'out', text: 'Top findings:' },
-        { kind: 'out', text: '  1. <finding> (<tool> <rule>)' },
-        { kind: 'out', text: 'Report: halotrcer-report/report.html' },
-      ]}
-    />
-  </section>
+  </div>
 
-  <section class="container section" aria-labelledby="privacy">
-    <h2 id="privacy">What stays on your machine</h2>
-    <blockquote class="note">
+  <section class="paper-section" aria-labelledby="fees">
+    <div class="container">
+      <h2 id="fees">Hire the detectives</h2>
+      <ul class="price-band">
+        {services.map((s) => (
+          <li>
+            <PriceCard service={s} compact />
+          </li>
+        ))}
+      </ul>
       <p>
-        <Claim id="halotrcer.privacy" />
+        <a href={url('www', '/pricing')}>What each one delivers</a>
       </p>
-    </blockquote>
-  </section>
 
-  <section class="container section" aria-labelledby="products">
-    <h2 id="products">Two tools, one report</h2>
-    <ul class="card-grid">
-      <li class="card card--tokvera">
-        <h3>
-          <a href={url('tokvera')}>Tokvera</a>
-        </h3>
-        <p>
-          <Claim id="tokvera.headline" />
-        </p>
-      </li>
-      <li class="card card--sievant">
-        <h3>
-          <a href={url('sievant')}>Sievant</a>
-        </h3>
-        <p>
-          <Claim id="sievant.headline" />
-        </p>
-      </li>
-    </ul>
-  </section>
+      <div class="grid-3 case-notes">
+        <div>
+          <h3>Where your data goes</h3>
+          <p>
+            <Claim id="tokvera.no-telemetry" />
+          </p>
+          <p>
+            <Claim id="sievant.no-telemetry" />
+          </p>
+        </div>
+        <div>
+          <h3>What if you stop maintaining it?</h3>
+          <p>
+            <Claim id="www.continuity" />
+          </p>
+          <p>
+            <a href={url('www', '/security')}>Security and continuity</a>
+          </p>
+        </div>
+        <div>
+          <h3>One ranked fix list</h3>
+          <p>
+            <Claim id="halotrcer.fix-plan" /> Provisional.
+          </p>
+          <p>
+            <a href={url('www', '/scoring')}>How findings are ranked</a>
+          </p>
+        </div>
+      </div>
 
-  <section class="container section" aria-labelledby="free">
-    <h2 id="free">Two checks you can do now</h2>
-    <ul class="card-grid">
-      <li class="card card--tokvera">
-        <h3>
-          <a href={url('www', '/calculator')}>AI bill leak calculator</a>
-        </h3>
-        <p>
-          Estimate your monthly LLM spend and how much of it goes on repeated, uncached input, from
-          your own numbers.
-        </p>
-      </li>
-      <li class="card card--sievant">
-        <h3>
-          <a href={url('sievant', '/scan')}>Is your MCP setup leaking?</a>
-        </h3>
-        <p>
-          What <code>sievant scan</code> checks in the MCP servers your AI clients launch, and what
-          a finding looks like.
-        </p>
-      </li>
-    </ul>
+      <div class="contact-row">
+        <span id="contact-email" class="contact-email">
+          {CONTACT_EMAIL}
+        </span>
+        <button class="button button--ghost js-only" type="button" data-copy="contact-email">
+          Copy email
+        </button>
+        <a class="button" href={BOOKING_URL}>
+          Book a call
+        </a>
+      </div>
+    </div>
   </section>
 
   <Proof />
 
-  <section class="container section" aria-labelledby="audit">
-    <h2 id="audit">Rather we ran it?</h2>
-    <p>
-      The {audit.name} runs both tools on your system, leaves the instrumentation in place and hands
-      you one combined report.
-    </p>
-    <p data-owner-source="content/pricing.md">
-      From {formatPrice(audit.from)}, {audit.duration.toLowerCase()}.
-    </p>
-    <div class="button-row">
-      <a class="button" href={url('www', '/audit')}>
-        About the audit
-      </a>
-      <a class="button button--ghost" href={url('www', '/pricing')}>
-        All pricing
-      </a>
-    </div>
-  </section>
-
   <section class="container section">
     <InstallOrSoon product="halotrcer" />
   </section>
+  <CopyButtons />
 </BaseLayout>
