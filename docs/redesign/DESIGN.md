@@ -44,7 +44,7 @@ Revised by the owner on 2026-10-23 (LCP budget, measured that day; the runs are 
 
 | Role | Face | Use |
 |---|---|---|
-| Display | Permanent Marker, trimmed subset (printable ASCII plus the copy's punctuation), not preloaded | headings, card titles, "kind" labels, prices. Never body text |
+| Display | Permanent Marker, trimmed to the glyphs the site sets in Marker plus digits, A–F and common punctuation (owner, 2026-10-23; `npm run check:marker` fails the build on any other glyph), not preloaded | headings, card titles, "kind" labels, prices. Never body text |
 | Typewriter | system monospace (`Courier New`, `Liberation Mono`, …), ink colour from the tokens, slight letter spacing | card body text, case tags, stamps, small print |
 | Body | system UI fonts | paragraphs, navigation, buttons, forms |
 
