@@ -65,3 +65,25 @@ test.describe('sample report from the header at 320 px', () => {
       await expect(link).toHaveAttribute('href', url(site, '/sample-report'));
     });
 });
+
+// Wordmarks: Marker on www; the bold body face on the product sites, where Marker in the
+// first laid-out text cost LCP (owner decision 2026-10-23).
+test.describe('wordmark face', () => {
+  for (const [site, marker] of [
+    ['www', true],
+    ['tokvera', false],
+    ['sievant', false],
+  ] as const)
+    test(`${site}: ${marker ? 'Marker' : 'bold body face'}`, async ({ page }) => {
+      await page.goto(`${ORIGINS[site]}/`);
+      const { family, weight } = await page.locator('.wordmark').evaluate((el) => ({
+        family: getComputedStyle(el).fontFamily,
+        weight: getComputedStyle(el).fontWeight,
+      }));
+      if (marker) expect(family).toMatch(/^"Case Marker"/);
+      else {
+        expect(family).toMatch(/^system-ui/);
+        expect(weight).toBe('800');
+      }
+    });
+});
