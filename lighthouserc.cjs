@@ -46,11 +46,10 @@ const ALL_CATEGORIES = {
 };
 
 const BUDGETS = {
-  // Owner decisions 2026-10-23: the median of the 3 runs (single runs vary by more than our
-  // margin), under 1.3 s (Permanent Marker on the first screen costs about 0.3 s on the simulated
-  // mobile connection; the Case File home measured 1.21 s median, 100 ×4). The other budgets
-  // keep LHCI's default, the best of the runs.
-  'largest-contentful-paint': ['error', { maxNumericValue: 1300, aggregationMethod: 'median' }],
+  // Median of the 3 runs (owner, 2026-10-23: single runs vary by more than the margin). Limit
+  // 1.4 s (owner, 2026-10-23): the Marker font puts simulated LCP on a 1.21 / 1.36 / 1.51 s step; 30 runs after subsetting were all ≤ 1.36 s, so 1.4 s passes the current font and still fails if it adds another step.
+  // The other budgets keep LHCI's default, the best of the runs.
+  'largest-contentful-paint': ['error', { maxNumericValue: 1400, aggregationMethod: 'median' }],
   'cumulative-layout-shift': ['error', { maxNumericValue: 0 }],
   // Lab proxy for INP; interaction timing is also tested in Playwright.
   'total-blocking-time': ['error', { maxNumericValue: 100 }],

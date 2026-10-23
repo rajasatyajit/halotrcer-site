@@ -26,7 +26,8 @@ below 2):
 
 Preloading Marker made the hero heading wait for it. Without the preload the font still
 lands before the first paint, which costs about 0.3 s against `main`. The owner set the LCP
-limit to 1.3 s as the median of 3 runs (`lighthouserc.cjs`). The run-by-run record is in
+limit to 1.3 s, then to 1.4 s, as the median of 3 runs (`lighthouserc.cjs`): with Marker, simulated
+LCP lands on a 1.21 / 1.36 / 1.51 s step; after subsetting, 30 runs were all ≤ 1.36 s. The run-by-run record is in
 the M8 ledger (`.superpowers/sdd/2026-10-23-m8-case-file/progress.md`, local, not committed).
 
 ## Source
