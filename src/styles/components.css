@@ -1628,6 +1628,15 @@ caption,
   margin-top: var(--s-5);
 }
 
+/* Product headlines are sentences: the bold body face, not Marker (DESIGN.md §3). As
+   system text they also paint with the page, so LCP is the first paint. */
+.case-hero--long h1 {
+  font-family: var(--font-body);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
 @media (width >= 48rem) {
   .case-hero--long h1 {
     font-size: var(--text-3xl);

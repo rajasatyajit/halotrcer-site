@@ -48,6 +48,7 @@ Revised by the owner on 2026-10-23 (LCP budget, measured that day; the runs are 
 | Typewriter | system monospace (`Courier New`, `Liberation Mono`, …), ink colour from the tokens, slight letter spacing | card body text, case tags, stamps, small print |
 | Body | system UI fonts | paragraphs, navigation, buttons, forms |
 
+- Marker for the www headline and all board furniture; product-site headlines use the bold body face (long sentences, and it keeps LCP at first paint). (Owner decision 2026-10-23: in Marker, the Sievant headline was the LCP element and measured 1.36 s median.)
 - Reason: on Lighthouse's simulated mobile connection every font on the first screen
   delays the first paint. All three faces gave a 1.81 s LCP; Marker alone, not
   preloaded, gave a 1.21 s median (100 ×4). Preloading Marker made the hero wait for it
