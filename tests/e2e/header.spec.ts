@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { url } from '../../src/config/site.ts';
 import { ORIGINS } from './helpers.ts';
 
 const SITES = ['www', 'tokvera', 'sievant'] as const;
@@ -45,4 +46,22 @@ test.describe('desktop header', () => {
       await expect(page.getByRole('button', { name: /^Theme/ })).toBeVisible();
     });
   }
+});
+
+// The product heroes no longer link to the sample report: on the smallest phone it must be
+// one tap away once the header menu is open.
+test.describe('sample report from the header at 320 px', () => {
+  test.use({ viewport: { width: 320, height: 640 }, isMobile: false, hasTouch: false });
+  for (const site of ['tokvera', 'sievant'] as const)
+    test(`${site}: Menu, then Sample report`, async ({ page }) => {
+      await page.goto(`${ORIGINS[site]}/`);
+      const nav = page.getByRole('navigation', { name: 'Main' });
+      await nav.getByText('Menu', { exact: true }).click();
+      const link = nav.getByRole('link', { name: 'Sample report' });
+      await expect(link).toBeVisible();
+      const box = await link.boundingBox();
+      expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(640);
+      // Links carry the production URL (url() in src/config/site.ts).
+      await expect(link).toHaveAttribute('href', url(site, '/sample-report'));
+    });
 });
