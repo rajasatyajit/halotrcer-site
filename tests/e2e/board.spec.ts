@@ -144,7 +144,7 @@ for (const width of [320, 390, 768, 800, 1024, 1280, 1440])
           return [...document.querySelectorAll<HTMLElement>('.board > li > *')].flatMap((el) => {
             const r = el.getBoundingClientRect();
             const out: string[] = [];
-            if (r.left < frame.left - 1 || r.right > frame.right + 1)
+            if (r.left < frame.left - slack || r.right > frame.right + slack)
               out.push(`outside: ${el.className}`);
             // The cards and their contents, not the wrapper around a deliberately tilted card
             // (a rotated box's corners count toward its parent's scroll width).
