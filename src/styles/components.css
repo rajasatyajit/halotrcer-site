@@ -163,6 +163,7 @@
   justify-content: center;
   gap: var(--s-2);
   min-height: 3.125rem;
+  max-width: 100%;
   padding: var(--s-2) var(--s-5);
   border: 2px solid var(--yarn);
   border-radius: 4px;
@@ -170,7 +171,9 @@
   color: var(--on-yarn);
   font: inherit;
   font-weight: 800;
+  text-align: center;
   text-decoration: none;
+  overflow-wrap: anywhere;
   cursor: pointer;
 }
 
@@ -1316,6 +1319,7 @@ caption,
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--s-5);
+  max-width: none;
   margin: 0;
   padding: var(--s-5) var(--s-4);
   list-style: none;

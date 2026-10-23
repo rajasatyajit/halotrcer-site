@@ -53,6 +53,10 @@ for (const [width, viewport] of Object.entries(WIDTHS)) {
   for (const colorScheme of ['light', 'dark'] as const) {
     const context = await browser.newContext({ viewport, colorScheme });
     const page = await context.newPage();
+    // Warm the cache first: the fonts are font-display: optional, so a first visit may
+    // show their fallbacks (shot separately as *-first-visit). These shots show the fonts.
+    for (const site of Object.keys(ORIGINS) as Site[])
+      await page.goto(ORIGINS[site] + '/', { waitUntil: 'networkidle' });
     for (const [site, path] of PAGES) {
       await assertThisBuild(site);
       await page.goto(ORIGINS[site] + path, { waitUntil: 'networkidle' });
@@ -67,6 +71,20 @@ for (const [width, viewport] of Object.entries(WIDTHS)) {
     }
     await context.close();
   }
+}
+// One cold first visit per width, for comparison.
+for (const [width, viewport] of Object.entries(WIDTHS)) {
+  const context = await browser.newContext({ viewport, colorScheme: 'light' });
+  const page = await context.newPage();
+  await page.goto(ORIGINS.www + '/', { waitUntil: 'networkidle' });
+  await page.screenshot({
+    path: join(out, `www-home-${width}-light-first-visit.jpg`),
+    fullPage: true,
+    type: 'jpeg',
+    quality: 70,
+  });
+  n++;
+  await context.close();
 }
 await browser.close();
 console.log(`${n} screenshots in ${out}`);
