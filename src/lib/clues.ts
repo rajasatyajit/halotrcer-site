@@ -9,6 +9,8 @@ export type SampleId = 'tokvera-scan' | 'sievant-posture';
 export interface Clue {
   kind: string;
   title: string;
+  // The key number, set large under the title.
+  figure: string;
   body: string;
   tool: 'Tokvera' | 'Sievant';
   detail?: string;
@@ -80,25 +82,29 @@ function tokvera() {
     ...base,
     kind: KINDS.suspect(1),
     title: CLUES.repeated.title,
+    figure: CLUES.repeated.figure(v.repeats, v.prompts),
     body: CLUES.repeated.body(v.repeats, v.prompts),
   };
   const rush: Clue = {
     ...base,
     kind: KINDS.suspect(2),
     title: CLUES.rush.title,
+    figure: CLUES.rush.figure(v.idle, v.peak),
     body: CLUES.rush.body(v.idle, v.peak, v.level),
     detail: CLUES.rush.detail,
   };
   const failed: Clue = {
     ...base,
     kind: KINDS.evidence,
-    title: CLUES.failed.title(v.failed, v.requests),
+    title: CLUES.failed.title,
+    figure: CLUES.failed.figure(v.failed, v.requests),
     body: CLUES.failed.body(v.codes),
   };
   const grade: Clue = {
     ...base,
     kind: KINDS.verdict,
-    title: CLUES.grade.title(v.grade),
+    title: CLUES.grade.title,
+    figure: CLUES.grade.figure(v.grade),
     body: CLUES.grade.body(v.points),
   };
   return { v, source, repeated, rush, failed, grade };
@@ -128,30 +134,35 @@ function sievant() {
     ...base,
     kind: KINDS.accomplice,
     title: CLUES.bypass.title(bypassing[0].name),
+    figure: CLUES.bypass.figure(v.bypassing, v.servers),
     body: CLUES.bypass.body,
   };
   const credential: Clue = {
     ...base,
     kind: KINDS.caught,
     title: CLUES.credential.title,
-    body: CLUES.credential.body(v.credentials, v.credentials !== 1),
+    figure: CLUES.credential.figure(v.credentials),
+    body: CLUES.credential.body(v.credentials !== 1),
   };
   const checkpoint: Clue = {
     ...base,
     kind: KINDS.alibi,
     title: CLUES.checkpoint.title,
-    body: CLUES.checkpoint.body(v.blocked, v.requests, v.redacted),
+    figure: CLUES.checkpoint.figure(v.blocked, v.requests),
+    body: CLUES.checkpoint.body(v.redacted),
   };
   const alibi: Clue = {
     ...base,
     kind: KINDS.alibi,
     title: CLUES.wrapped.title(wrapped.name),
+    figure: CLUES.wrapped.figure(v.servers - v.bypassing, v.servers),
     body: CLUES.wrapped.body,
   };
   const blocked: Clue = {
     ...base,
     kind: KINDS.evidence,
-    title: CLUES.blocked.title(v.blocked, v.requests),
+    title: CLUES.blocked.title,
+    figure: CLUES.blocked.figure(v.blocked, v.requests),
     body: CLUES.blocked.body(top.name, top.count),
   };
   return {

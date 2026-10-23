@@ -1453,6 +1453,19 @@ caption,
   line-height: 1.1;
 }
 
+.clue__figure {
+  margin: var(--s-1) 0 0;
+  color: var(--board-ink);
+  font-family: var(--font-marker);
+  font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2.25rem);
+  line-height: 1.1;
+}
+
+.clue__figure--plain {
+  font-family: var(--font-body);
+  font-weight: 800;
+}
+
 .clue__title--plain {
   font-family: var(--font-body);
   font-weight: 800;

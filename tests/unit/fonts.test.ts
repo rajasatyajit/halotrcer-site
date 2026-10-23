@@ -18,8 +18,11 @@ describe('Marker subset', () => {
     expect(inMarkerSubset('服务器')).toBe(false);
   });
 
-  it('covers every clue title on today’s boards', () => {
+  it('covers every clue title and figure on today’s boards', () => {
     for (const site of SITES)
-      for (const clue of board(site).clues) expect(inMarkerSubset(clue.title)).toBe(true);
+      for (const clue of board(site).clues) {
+        expect(inMarkerSubset(clue.title)).toBe(true);
+        expect(inMarkerSubset(clue.figure)).toBe(true);
+      }
   });
 });

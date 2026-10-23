@@ -14,14 +14,14 @@ const text = (site: Parameters<typeof board>[0], title: string) => {
 describe('www board', () => {
   const b = board('www');
 
-  it('pins six clues in the mockup order', () => {
-    expect(b.clues.map((c) => [c.kind, c.title])).toEqual([
-      ['Suspect #1', 'Repeated prompts'],
-      ['Suspect #2', 'Rush hour'],
-      ['Evidence', '5 of 60 requests failed'],
-      ['Accomplice', 'MCP server “search”'],
-      ['Caught', 'Credential in arguments'],
-      ['Alibi', 'Behind the checkpoint'],
+  it('pins six clues in the mockup order, each with its figure', () => {
+    expect(b.clues.map((c) => [c.kind, c.title, c.figure])).toEqual([
+      ['Suspect #1', 'Repeated prompts', '16 of 40'],
+      ['Suspect #2', 'Rush hour', '11 → 201 ms'],
+      ['Evidence', 'Failed requests', '5 of 60'],
+      ['Accomplice', 'MCP server “search”', '1 of 2'],
+      ['Caught', 'Credential in arguments', '1 blocked'],
+      ['Alibi', 'Behind the checkpoint', '13 of 19'],
     ]);
   });
 
@@ -32,15 +32,15 @@ describe('www board', () => {
     expect(text('www', 'Rush hour').body).toBe(
       'First token, p99: 11 ms one request at a time, 201 ms with 16 requests at once.',
     );
-    expect(text('www', '5 of 60 requests failed').body).toBe(
-      'HTTP 429 ×5: turned away at the door.',
-    );
+    expect(text('www', 'Failed requests').body).toBe('HTTP 429 ×5: turned away at the door.');
     expect(text('www', 'MCP server “search”').body).toBe(
-      'Talks to its agent directly: no policy, no redaction, no audit.',
+      'MCP servers on this machine that skip Sievant: no policy, no redaction, no audit.',
     );
-    expect(text('www', 'Credential in arguments').body).toBe('1 call blocked.');
+    expect(text('www', 'Credential in arguments').body).toBe(
+      'Sievant stopped the call before it reached the tool.',
+    );
     expect(text('www', 'Behind the checkpoint').body).toBe(
-      'Calls through Sievant: 13 of 19 blocked, 3 results redacted.',
+      'Calls through Sievant that were blocked; 3 results redacted.',
     );
   });
 
@@ -81,13 +81,13 @@ describe('www board', () => {
 describe('product boards', () => {
   it('tokvera: four clues, the grade with its provisional label', () => {
     const b = board('tokvera');
-    expect(b.clues.map((c) => c.title)).toEqual([
-      'Repeated prompts',
-      'Rush hour',
-      '5 of 60 requests failed',
-      'Grade D',
+    expect(b.clues.map((c) => [c.title, c.figure])).toEqual([
+      ['Repeated prompts', '16 of 40'],
+      ['Rush hour', '11 → 201 ms'],
+      ['Failed requests', '5 of 60'],
+      ['Grade', 'D'],
     ]);
-    const grade = text('tokvera', 'Grade D');
+    const grade = text('tokvera', 'Grade');
     expect([grade.kind, grade.body]).toEqual(['Verdict', '60.8 points. Provisional scoring.']);
     expect(b.subject.title).toBe('Your LLM endpoint');
     expect(b.tag).toBe("Case TOK-001 · Tokvera's built-in simulator · simulated demo run");
@@ -98,15 +98,26 @@ describe('product boards', () => {
 
   it('sievant: four clues from the posture report', () => {
     const b = board('sievant');
-    expect(b.clues.map((c) => [c.kind, c.title, c.body])).toEqual([
+    expect(b.clues.map((c) => [c.kind, c.title, c.figure, c.body])).toEqual([
       [
         'Accomplice',
         'MCP server “search”',
-        'Talks to its agent directly: no policy, no redaction, no audit.',
+        '1 of 2',
+        'MCP servers on this machine that skip Sievant: no policy, no redaction, no audit.',
       ],
-      ['Caught', 'Credential in arguments', '1 call blocked.'],
-      ['Alibi', 'MCP server “notes”', 'Runs through Sievant on this machine.'],
-      ['Evidence', '13 of 19 tool calls blocked', 'Top blocked tool: admin_delete (12).'],
+      [
+        'Caught',
+        'Credential in arguments',
+        '1 blocked',
+        'Sievant stopped the call before it reached the tool.',
+      ],
+      [
+        'Alibi',
+        'MCP server “notes”',
+        '1 of 2',
+        'MCP servers on this machine that run through Sievant.',
+      ],
+      ['Evidence', 'Tool calls blocked', '13 of 19', 'Top blocked tool: admin_delete (12).'],
     ]);
     expect(b.subject.title).toBe("Your agents' tools");
     expect(b.tag).toBe('Case SIE-001 · Example Co · simulated demo run · fictional system');

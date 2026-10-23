@@ -4,47 +4,59 @@
 
 type N = number | string;
 
+// Each clue has a figure (the key number, set large) and a sentence that explains it.
 export const CLUES = {
   repeated: {
     title: 'Repeated prompts',
+    figure: (repeats: N, prompts: N) => `${repeats} of ${prompts}`,
     body: (repeats: N, prompts: N) =>
       `${repeats} of ${prompts} prompts repeat an earlier one exactly. If that is what reaches the model, each repeat is paid for again.`,
   },
   rush: {
     title: 'Rush hour',
+    figure: (idle: N, peak: N) => `${idle} → ${peak} ms`,
     body: (idle: N, peak: N, level: N) =>
       `First token, p99: ${idle} ms one request at a time, ${peak} ms with ${level} requests at once.`,
     detail: 'p99',
   },
   failed: {
-    title: (failed: N, requests: N) => `${failed} of ${requests} requests failed`,
+    title: 'Failed requests',
+    figure: (failed: N, requests: N) => `${failed} of ${requests}`,
     body: (codes: string) => `${codes}: turned away at the door.`,
     code: (status: N, count: N) => `HTTP ${status} ×${count}`,
   },
   grade: {
-    title: (grade: string) => `Grade ${grade}`,
+    title: 'Grade',
+    figure: (grade: string) => grade,
     // Tokvera's label, verbatim.
     body: (points: N) => `${points} points. Provisional scoring.`,
   },
   bypass: {
     title: (name: string) => `MCP server “${name}”`,
-    body: 'Talks to its agent directly: no policy, no redaction, no audit.',
+    figure: (n: N, of: N) => `${n} of ${of}`,
+    body: 'MCP servers on this machine that skip Sievant: no policy, no redaction, no audit.',
   },
   credential: {
     title: 'Credential in arguments',
-    body: (count: N, plural: boolean) => `${count} call${plural ? 's' : ''} blocked.`,
+    figure: (count: N) => `${count} blocked`,
+    body: (plural: boolean) =>
+      plural
+        ? 'Sievant stopped the calls before they reached the tool.'
+        : 'Sievant stopped the call before it reached the tool.',
   },
   checkpoint: {
     title: 'Behind the checkpoint',
-    body: (blocked: N, requests: N, redacted: N) =>
-      `Calls through Sievant: ${blocked} of ${requests} blocked, ${redacted} results redacted.`,
+    figure: (blocked: N, requests: N) => `${blocked} of ${requests}`,
+    body: (redacted: N) => `Calls through Sievant that were blocked; ${redacted} results redacted.`,
   },
   wrapped: {
     title: (name: string) => `MCP server “${name}”`,
-    body: 'Runs through Sievant on this machine.',
+    figure: (n: N, of: N) => `${n} of ${of}`,
+    body: 'MCP servers on this machine that run through Sievant.',
   },
   blocked: {
-    title: (blocked: N, requests: N) => `${blocked} of ${requests} tool calls blocked`,
+    title: 'Tool calls blocked',
+    figure: (blocked: N, requests: N) => `${blocked} of ${requests}`,
     body: (tool: string, count: N) => `Top blocked tool: ${tool} (${count}).`,
   },
 };
