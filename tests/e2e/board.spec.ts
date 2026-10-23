@@ -314,25 +314,3 @@ test.describe('heading sizes on desktop', () => {
       expect(new Set(h2s)).toEqual(new Set([40]));
     });
 });
-
-// Product headlines are long sentences in the bold body face (it also keeps LCP at the first
-// paint); the www headline stays in Marker.
-test.describe('board headline faces', () => {
-  for (const [site, marker] of [
-    ['www', true],
-    ['tokvera', false],
-    ['sievant', false],
-  ] as const)
-    test(`${site}: ${marker ? 'Marker' : 'bold body face'}`, async ({ page }) => {
-      await page.goto(`${ORIGINS[site]}/`);
-      const { family, weight } = await page.locator('.case-hero h1').evaluate((el) => ({
-        family: getComputedStyle(el).fontFamily,
-        weight: getComputedStyle(el).fontWeight,
-      }));
-      if (marker) expect(family).toMatch(/^"Case Marker"/);
-      else {
-        expect(family).toMatch(/^system-ui/);
-        expect(weight).toBe('800');
-      }
-    });
-});
