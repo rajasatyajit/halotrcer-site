@@ -106,3 +106,41 @@ test.describe('www board', () => {
       });
     });
 });
+
+// Every card fits its board and nothing inside a card spills sideways, at every width the
+// grid passes through (one column, the 3-column switch, desktop).
+for (const width of [320, 390, 768, 800, 1024, 1280, 1440])
+  test.describe(`board fit at ${width} px`, () => {
+    test.use({ viewport: { width, height: 900 }, isMobile: false, hasTouch: false });
+    // Task 8 adds tokvera and sievant.
+    for (const site of ['www'] as const)
+      test(`${site}: cards inside the frame, no overflow`, async ({ page }) => {
+        await page.goto(`${ORIGINS[site]}/`, { waitUntil: 'networkidle' });
+        await page.goto(`${ORIGINS[site]}/`, { waitUntil: 'networkidle' });
+        const problems = await page.evaluate(() => {
+          // Tilt is at most 2.6°: allow its corner sweep at the frame edge.
+          const slack = 12;
+          const frame = document.querySelector('.board-frame')?.getBoundingClientRect();
+          if (!frame) return ['no board'];
+          return [...document.querySelectorAll<HTMLElement>('.board > li > *')].flatMap((el) => {
+            const r = el.getBoundingClientRect();
+            const out: string[] = [];
+            if (r.left < frame.left - 1 || r.right > frame.right + 1)
+              out.push(`outside: ${el.className}`);
+            // The cards and their contents, not the wrapper around a deliberately tilted card
+            // (a rotated box's corners count toward its parent's scroll width).
+            for (const c of el.querySelectorAll<HTMLElement>(
+              '.clue, .clue *, .subject-card, .subject-card *, .case-tag, .sticky-note',
+            ))
+              if (
+                c.scrollWidth > c.clientWidth + 1 &&
+                getComputedStyle(c).overflowX === 'visible' &&
+                c.clientWidth > 0
+              )
+                out.push(`spills: ${c.className || c.tagName} in ${el.className}`);
+            return out;
+          });
+        });
+        expect(problems).toEqual([]);
+      });
+  });

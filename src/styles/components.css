@@ -1448,13 +1448,13 @@ caption,
 }
 
 .clue__title {
-  margin: var(--s-2) 0 0;
+  margin: var(--s-3) 0 0;
   font-size: var(--text-xl);
   line-height: 1.1;
 }
 
 .clue__figure {
-  margin: var(--s-1) 0 0;
+  margin: var(--s-2) 0 0;
   color: var(--board-ink);
   font-family: var(--font-marker);
   font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2.25rem);
@@ -1472,13 +1472,13 @@ caption,
 }
 
 .clue__body {
-  margin-top: var(--s-2);
+  margin-top: var(--s-3);
   font-size: var(--text-sm);
-  line-height: 1.45;
+  line-height: 1.6;
 }
 
 .clue__source {
-  margin-top: var(--s-2);
+  margin-top: var(--s-3);
   color: var(--faded);
   font-size: 0.75rem;
 }
