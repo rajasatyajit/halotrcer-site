@@ -57,11 +57,12 @@
   --sev-low: light-dark(#1f5f99, #8cc2ff);
   --sev-info: light-dark(#55524b, #a6a39c);
 
-  /* Type: three self-hosted faces (src/styles/fonts.css), each with a metric-matched
-     fallback face so a late font does not move the layout. */
+  /* Type: one web font for display (src/styles/fonts.css); body and card text use system
+     fonts at zero bytes. The typewriter stack carries the cards' typed look. */
   --font-marker: 'Case Marker', 'Case Marker fallback', cursive;
-  --font-type: 'Case Typewriter', 'Case Typewriter fallback', 'Courier New', monospace;
-  --font-body: 'Case Karla', 'Case Karla fallback', system-ui, sans-serif;
+  --font-type: 'Courier New', courier, 'Liberation Mono', 'Nimbus Mono PS', monospace;
+  --type-tracking: 0.02em;
+  --font-body: system-ui, -apple-system, 'Segoe UI', roboto, 'Helvetica Neue', arial, sans-serif;
   --font-sans: var(--font-body);
   --font-mono: ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
 

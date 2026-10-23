@@ -1,15 +1,19 @@
 import { expect, test } from '@playwright/test';
 import { ORIGINS } from './helpers.ts';
 
-// The three self-hosted fonts (owner decision 2026-10-23): only Permanent Marker is
-// preloaded, nothing loads from another origin, and a late font never moves the layout.
+// One self-hosted font, a Permanent Marker subset, not preloaded (owner decisions
+// 2026-10-23, LCP budget). Nothing loads from another origin and a late font never moves
+// the layout.
 test.describe('fonts on www/', () => {
-  test('preloads only Permanent Marker', async ({ page }) => {
-    await page.goto(`${ORIGINS.www}/`);
-    const preloads = page.locator('link[rel=preload][as=font]');
-    await expect(preloads).toHaveCount(1);
-    await expect(preloads).toHaveAttribute('href', /permanent-marker/);
-    await expect(preloads).toHaveAttribute('crossorigin', /.*/);
+  test('loads only the Marker subset, without a preload', async ({ page }) => {
+    const fonts: string[] = [];
+    page.on('request', (r) => {
+      if (r.resourceType() === 'font') fonts.push(r.url());
+    });
+    await page.goto(`${ORIGINS.www}/`, { waitUntil: 'networkidle' });
+    await expect(page.locator('link[rel=preload][as=font]')).toHaveCount(0);
+    expect(fonts).toHaveLength(1);
+    expect(fonts[0]).toMatch(/\/_astro\/permanent-marker\.[\w-]+\.woff2$/);
   });
 
   test('a late font causes no layout shift', async ({ page }) => {
@@ -37,12 +41,15 @@ test.describe('fonts on www/', () => {
     expect(shift).toBe(0);
   });
 
-  test('the fonts are used when they arrive in time', async ({ page }) => {
+  test('Marker is used once cached', async ({ page }) => {
+    await page.goto(`${ORIGINS.www}/`, { waitUntil: 'networkidle' });
     await page.goto(`${ORIGINS.www}/`, { waitUntil: 'networkidle' });
     const loaded = await page.evaluate(async () => {
       await document.fonts.ready;
       return [...document.fonts].filter((f) => f.status === 'loaded').map((f) => f.family);
     });
-    expect(loaded).toEqual(expect.arrayContaining(['Case Marker', 'Case Karla']));
+    expect(loaded).toContain('Case Marker');
+    const family = await page.locator('h1').evaluate((el) => getComputedStyle(el).fontFamily);
+    expect(family).toMatch(/^"Case Marker"/);
   });
 });

@@ -140,7 +140,7 @@ The flags are parsed once in `src/config/flags.ts` and validated with zod. A typ
 
 **"Instrument panel, printed honestly."** These are measurement and security tools, so the site should read like a calibrated instrument, not a SaaS landing page: real commands, real output and plain labels.
 
-- **Type**: superseded in M8 (owner decision 2026-10-23): Permanent Marker, Special Elite and Karla, self-hosted WOFF2 (`docs/fonts.md`). Code stays on the system monospace stack. One OFL font file is used only at build time to render OG images.
+- **Type**: superseded in M8 (owner decisions 2026-10-23): one self-hosted Permanent Marker subset for display; body, card text and code on system fonts (`docs/fonts.md`). One OFL font file is used only at build time to render OG images.
 - **Colour**: near-neutral ink on paper (warm grey) for light mode, and deep graphite for dark. One signal colour per brand: Halotrcer indigo, Tokvera amber (latency and cost), Sievant teal (security). Severity colours (critical/high/medium/low/info) and grade colours (A–F) are tokens, always paired with a text label, never colour alone. All pairs are checked at ≥ 4.5:1 (≥ 3:1 for large text and UI) in both themes by a token contrast test.
 - **Layout**: an 8 px grid, a 68ch measure for prose, and wide "terminal" panels for commands and output. The hero shows the command and the tool's documented output in a terminal panel that is real text, not an image. That keeps LCP text-based and the output copyable.
 - **Motion**: almost none. A 150 ms fade for copy feedback and details disclosure, disabled under `prefers-reduced-motion`.

@@ -39,16 +39,23 @@ Run `tests/unit/contrast.test.ts` on every pair, both themes.
 
 ## 3. Typography
 
+Revised by the owner on 2026-10-23 (LCP budget, measured that day; the runs are in
+`docs/fonts.md`).
+
 | Role | Face | Use |
 |---|---|---|
-| Display | Permanent Marker | headings, card titles, "kind" labels, prices. Never body text |
-| Typewriter | Special Elite | card body text, case tags, stamps, small print |
-| Body | Karla (400/600/800) | paragraphs, navigation, buttons, forms |
+| Display | Permanent Marker, trimmed subset (printable ASCII plus the copy's punctuation), not preloaded | headings, card titles, "kind" labels, prices. Never body text |
+| Typewriter | system monospace (`Courier New`, `Liberation Mono`, …), ink colour from the tokens, slight letter spacing | card body text, case tags, stamps, small print |
+| Body | system UI fonts | paragraphs, navigation, buttons, forms |
 
-- All three are open-licensed (Permanent Marker and Special Elite: Apache-2.0; Karla:
-  OFL). Self-host WOFF2, subset to Latin, no Google Fonts request (CSP stays `'self'`).
-- Preload only Permanent Marker. `font-display: swap` plus metric-matched fallbacks
-  (`size-adjust`) so CLS stays 0.
+- Reason: on Lighthouse's simulated mobile connection every font on the first screen
+  delays the first paint. All three faces gave a 1.81 s LCP; Marker alone, not
+  preloaded, gave a 1.21 s median (100 ×4). Preloading Marker made the hero wait for it
+  (1.36 s median). The LCP limit became 1.3 s, the median of 3 runs (owner decision).
+- Permanent Marker is Apache-2.0 (NOTICE). Self-hosted WOFF2, no Google Fonts request
+  (CSP stays `'self'`). Sample-driven text outside the subset is set in the body face.
+- `font-display: optional` plus a metric-matched fallback (`size-adjust`), under our own
+  family name, so CLS stays 0.
 - Scale: display 96/68/40/24, body 19/17/15, small 13. Headings `text-wrap: balance`.
 
 ## 4. Components

@@ -72,19 +72,23 @@ for (const [width, viewport] of Object.entries(WIDTHS)) {
     await context.close();
   }
 }
-// One cold first visit per width, for comparison.
+// One cold first visit of each home per width and scheme, for comparison.
 for (const [width, viewport] of Object.entries(WIDTHS)) {
-  const context = await browser.newContext({ viewport, colorScheme: 'light' });
-  const page = await context.newPage();
-  await page.goto(ORIGINS.www + '/', { waitUntil: 'networkidle' });
-  await page.screenshot({
-    path: join(out, `www-home-${width}-light-first-visit.jpg`),
-    fullPage: true,
-    type: 'jpeg',
-    quality: 70,
-  });
-  n++;
-  await context.close();
+  for (const colorScheme of ['light', 'dark'] as const) {
+    for (const site of Object.keys(ORIGINS) as Site[]) {
+      const context = await browser.newContext({ viewport, colorScheme });
+      const page = await context.newPage();
+      await page.goto(ORIGINS[site] + '/', { waitUntil: 'networkidle' });
+      await page.screenshot({
+        path: join(out, `${site}-home-${width}-${colorScheme}-first-visit.jpg`),
+        fullPage: true,
+        type: 'jpeg',
+        quality: 70,
+      });
+      n++;
+      await context.close();
+    }
+  }
 }
 await browser.close();
 console.log(`${n} screenshots in ${out}`);

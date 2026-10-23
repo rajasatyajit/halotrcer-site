@@ -3,6 +3,7 @@
 // keeps its label (scripts/check-stamps.ts fails on a [data-clue] without one).
 import SimulatedStamp from '../SimulatedStamp.astro';
 import type { Clue } from '../../lib/clues.ts';
+import { inMarkerSubset } from '../../lib/fonts.ts';
 
 interface Props {
   clue: Clue;
@@ -11,12 +12,15 @@ interface Props {
 }
 
 const { clue, index } = Astro.props;
+// Titles carry sample values (server names); one outside the Marker subset is set in the body
+// face rather than mixing in fallback glyphs.
+const plain = !inMarkerSubset(clue.title);
 ---
 
 <div class="clue-wrap" data-sample={clue.sample}>
   <article class={`clue clue--r${index + 1}`} data-clue>
     <p class="clue__kind">{clue.kind}</p>
-    <h3 class="clue__title">{clue.title}</h3>
+    <h3 class:list={['clue__title', { 'clue__title--plain': plain }]}>{clue.title}</h3>
     <p class="clue__body">{clue.body}</p>
     <p class="clue__source">
       {clue.tool}

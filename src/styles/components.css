@@ -309,6 +309,7 @@
 .site-footer__small {
   margin-top: var(--s-6);
   font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
   font-size: var(--text-xs);
 }
 
@@ -433,6 +434,7 @@
 
 .price-card__duration {
   font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
   font-size: var(--text-sm);
 }
 
@@ -1412,6 +1414,7 @@ caption,
   color: var(--board-ink);
   box-shadow: 0 10px 18px rgb(0 0 0 / 35%);
   font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
 }
 
 /* The pin. */
@@ -1448,6 +1451,11 @@ caption,
   margin: var(--s-2) 0 0;
   font-size: var(--text-xl);
   line-height: 1.1;
+}
+
+.clue__title--plain {
+  font-family: var(--font-body);
+  font-weight: 800;
 }
 
 .clue__body {
@@ -1498,6 +1506,7 @@ caption,
   background: var(--tag);
   color: var(--board-ink);
   font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
   font-size: var(--text-sm);
   text-align: center;
   box-shadow: 0 6px 12px rgb(0 0 0 / 30%);
@@ -1530,6 +1539,7 @@ caption,
   margin-top: var(--s-3);
   color: var(--on-frame-muted);
   font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
   font-size: var(--text-xs);
   max-width: none;
 }
@@ -1609,6 +1619,7 @@ caption,
   margin-top: var(--s-3);
   color: var(--on-frame-muted);
   font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
   font-size: var(--text-xs);
 }
 
@@ -1653,6 +1664,7 @@ html:not(.js) .js-only {
   padding: 10px 14px;
   border: 2px dashed currentcolor;
   font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
   overflow-wrap: anywhere;
   user-select: all;
 }
