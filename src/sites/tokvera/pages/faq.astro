@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
 import SyncedDoc from '../../../components/SyncedDoc.astro';
 import { BOOKING_URL } from '../../../config/site.ts';
 import { faqPage } from '../../../lib/jsonld.ts';
@@ -21,4 +22,11 @@ const jsonld = [faqPage('tokvera/faq')];
   <div class="container">
     <SyncedDoc id="tokvera/faq" />
   </div>
+  {/* From Halotrcer, not the synced doc: the synced wording is never edited. */}
+  <section class="container section" aria-labelledby="maintainer">
+    <h2 id="maintainer">What if the maintainer stops?</h2>
+    <p>
+      <Claim id="www.continuity" />
+    </p>
+  </section>
 </BaseLayout>

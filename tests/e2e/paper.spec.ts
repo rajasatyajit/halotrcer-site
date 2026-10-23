@@ -79,3 +79,42 @@ for (const [site, reports] of [
     for (const r of reports)
       await expect(card.locator(`a[href="${url(r, '/sample-report')}"]`)).toHaveCount(1);
   });
+
+test('/agencies: what the report can carry, no branding option, referrals', async ({ page }) => {
+  await page.goto(`${ORIGINS.www}/agencies`);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'For agencies and consultancies',
+  );
+  const main = page.locator('main');
+  for (const id of [
+    'sievant.report-org',
+    'sievant.report-no-cta',
+    'tokvera.scan-no-cta',
+    'halotrcer.check-no-cta',
+  ])
+    await expect(main).toContainText(claim(id).text);
+  await expect(main).toContainText('There is no logo or branding option.');
+  await expect(main).not.toContainText(/white[- ]?label/i);
+  await expect(page.getByRole('heading', { name: 'Talk to us about referrals' })).toBeVisible();
+  for (const href of [
+    url('tokvera', '/sample-report'),
+    url('sievant', '/sample-report'),
+    url('www', '/pricing'),
+  ])
+    await expect(main.locator(`a[href="${href}"]`).first()).toBeVisible();
+});
+
+test('/agencies is linked from pricing and the footer', async ({ page }) => {
+  await page.goto(`${ORIGINS.www}/pricing`);
+  await expect(page.locator(`main a[href="${url('www', '/agencies')}"]`)).toHaveCount(1);
+  await expect(page.locator(`footer a[href="${url('www', '/agencies')}"]`)).toHaveCount(1);
+});
+
+for (const site of ['tokvera', 'sievant'] as const)
+  test(`${site}/faq: the continuity answer after the synced FAQ`, async ({ page }) => {
+    await page.goto(`${ORIGINS[site]}/faq`);
+    const section = page.locator('section', {
+      has: page.getByRole('heading', { name: 'What if the maintainer stops?' }),
+    });
+    await expect(section).toContainText(continuity);
+  });

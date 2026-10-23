@@ -15,6 +15,7 @@ const PAGES = {
     '/calculator.html',
     '/blog.html',
     '/book.html',
+    '/agencies.html',
     '/404.html',
   ],
   tokvera: [

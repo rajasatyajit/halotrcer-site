@@ -918,3 +918,39 @@
     owner: true
     decided: 2026-10-22
     note: O2 in docs/redesign/proposal.md, repeated in the DESIGN.md mockup.
+
+- id: sievant.report-org
+  text: sievant report --org <name> names your client's organization in the report title.
+  source:
+    repo: sievant
+    path: cmd/sievant/report.go
+    lines: '46'
+    commit: efa96682872b476c786a6d0f507aa17254000ac0
+    quote: '--org <name>            organization named in the title'
+
+- id: sievant.report-no-cta
+  text: sievant report --no-cta leaves out the footer offering a professional review.
+  source:
+    repo: sievant
+    path: cmd/sievant/report.go
+    lines: '49'
+    commit: efa96682872b476c786a6d0f507aa17254000ac0
+    quote: '--no-cta                leave out the footer offering a professional review'
+
+- id: tokvera.scan-no-cta
+  text: tokvera scan --no-cta leaves the "Want this fixed?" footer out.
+  source:
+    repo: tokvera
+    path: cmd/tokvera/scan.go
+    lines: '65'
+    commit: ca4ed28d816d01ffee0b0707a2d6b2cdf4387735
+    quote: '--no-cta               leave the "Want this fixed?" footer out'
+
+- id: halotrcer.check-no-cta
+  text: halotrcer check --no-cta leaves out the footer call to action.
+  source:
+    repo: halotrcer
+    path: cmd/halotrcer/check.go
+    lines: '52'
+    commit: a3561bfff5794bb60623faa70c439701077d1ec7
+    quote: '--no-cta                  leave out the footer call to action'
