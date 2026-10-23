@@ -16,10 +16,9 @@ interface Props {
 const { site } = Astro.props;
 const b = board(site);
 const slots = clueSlots(b.clues.length);
-// Row by row, as the board reads; empty slots are left out (CSS places each item).
-const items = Array.from({ length: 9 }, (_, slot) => slot).filter(
-  (slot) => slot === CENTRE || slot === TAG_SLOT || slot === STICKY_SLOT || slots.includes(slot),
-);
+// Reading order (and the one-column order on phones): case tag, subject, clues, sticky note.
+// On wider screens CSS places each item in its 3×3 slot. Empty slots are left out.
+const items = [TAG_SLOT, CENTRE, ...slots, STICKY_SLOT];
 const heading = `board-${site}-title`;
 ---
 

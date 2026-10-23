@@ -163,3 +163,54 @@ for (const width of [320, 390, 768, 800, 1024, 1280, 1440])
         expect(problems).toEqual([]);
       });
   });
+
+// One column (and the reading order everywhere): case tag, subject, clues, sticky note.
+// On desktop each item keeps its 3×3 slot.
+test.describe('board order', () => {
+  const kinds = (page: import('@playwright/test').Page) =>
+    page.locator('.board > li').evaluateAll((lis) =>
+      lis.map((li) => {
+        const kind = li.querySelector('.case-tag')
+          ? 'tag'
+          : li.querySelector('.subject-card')
+            ? 'subject'
+            : li.querySelector('.sticky-note')
+              ? 'sticky'
+              : 'clue';
+        const r = li.getBoundingClientRect();
+        return { kind, x: Math.round(r.x + r.width / 2), y: Math.round(r.y) };
+      }),
+    );
+
+  test.describe('phone', () => {
+    test.use({ viewport: { width: 390, height: 844 } });
+    test('tag, subject, clues, sticky, top to bottom', async ({ page }) => {
+      await page.goto(`${ORIGINS.www}/`);
+      const items = await kinds(page);
+      expect(items.map((i) => i.kind)).toEqual([
+        'tag',
+        'subject',
+        ...Array(6).fill('clue'),
+        'sticky',
+      ]);
+      const ys = items.map((i) => i.y);
+      expect(ys).toEqual([...ys].sort((a, b) => a - b));
+    });
+  });
+
+  test.describe('desktop', () => {
+    test.use({ viewport: { width: 1280, height: 900 } });
+    test('tag top middle, subject centre, sticky bottom middle', async ({ page }) => {
+      await page.goto(`${ORIGINS.www}/`);
+      const items = await kinds(page);
+      const at = (k: string) => items.find((i) => i.kind === k);
+      const clues = items.filter((i) => i.kind === 'clue');
+      const left = Math.min(...clues.map((c) => c.x));
+      const right = Math.max(...clues.map((c) => c.x));
+      for (const k of ['tag', 'subject', 'sticky'])
+        expect(Math.abs((at(k)?.x ?? 0) - (left + right) / 2)).toBeLessThan(20);
+      expect(at('tag')?.y ?? 0).toBeLessThan(at('subject')?.y ?? 0);
+      expect(at('subject')?.y ?? 0).toBeLessThan(at('sticky')?.y ?? 0);
+    });
+  });
+});
