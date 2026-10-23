@@ -7,6 +7,86 @@ the deployed sites or the owner and are not claimed as done.
 Last full green CI: run 39638677403 (`m7-hardening` 91f318f, manual run, 21 of 21 jobs:
 Lighthouse, and the browser tests in Chromium, Firefox and WebKit, both modes).
 
+## M8 acceptance (`m8-redesign`, 0ab89b1)
+
+The Case File redesign (docs/redesign/DESIGN.md, plan
+docs/superpowers/plans/2026-10-23-m8-case-file.md). Run locally on 2026-10-23, every run started
+at a 1-minute load average below 1.0. Pre-launch is `npm run build:prelaunch`; launched is
+`npm run build:launched-fixture` with `LAUNCHED=true`, as in CI. Not merged; nothing pushed.
+
+### Lighthouse (mobile; `lhci autorun` with `lighthouserc.cjs`, 3 runs per page)
+
+Gate: 100 in all four categories, LCP median of 3 runs < 1.4 s, CLS 0, TBT < 100 ms, JS
+≤ 20 KB, page ≤ 250 KB, no third-party requests. All 46 page runs passed (exit 0); CLS 0 and
+TBT 0 ms on every run. Scores are performance/accessibility/best practices/SEO; SEO is off by
+config on the two `noindex` pages (404, /book).
+
+| Page                       | LCP median, pre-launch | LCP median, launched | Scores, pre-launch        | Scores, launched          |
+| -------------------------- | ---------------------- | -------------------- | ------------------------- | ------------------------- |
+| www/                       | 1.36 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+| www/404                    | 1.21 s                 | 1.36 s               | 100/100/100/off (noindex) | 100/100/100/off (noindex) |
+| www/agencies               | 1.21 s                 | 1.21 s               | 100/100/100/100           | 100/100/100/100           |
+| www/audit                  | 1.36 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+| www/blog                   | 1.21 s                 | 1.21 s               | 100/100/100/100           | 100/100/100/100           |
+| www/book                   | 1.21 s                 | 1.21 s               | 100/100/100/off (noindex) | 100/100/100/off (noindex) |
+| www/calculator             | 1.36 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+| www/install                | 1.21 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+| www/pricing                | 1.21 s                 | 1.21 s               | 100/100/100/100           | 100/100/100/100           |
+| www/scoring                | 1.21 s                 | 1.21 s               | 100/100/100/100           | 100/100/100/100           |
+| www/security               | 1.21 s                 | 1.21 s               | 100/100/100/100           | 100/100/100/100           |
+| tokvera/                   | 1.36 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+| tokvera/404                | 1.21 s                 | 1.36 s               | 100/100/100/off (noindex) | 100/100/100/off (noindex) |
+| tokvera/calculator         | 1.36 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+| tokvera/docs/scan          | 1.36 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+| tokvera/sample-report      | 1.36 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+| tokvera/scoring            | 1.21 s                 | 1.21 s               | 100/100/100/100           | 100/100/100/100           |
+| sievant/                   | 1.36 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+| sievant/404                | 1.21 s                 | 1.36 s               | 100/100/100/off (noindex) | 100/100/100/off (noindex) |
+| sievant/docs/scan-and-wrap | 1.36 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+| sievant/owasp-llm-top-10   | 1.36 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+| sievant/sample-report      | 1.36 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+| sievant/scan               | 1.36 s                 | 1.36 s               | 100/100/100/100           | 100/100/100/100           |
+
+Margin: with Permanent Marker, simulated LCP lands on a 1.21 / 1.36 / 1.51 s step. Most pages
+now sit on the 1.36 s step, 40 ms under the 1.4 s limit (docs/fonts.md).
+
+### Checks
+
+| Gate                                                                        | Pre-launch                                                                       | Launched                                                                                                                 | Commit  |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------- |
+| Unit tests (Vitest)                                                         | 364 passed                                                                       | (mode-independent)                                                                                                       | 0ab89b1 |
+| Lint (ESLint, Stylelint, Prettier), typecheck                               | pass                                                                             | pass                                                                                                                     | 0ab89b1 |
+| HTML, headers/CSP, claims scan, SEO, JSON-LD                                | pass                                                                             | pass                                                                                                                     | 0ab89b1 |
+| Stamps (`check:stamps`, every sample frame and clue card, no empty stamp)   | pass                                                                             | pass                                                                                                                     | 0ab89b1 |
+| Marker glyphs (`check:marker`)                                              | pass                                                                             | pass                                                                                                                     | 0ab89b1 |
+| Budgets (`npm run budget`)                                                  | largest JS 2.5 KB gz (www/calculator), largest page 34.2 KB (sievant/docs/audit) | largest JS 3.7 KB gz (sievant/scan), largest page 48.2 KB (sievant/docs/gateway); docs search 24.4 KB JS at first search | 0ab89b1 |
+| Pre-launch rules (`check:prelaunch`) / launched channels (`check:launched`) | pass                                                                             | pass (126 commands present, scripts byte-identical)                                                                      | 0ab89b1 |
+| Internal links, URL permanence (63 URLs, incl. the sample JSON download)    | pass                                                                             | pass                                                                                                                     | 0ab89b1 |
+| Claim sources (`verify:claims`)                                             | 77 quotes verified                                                               |                                                                                                                          | 0ab89b1 |
+| External links (`check:external`)                                           | 23 links OK                                                                      |                                                                                                                          | 3f8158e |
+
+### Browsers (full Playwright suite: axe in both themes, no-JS, keyboard, board, fonts, layout at 320 px, email wrapping, text blocks, calculator, picker, docs)
+
+| Browser  | Pre-launch                                                                                                                       | Launched           |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| Chromium | 294 passed, 22 skipped (picker tests need a launched build)                                                                      | 316 passed         |
+| Firefox  | 294 passed, 22 skipped                                                                                                           | 316 passed         |
+| WebKit   | **not run**: WebKit does not launch on this machine (host lacks libicu74 and libflite1; Arch Linux). CI runs it on ubuntu-24.04. | **not run** (same) |
+
+### Picker behaviour and honesty
+
+- Install picker (launched only): picker spec passes in Chromium and Firefox; commands wrap on
+  phones and copy exactly.
+- No fabricated claims: claims scan on every page; every board figure and every number in a
+  clue sentence is derived from `content/samples/*.json` (`board-numbers.test.ts`, including a
+  mutation test); every clue card and sample frame carries "Simulated demo run".
+
+### Owner's manual steps
+
+- Review and merge `m8-redesign` to `main`, then push. After the push: confirm CI is green,
+  including WebKit, which could not be run locally.
+- Nothing new on DNS, Pages projects, the booking link or Search Console.
+
 ## Hosts, products and content
 
 | Requirement                                                                     | Enforced by                                                                                  | State                         |
