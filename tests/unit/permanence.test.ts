@@ -5,6 +5,7 @@ import {
   redirectSources,
   sitemapUrls,
   type Recorded,
+  downloadUrls,
 } from '../../scripts/lib/permanence.ts';
 
 const W = 'https://www.halotrcer.com';
@@ -81,5 +82,29 @@ describe('URL permanence', () => {
         'prelaunch',
       ),
     ).toHaveLength(1);
+  });
+});
+
+describe('published downloads', () => {
+  it('lists the sample JSON downloads of a built host as URLs', () => {
+    expect(
+      downloadUrls('sievant', [
+        'samples/sievant-posture.simulated-demo.json',
+        'index.html',
+        '_astro/x.js',
+        'pagefind/pagefind-entry.json',
+      ]),
+    ).toEqual(['https://sievant.halotrcer.com/samples/sievant-posture.simulated-demo.json']);
+  });
+
+  it('fails when a recorded download disappears', () => {
+    const url = 'https://sievant.halotrcer.com/samples/sievant-posture.simulated-demo.json';
+    expect(
+      problems(
+        { [url]: 'prelaunch' },
+        [{ site: 'sievant', sitemap: [], redirects: new Set() }],
+        'prelaunch',
+      ),
+    ).toEqual([`${url} was published and is gone: add a 301 in src/data/redirects.ts`]);
   });
 });
