@@ -62,7 +62,8 @@ test.describe('www board', () => {
     test('the case file text is visible and the copy buttons are hidden', async ({ page }) => {
       await page.goto(`${ORIGINS.www}/`);
       await expect(page.locator('#case-file-text')).toHaveText(board('www').summary);
-      await expect(page.getByRole('button', { name: 'Copy this case file' })).toBeHidden();
+      for (const b of await page.getByRole('button', { name: 'Copy this case file' }).all())
+        await expect(b).toBeHidden();
     });
   });
 
@@ -71,16 +72,37 @@ test.describe('www board', () => {
     test('Copy this case file copies the summary', async ({ page }) => {
       await recordClipboard(page);
       await page.goto(`${ORIGINS.www}/`);
-      await page.getByRole('button', { name: 'Copy this case file' }).click();
+      await page.getByRole('button', { name: 'Copy this case file' }).first().click();
       await expect.poll(() => copied(page)).toBe(board('www').summary);
     });
   });
 
-  test('Open your case books a call', async ({ page }) => {
+  test('Open your case books a call, under the hero and under the board', async ({ page }) => {
     await page.goto(`${ORIGINS.www}/`);
-    await expect(page.getByRole('link', { name: 'Open your case' })).toHaveAttribute(
-      'href',
-      /\/book$/,
-    );
+    const open = page.getByRole('link', { name: 'Open your case' });
+    await expect(open).toHaveCount(2);
+    for (const link of await open.all()) await expect(link).toHaveAttribute('href', /\/book$/);
+    await expect(page.getByRole('button', { name: 'Copy this case file' })).toHaveCount(2);
   });
+
+  for (const viewport of [
+    { width: 320, height: 640 },
+    { width: 390, height: 844 },
+    { width: 1280, height: 800 },
+  ])
+    test.describe(`${viewport.width} px`, () => {
+      test.use({ viewport });
+      test('both case buttons sit under the hero line, in the first screen', async ({ page }) => {
+        await page.goto(`${ORIGINS.www}/`);
+        const lede = await page.locator('.case-hero .lede').boundingBox();
+        for (const name of ['Open your case', 'Copy this case file']) {
+          const box = await page
+            .locator('.case-hero')
+            .getByRole(name.startsWith('Open') ? 'link' : 'button', { name })
+            .boundingBox();
+          expect(box?.y ?? 0).toBeGreaterThan((lede?.y ?? 0) + (lede?.height ?? 0) - 1);
+          expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(viewport.height);
+        }
+      });
+    });
 });

@@ -31,6 +31,14 @@ const jsonld = [organization(), website(), softwareApplication('halotrcer')];
       <p class="lede">
         <Claim id="www.case.lede" /> Here's what they pinned up after their simulated demo runs.
       </p>
+      <div class="button-row case-hero__actions">
+        <a class="button" href={BOOKING_URL}>
+          Open your case
+        </a>
+        <button class="button button--ghost js-only" type="button" data-copy="case-file-text">
+          Copy this case file
+        </button>
+      </div>
     </section>
 
     <div class="container case-body">

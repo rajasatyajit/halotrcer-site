@@ -1611,6 +1611,36 @@ caption,
   color: var(--on-frame-muted);
 }
 
+.case-hero__actions {
+  margin-top: var(--s-5);
+}
+
+/* Phones: both case buttons stay in the first screen, down to 320 × 640. */
+@media (width < 48rem) {
+  .case-hero {
+    padding-block: var(--s-4);
+  }
+
+  .case-hero h1 {
+    margin-bottom: var(--s-3);
+  }
+
+  .case-hero .lede {
+    font-size: var(--text-base);
+    line-height: 1.5;
+  }
+
+  .case-hero__actions {
+    margin-top: var(--s-4);
+    gap: var(--s-2);
+  }
+
+  .case-hero__actions .button {
+    min-height: 2.75rem;
+    padding-inline: var(--s-4);
+  }
+}
+
 .case-actions {
   margin-top: var(--s-6);
 }
