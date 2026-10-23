@@ -109,6 +109,15 @@ export function docLinksPlugin(options: { launched: boolean }): HastPlugins[numb
           },
         },
         {
+          // A focusable code block needs a name; <pre> has no role that allows one, so it is
+          // a named group ("Code example (sh)").
+          filter: ['pre'],
+          visit(node, c) {
+            c.setProperty(node, 'role', 'group');
+            c.setProperty(node, 'ariaLabel', codeLabel(node as unknown as Element));
+          },
+        },
+        {
           filter: ['h2', 'h3', 'h4', 'h5', 'h6'],
           visit(node, c) {
             const el = node as unknown as Element;
@@ -135,4 +144,20 @@ export function docLinksPlugin(options: { launched: boolean }): HastPlugins[numb
       ],
     };
   };
+}
+
+// "Code example", with the block's language when the Markdown fence named one.
+export function codeLabel(pre: Element): string {
+  const classes = (el: Element | undefined) => {
+    const c = el?.properties?.className;
+    return Array.isArray(c) ? c.map(String) : typeof c === 'string' ? c.split(/\s+/) : [];
+  };
+  const code = (pre.children ?? []).find(
+    (ch): ch is Element =>
+      (ch as { type?: string }).type === 'element' && (ch as Element).tagName === 'code',
+  );
+  const lang = [...classes(pre), ...classes(code)]
+    .find((c) => c.startsWith('language-'))
+    ?.slice('language-'.length);
+  return lang ? `Code example (${lang})` : 'Code example';
 }

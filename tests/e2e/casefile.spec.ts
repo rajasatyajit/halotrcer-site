@@ -184,3 +184,21 @@ for (const [site, path, shown] of [
     if (shown) await expect(footer).toContainText(SMALL);
     else await expect(footer).not.toContainText(SMALL);
   });
+
+// Docs code blocks keep horizontal scroll (aligned comments) but are keyboard-reachable and
+// named, so axe's scrollable-region-focusable holds and a screen reader says what they are.
+for (const [site, path] of [
+  ['tokvera', '/docs/scan'],
+  ['sievant', '/docs/scan-and-wrap'],
+] as const)
+  test(`${site}${path}: code blocks are focusable, named and still scroll`, async ({ page }) => {
+    await page.goto(`${ORIGINS[site]}${path}`);
+    const blocks = page.locator('.prose pre');
+    expect(await blocks.count()).toBeGreaterThan(0);
+    for (const pre of await blocks.all()) {
+      await expect(pre).toHaveAttribute('tabindex', '0');
+      await expect(pre).toHaveAttribute('role', 'group');
+      await expect(pre).toHaveAttribute('aria-label', /^Code example/);
+      expect(await pre.evaluate((el) => getComputedStyle(el).overflowX)).toBe('auto');
+    }
+  });
