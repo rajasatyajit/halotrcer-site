@@ -54,7 +54,7 @@ Other sessions own them. Only read them: no writes, builds or binaries, and no g
 ## Budgets (CI-enforced)
 
 - Lighthouse 100 in all four categories on key pages (mobile).
-- LCP < 1.2 s as the median of 3 Lighthouse runs per page (owner decision 2026-10-23; single runs vary by more than the margins), CLS 0, INP < 100 ms.
+- LCP < 1.3 s as the median of 3 Lighthouse runs per page, CLS 0, INP < 100 ms. Owner decisions 2026-10-23: the median because single runs vary by more than the margins; 1.3 s (was 1.2 s) because Permanent Marker on the first screen costs about 0.3 s on Lighthouse's simulated mobile connection (the Case File home measured 1.21 s median, 100 ×4).
 - JS ≤ 20 KB gz per page; page weight ≤ 250 KB excluding a demo video.
 
 ## CI

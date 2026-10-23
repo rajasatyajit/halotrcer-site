@@ -46,9 +46,11 @@ const ALL_CATEGORIES = {
 };
 
 const BUDGETS = {
-  // Median of the 3 runs (owner decision 2026-10-23): single runs vary by more than our margin.
-  // The other budgets keep LHCI's default, the best of the runs.
-  'largest-contentful-paint': ['error', { maxNumericValue: 1200, aggregationMethod: 'median' }],
+  // Owner decisions 2026-10-23: the median of the 3 runs (single runs vary by more than our
+  // margin), under 1.3 s (Permanent Marker on the first screen costs about 0.3 s on the simulated
+  // mobile connection; the Case File home measured 1.21 s median, 100 ×4). The other budgets
+  // keep LHCI's default, the best of the runs.
+  'largest-contentful-paint': ['error', { maxNumericValue: 1300, aggregationMethod: 'median' }],
   'cumulative-layout-shift': ['error', { maxNumericValue: 0 }],
   // Lab proxy for INP; interaction timing is also tested in Playwright.
   'total-blocking-time': ['error', { maxNumericValue: 100 }],
