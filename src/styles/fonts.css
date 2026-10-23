@@ -2,7 +2,9 @@
    NOTICE). Each has a local fallback face scaled to its metrics (npm run fonts:subset
    prints them). font-display is optional, not swap: a face that misses the first paint is
    not swapped in later, because a heading that rewraps moves the page (CLS must stay 0).
-   The preloaded Marker normally makes it; the cached fonts always do on the next page. */
+   The preloaded Marker normally makes it; Karla and Special Elite often miss it on a first
+   visit and show from the next page on, once cached. swap measured CLS above 0 even for
+   Karla alone (button labels change width). */
 
 @font-face {
   font-family: 'Permanent Marker';

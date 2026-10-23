@@ -14,51 +14,31 @@
   top: var(--s-4);
 }
 
-/* Header */
+/* Header: on the board's wooden frame in both themes. */
 .site-header {
-  border-bottom: 1px solid var(--line);
-  background: var(--bg);
+  background: var(--frame);
+  color: var(--on-frame);
 }
 
 .site-header__inner {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--s-3) var(--s-5);
-  min-height: 3.5rem;
-  padding-block: var(--s-2);
+  gap: var(--s-3);
+  min-height: 4.5rem;
+  padding-block: var(--s-3);
 }
 
 .wordmark {
-  font-weight: 700;
-  font-size: var(--text-lg);
-  letter-spacing: -0.01em;
-  color: var(--ink);
+  font-family: var(--font-marker);
+  font-size: 1.625rem;
+  line-height: 1;
+  color: var(--on-frame);
   text-decoration: none;
   margin-inline-end: auto;
 }
 
-.wordmark__dot {
-  color: var(--accent);
-}
-
-/* Narrow screens: wordmark and theme toggle share the first row, nav takes the second. */
-.site-nav {
-  order: 3;
-  flex-basis: 100%;
-}
-
-@media (width >= 40rem) {
-  .site-nav {
-    order: 0;
-    flex-basis: auto;
-  }
-}
-
 .site-nav ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-1) var(--s-4);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -67,32 +47,131 @@
 .site-nav a {
   display: inline-block;
   padding-block: var(--s-2);
-  color: var(--ink);
+  color: var(--on-frame);
+  font-weight: 600;
   text-decoration: none;
 }
 
 .site-nav a:hover,
 .site-nav a[aria-current='page'] {
   text-decoration: underline;
+  text-decoration-color: var(--sticky);
 }
 
-/* Buttons */
+.site-nav__list {
+  display: none;
+}
+
+.site-nav__menu {
+  position: relative;
+}
+
+.site-nav__menu summary {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: var(--s-3);
+  border: 2px solid var(--on-frame-muted);
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.site-nav__menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.site-nav__menu summary::after {
+  content: '▾';
+  margin-inline-start: var(--s-2);
+}
+
+.site-nav__menu[open] summary::after {
+  content: '▴';
+}
+
+.site-nav__menu ul {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + var(--s-2));
+  z-index: 5;
+  min-width: 12rem;
+  padding: var(--s-2) var(--s-4);
+  background: var(--frame);
+  border: 2px solid var(--frame-edge);
+  border-radius: 4px;
+  box-shadow: 0 10px 18px rgb(0 0 0 / 35%);
+}
+
+.site-nav__menu li a {
+  display: block;
+  min-height: 2.75rem;
+}
+
+.site-nav__menu .theme-toggle {
+  margin-block: var(--s-2);
+}
+
+.site-header__theme {
+  display: none;
+}
+
+@media (width >= 48rem) {
+  .site-nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1) var(--s-5);
+  }
+
+  .site-nav__menu {
+    display: none;
+  }
+
+  .site-header__theme {
+    display: inline-block;
+  }
+}
+
+.site-header .button--ghost {
+  min-height: 2.75rem;
+  padding-inline: var(--s-3);
+}
+
+/* Phones: wordmark, Menu and Book a call share one row down to 320 px. */
+@media (width < 48rem) {
+  .site-header__inner {
+    gap: var(--s-2);
+  }
+
+  .wordmark {
+    font-size: 1.375rem;
+  }
+
+  .site-header .button--ghost,
+  .site-nav__menu summary {
+    padding-inline: var(--s-2);
+    font-size: var(--text-sm);
+  }
+}
+
+/* Buttons (DESIGN.md §4): the primary is red with white text; the ghost is an outline in
+   the surrounding text colour. 50 px tall, 44 px where space is short. */
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--s-2);
-  min-height: 2.75rem;
+  min-height: 3.125rem;
   padding: var(--s-2) var(--s-5);
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  background: var(--accent);
-  color: var(--accent-ink);
+  border: 2px solid var(--yarn);
+  border-radius: 4px;
+  background: var(--yarn);
+  color: var(--on-yarn);
   font: inherit;
-  font-weight: 600;
+  font-weight: 800;
   text-decoration: none;
   cursor: pointer;
-  transition: background var(--duration) ease;
 }
 
 .button:hover {
@@ -100,8 +179,9 @@
 }
 
 .button--ghost {
+  border-color: currentcolor;
   background: transparent;
-  color: var(--accent);
+  color: inherit;
 }
 
 .button-row {
@@ -114,12 +194,13 @@
   min-height: 2.75rem;
   min-width: 2.75rem;
   padding: var(--s-2) var(--s-3);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: 2px solid var(--on-frame-muted);
+  border-radius: 4px;
   background: transparent;
-  color: var(--ink);
+  color: var(--on-frame);
   font: inherit;
   font-size: var(--text-sm);
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -183,12 +264,12 @@
   font-size: var(--text-xl);
 }
 
-/* Footer */
+/* Footer: wood, like the header. */
 .site-footer {
   margin-top: var(--s-8);
-  padding-block: var(--s-7);
-  border-top: 1px solid var(--line);
-  color: var(--ink-muted);
+  padding-block: var(--s-7) var(--s-6);
+  background: var(--frame);
+  color: var(--on-frame-muted);
   font-size: var(--text-sm);
 }
 
@@ -199,10 +280,13 @@
 }
 
 .site-footer h2 {
+  font-family: var(--font-body);
   font-size: var(--text-sm);
+  font-weight: 800;
+  line-height: var(--leading-tight);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--ink);
+  color: var(--on-frame);
 }
 
 .site-footer ul {
@@ -216,7 +300,13 @@
 }
 
 .site-footer a {
-  color: var(--ink-muted);
+  color: var(--on-frame-muted);
+}
+
+.site-footer__small {
+  margin-top: var(--s-6);
+  font-family: var(--font-type);
+  font-size: var(--text-xs);
 }
 
 /* Terminal panel (dark in both themes) */
