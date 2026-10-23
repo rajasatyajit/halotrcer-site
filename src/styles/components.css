@@ -1719,10 +1719,10 @@ html:not(.js) .js-only {
 }
 
 .contact-email {
+  max-width: 100%;
   padding: 10px 14px;
   border: 2px dashed currentcolor;
   font-family: var(--font-type);
   letter-spacing: var(--type-tracking);
-  overflow-wrap: anywhere;
   user-select: all;
 }

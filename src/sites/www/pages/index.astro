@@ -13,6 +13,8 @@ import { organization, softwareApplication, website } from '../../../lib/jsonld.
 
 const { services } = loadPricing();
 const { summary } = board('www');
+// The address may wrap only after the @ (copying reads the text, which the <wbr> leaves whole).
+const [emailUser, emailDomain] = CONTACT_EMAIL.split('@');
 const jsonld = [organization(), website(), softwareApplication('halotrcer')];
 ---
 
@@ -106,7 +108,8 @@ const jsonld = [organization(), website(), softwareApplication('halotrcer')];
 
       <div class="contact-row">
         <span id="contact-email" class="contact-email">
-          {CONTACT_EMAIL}
+          {emailUser}@<wbr />
+          {emailDomain}
         </span>
         <button class="button button--ghost js-only" type="button" data-copy="contact-email">
           Copy email
