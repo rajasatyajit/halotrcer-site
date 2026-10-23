@@ -11,3 +11,6 @@ content/samples/
 content/docs/
 # Plain-text guide with a frontmatter example Prettier would reflow
 content/proof/README
+# Owner-supplied redesign spec and mockup, kept byte-for-byte as approved
+docs/redesign/DESIGN.md
+docs/redesign/reference/
