@@ -34,7 +34,7 @@ describe('www board', () => {
     );
     expect(text('www', 'Failed requests').body).toBe('HTTP 429 ×5: turned away at the door.');
     expect(text('www', 'MCP server “search”').body).toBe(
-      'MCP servers on this machine that skip Sievant: no policy, no redaction, no audit.',
+      'MCP servers in this run that skip Sievant: no policy, no redaction, no audit.',
     );
     expect(text('www', 'Credential in arguments').body).toBe(
       'Sievant stopped the call before it reached the tool.',
@@ -103,7 +103,7 @@ describe('product boards', () => {
         'Accomplice',
         'MCP server “search”',
         '1 of 2',
-        'MCP servers on this machine that skip Sievant: no policy, no redaction, no audit.',
+        'MCP servers in this run that skip Sievant: no policy, no redaction, no audit.',
       ],
       [
         'Caught',
@@ -115,7 +115,7 @@ describe('product boards', () => {
         'Alibi',
         'MCP server “notes”',
         '1 of 2',
-        'MCP servers on this machine that run through Sievant.',
+        'MCP servers in this run that run through Sievant.',
       ],
       ['Evidence', 'Tool calls blocked', '13 of 19', 'Top blocked tool: admin_delete (12).'],
     ]);

@@ -34,7 +34,7 @@ export const CLUES = {
   bypass: {
     title: (name: string) => `MCP server “${name}”`,
     figure: (n: N, of: N) => `${n} of ${of}`,
-    body: 'MCP servers on this machine that skip Sievant: no policy, no redaction, no audit.',
+    body: 'MCP servers in this run that skip Sievant: no policy, no redaction, no audit.',
   },
   credential: {
     title: 'Credential in arguments',
@@ -52,7 +52,7 @@ export const CLUES = {
   wrapped: {
     title: (name: string) => `MCP server “${name}”`,
     figure: (n: N, of: N) => `${n} of ${of}`,
-    body: 'MCP servers on this machine that run through Sievant.',
+    body: 'MCP servers in this run that run through Sievant.',
   },
   blocked: {
     title: 'Tool calls blocked',
