@@ -110,3 +110,58 @@ for (const colorScheme of ['light', 'dark'] as const)
       for (const r of ratios) expect(r).toBeGreaterThanOrEqual(4.5);
       await context.close();
     });
+
+// Review I2: reading pages use reading sizes for h1 and h2, and no heading word is ever split
+// across lines on a 320 px phone.
+const READING = [
+  ['tokvera', '/docs/capture'],
+  ['tokvera', '/docs/usage-log-format'],
+  ['sievant', '/docs/troubleshooting'],
+  ['sievant', '/docs/threat-model'],
+  ['www', '/privacy'],
+  ['www', '/terms'],
+] as const;
+
+test.describe('reading headings at 320 px', () => {
+  test.use({ viewport: { width: 320, height: 800 }, isMobile: false, hasTouch: false });
+  for (const [site, path] of READING)
+    test(`${site}${path}: no heading word breaks`, async ({ page }) => {
+      await page.goto(`${ORIGINS[site]}${path}`, { waitUntil: 'networkidle' });
+      const res = await page.goto(`${ORIGINS[site]}${path}`, { waitUntil: 'networkidle' });
+      expect(res?.status(), 'the page must exist in this build').toBe(200);
+      const broken = await page.locator('main :is(h1, h2)').evaluateAll((hs) =>
+        hs.flatMap((h) => {
+          const out: string[] = [];
+          const walker = document.createTreeWalker(h, NodeFilter.SHOW_TEXT);
+          for (let n; (n = walker.nextNode());) {
+            const text = n.textContent ?? '';
+            // A break after a hyphen is a normal wrap; anywhere else inside a word is not.
+            for (const m of text.matchAll(/[^\s-]+-?/g)) {
+              const r = document.createRange();
+              r.setStart(n, m.index ?? 0);
+              r.setEnd(n, (m.index ?? 0) + m[0].length);
+              const tops = new Set([...r.getClientRects()].map((x) => Math.round(x.top)));
+              if (tops.size > 1) out.push(m[0]);
+            }
+          }
+          return out;
+        }),
+      );
+      expect(broken).toEqual([]);
+    });
+});
+
+test.describe('reading heading sizes on desktop', () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+  for (const [site, path] of READING)
+    test(`${site}${path}: h1 ≤ 48 px, h2 ≤ 40 px`, async ({ page }) => {
+      const res = await page.goto(`${ORIGINS[site]}${path}`);
+      expect(res?.status()).toBe(200);
+      const px = (sel: string) =>
+        page
+          .locator(sel)
+          .evaluateAll((els) => els.map((el) => parseFloat(getComputedStyle(el).fontSize)));
+      for (const s of await px('main h1')) expect(s).toBeLessThanOrEqual(48);
+      for (const s of await px('main h2')) expect(s).toBeLessThanOrEqual(40);
+    });
+});
