@@ -919,6 +919,18 @@
     decided: 2026-10-22
     note: O2 in docs/redesign/proposal.md, repeated in the DESIGN.md mockup.
 
+- id: www.continuity.prelaunch
+  text: >-
+    One maintainer today. Tokvera and Sievant will be Apache-2.0, each a single binary that will be
+    yours to keep and run with no account. Halotrcer will be Apache-2.0 too; it will install and run
+    those two binaries, which keep working without it.
+  source:
+    owner: true
+    decided: 2026-10-23
+    note: >-
+      Pre-launch wording of www.continuity (owner, 2026-10-23): "will be", matching /pricing, until
+      the binaries are released.
+
 - id: sievant.report-org
   text: sievant report --org <name> names your client's organization in the report title.
   source:

@@ -1,6 +1,6 @@
 ---
+import Continuity from '../../../components/Continuity.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Claim from '../../../components/Claim.astro';
 import PriceCard from '../../../components/PriceCard.astro';
 import { BOOKING_URL, CONTACT_EMAIL, url } from '../../../config/site.ts';
 import { getFlags } from '../../../config/flags.ts';
@@ -68,7 +68,7 @@ const { launched } = getFlags();
       </ul>
       <h3>What if you stop maintaining it?</h3>
       <p>
-        <Claim id="www.continuity" />
+        <Continuity />
       </p>
     </section>
 

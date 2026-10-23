@@ -5,7 +5,10 @@ import { loadPricing, priceLabel, serviceFor } from '../../src/lib/pricing.ts';
 import { ORIGINS } from './helpers.ts';
 
 // Task 9: the www paper pages (pricing, audit, security) and the 404s.
-const continuity = claim('www.continuity').text;
+// Before launch the binaries "will be" yours to keep (as /pricing says); after launch they "are".
+const LAUNCHED = process.env.LAUNCHED === 'true';
+const continuity = claim(LAUNCHED ? 'www.continuity' : 'www.continuity.prelaunch').text;
+const otherContinuity = claim(LAUNCHED ? 'www.continuity.prelaunch' : 'www.continuity').text;
 
 test('/pricing: Hire the detectives, the three services, founding band, before you book', async ({
   page,
@@ -117,4 +120,17 @@ for (const site of ['tokvera', 'sievant'] as const)
       has: page.getByRole('heading', { name: 'What if the maintainer stops?' }),
     });
     await expect(section).toContainText(continuity);
+  });
+
+for (const [site, path] of [
+  ['www', '/'],
+  ['www', '/pricing'],
+  ['www', '/security'],
+  ['tokvera', '/faq'],
+  ['sievant', '/faq'],
+] as const)
+  test(`${site}${path}: the continuity answer matches the mode`, async ({ page }) => {
+    await page.goto(`${ORIGINS[site]}${path}`);
+    await expect(page.locator('main')).toContainText(continuity);
+    await expect(page.locator('main')).not.toContainText(otherContinuity);
   });

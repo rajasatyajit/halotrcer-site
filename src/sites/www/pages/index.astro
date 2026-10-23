@@ -1,4 +1,5 @@
 ---
+import Continuity from '../../../components/Continuity.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Proof from '../../../components/Proof.astro';
 import Claim from '../../../components/Claim.astro';
@@ -58,7 +59,7 @@ const jsonld = [organization(), website(), softwareApplication('halotrcer')];
         <div>
           <h3>What if you stop maintaining it?</h3>
           <p>
-            <Claim id="www.continuity" />
+            <Continuity />
           </p>
           <p>
             <a href={url('www', '/security')}>Security and continuity</a>
