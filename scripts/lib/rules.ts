@@ -44,7 +44,13 @@ export const FORBIDDEN: [RegExp, string][] = [
   [/\b(tokvera|sievant|halotrcer)[\s_@-]+v?\d+\.\d+\.\d+/i, 'product release version'],
   [/\b\d+\.\d+\.\d+-(rc|alpha|beta)\b/i, 'pre-release version'],
   [/github-buttons|stargazers|ghbtns|star-button|data-github-stars/i, 'star button'],
+  // GitHub's private vulnerability reporting needs the public repository: before launch the
+  // only reporting route is email (owner decision O3, 2026-10-22).
+  [/private vulnerability reporting/i, 'GitHub vulnerability reporting'],
 ];
+
+// True when a text shows nothing that must wait for launch.
+export const passesPrelaunch = (text: string): boolean => FORBIDDEN.every(([re]) => !re.test(text));
 
 export const RULES: [RegExp, string][] = [
   [/\$\s?\d/, 'dollar amount'],

@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { FORBIDDEN, findViolations, parseHeaders } from '../../scripts/lib/rules.ts';
+import {
+  findViolations,
+  FORBIDDEN,
+  parseHeaders,
+  passesPrelaunch,
+} from '../../scripts/lib/rules.ts';
 import { contentSecurityPolicy, headersFile } from '../../src/config/headers.ts';
 import { parseClaims } from '../../src/lib/claims.ts';
 
@@ -89,5 +94,16 @@ describe('claim registry', () => {
   it('rejects duplicate ids', () => {
     const entry = '- id: a.b\n  text: x\n  source: { owner: true, decided: 2026-10-21, note: n }\n';
     expect(() => parseClaims(entry + entry)).toThrow(/Duplicate/);
+  });
+});
+
+describe('passesPrelaunch', () => {
+  it('holds back GitHub private vulnerability reporting until launch', () => {
+    expect(passesPrelaunch('use GitHub’s private vulnerability reporting')).toBe(false);
+    expect(passesPrelaunch('Use GitHub Private Vulnerability Reporting on this repo')).toBe(false);
+  });
+
+  it('lets an email-only reporting route through', () => {
+    expect(passesPrelaunch('Report a vulnerability to security@example.com.')).toBe(true);
   });
 });

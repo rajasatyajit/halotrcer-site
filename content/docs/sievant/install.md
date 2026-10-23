@@ -6,7 +6,7 @@ source:
   ref: main
   commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
 prelaunch: false
-order: 14
+order: 15
 ---
 
 Every channel below installs a published GitHub release of

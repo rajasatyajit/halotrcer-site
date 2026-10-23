@@ -6,7 +6,7 @@ source:
   ref: main
   commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
 prelaunch: true
-order: 16
+order: 17
 ---
 
 Start with `sievant doctor`: it checks the configuration, the per-user
