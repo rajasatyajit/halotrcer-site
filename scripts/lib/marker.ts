@@ -2,7 +2,11 @@
 // (rules whose font-family is var(--font-marker)); an element that also matches a rule with
 // another face counts as not Marker. Over-collecting is the safe side: it only makes the
 // subset larger or the check stricter. Unit-tested in tests/unit/marker.test.ts.
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import type { HTMLElement } from 'node-html-parser';
+import type { SiteId } from '../../src/config/site.ts';
+import { builtSites, DIST, pages, walk } from './dist.ts';
 
 export interface MarkerRules {
   marker: string[];
@@ -62,3 +66,24 @@ export function markerChars(root: HTMLElement, rules: MarkerRules): Set<string> 
 
 export const missingGlyphs = (chars: Set<string>, subset: string): string[] =>
   [...chars].filter((c) => c.trim() && !subset.includes(c)).sort();
+
+export const markerFailure = (missing: string[]): string =>
+  `Marker text uses glyphs outside the subset: ${missing.join(' ')}. Run npm run font:marker to re-cut the font.`;
+
+// Every character the built site in dist/ sets in Marker, per page and in total.
+export function distMarkerChars(): { site: SiteId; rel: string; chars: Set<string> }[] {
+  return builtSites().flatMap((site) => {
+    const css = walk(join(DIST, site))
+      .filter((f) => f.endsWith('.css'))
+      .map((f) => readFileSync(f, 'utf8'))
+      .join('\n');
+    const rules = markerRules(css);
+    if (rules.marker.length === 0)
+      throw new Error(`${site}: no Marker rules found in the built CSS`);
+    return pages(site).map((page) => ({
+      site,
+      rel: page.rel,
+      chars: markerChars(page.root, rules),
+    }));
+  });
+}

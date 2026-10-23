@@ -1,7 +1,8 @@
 Halotrcer websites (www.halotrcer.com, tokvera.halotrcer.com, sievant.halotrcer.com)
 
 This repository ships one third-party font, self-hosted as a subset WOFF2 file in
-src/assets/fonts/. It is unmodified apart from subsetting. Source and checksums:
+src/assets/fonts/. It is unmodified apart from subsetting. The source TTF it is cut from is
+kept in vendor/fonts/ (used at build time only, never served). Source and checksums:
 docs/fonts.md.
 
 Permanent Marker

@@ -67,6 +67,7 @@
     "sync:samples": "node scripts/sync-samples.ts",
     "check:jsonld": "node scripts/check-jsonld.ts",
     "fonts:subset": "node scripts/subset-fonts.ts",
-    "check:marker": "node scripts/check-marker.ts"
+    "check:marker": "node scripts/check-marker.ts",
+    "font:marker": "node scripts/font-marker.ts"
   }
 }

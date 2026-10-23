@@ -1,6 +1,6 @@
 // One-off: subset Permanent Marker to MARKER_UNICODES as WOFF2 in src/assets/fonts/ and print
 // the metric overrides for its local fallback face (src/styles/fonts.css).
-// Usage: npm run fonts:subset -- <dir with the google/fonts TTF> [fallback TTF]
+// Usage: npm run fonts:subset [-- <TTF> [fallback TTF]]   (default: vendor/fonts/PermanentMarker-Regular.ttf)
 // Source, commit and SHA-256s: docs/fonts.md. Needs fonttools (pyftsubset) and woff2_compress.
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, mkdtempSync } from 'node:fs';
@@ -8,12 +8,10 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { MARKER_UNICODES } from '../src/lib/fonts.ts';
 
-const [dir, fallback = '/usr/share/fonts/liberation/LiberationSans-Regular.ttf'] =
-  process.argv.slice(2);
-if (!dir) {
-  console.error('usage: npm run fonts:subset -- <dir> [fallback.ttf]');
-  process.exit(2);
-}
+const [
+  ttf = 'vendor/fonts/PermanentMarker-Regular.ttf',
+  fallback = '/usr/share/fonts/liberation/LiberationSans-Regular.ttf',
+] = process.argv.slice(2);
 
 const run = (cmd: string, args: string[]) => {
   const r = spawnSync(cmd, args, { stdio: 'inherit' });
@@ -21,7 +19,6 @@ const run = (cmd: string, args: string[]) => {
 };
 
 const tmp = mkdtempSync(join(tmpdir(), 'fonts-'));
-const ttf = join(dir, 'apache_permanentmarker_PermanentMarker-Regular.ttf');
 run('pyftsubset', [
   ttf,
   `--unicodes=${MARKER_UNICODES}`,

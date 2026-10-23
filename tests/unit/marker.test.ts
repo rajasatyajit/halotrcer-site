@@ -2,7 +2,12 @@
 // subset and its build check follow the site rather than a hand-kept list.
 import { parse } from 'node-html-parser';
 import { describe, expect, it } from 'vitest';
-import { markerChars, markerRules, missingGlyphs } from '../../scripts/lib/marker.ts';
+import {
+  markerChars,
+  markerFailure,
+  markerRules,
+  missingGlyphs,
+} from '../../scripts/lib/marker.ts';
 
 const css =
   'h1,h2,h3{font-family:var(--font-marker);font-weight:400}' +
@@ -46,5 +51,13 @@ describe('markerChars', () => {
 describe('missingGlyphs', () => {
   it('lists characters outside the subset, ignoring whitespace', () => {
     expect(missingGlyphs(new Set(['a', 'é', ' ', '\n']), 'abc')).toEqual(['é']);
+  });
+});
+
+describe('markerFailure', () => {
+  it('names the missing glyphs and how to fix it', () => {
+    expect(markerFailure(['J', 'z'])).toBe(
+      'Marker text uses glyphs outside the subset: J z. Run npm run font:marker to re-cut the font.',
+    );
   });
 });

@@ -37,3 +37,10 @@ describe('Marker subset', () => {
       }
   });
 });
+
+describe('generated glyph list', () => {
+  it('is part of the subset', async () => {
+    const { MARKER_USED } = await import('../../src/lib/marker-glyphs.ts');
+    for (const c of MARKER_USED) expect(MARKER_CHARS).toContain(c);
+  });
+});
