@@ -702,6 +702,7 @@ html:not(.js) .picker__variants {
   background: var(--term-bg);
   color: var(--term-ink);
   line-height: 1.6;
+
   /* Commands wrap like the terminal panels: nothing is cut off on a phone. The copy button
      copies the exact command, so a visual wrap never changes what is pasted. */
   white-space: pre-wrap;
