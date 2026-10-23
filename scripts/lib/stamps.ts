@@ -3,11 +3,15 @@
 // tests/unit/stamps.test.ts; run on the built pages by scripts/check-stamps.ts.
 import type { HTMLElement } from 'node-html-parser';
 
+// A stamp counts only if it says something: an empty or whitespace-only [data-stamp] is no label.
+const hasStamp = (el: HTMLElement | null | undefined): boolean =>
+  !!el?.querySelectorAll('[data-stamp]').some((st) => st.textContent.trim() !== '');
+
 export function missingStamps(root: HTMLElement): string[] {
   // Every clue card carries its own stamp, wherever it sits (DESIGN.md §4).
   const clues = root
     .querySelectorAll('[data-clue]')
-    .flatMap((card, i) => (card.querySelector('[data-stamp]') ? [] : [`clue#${i}`]));
+    .flatMap((card, i) => (hasStamp(card) ? [] : [`clue#${i}`]));
   // data-simulated="false" marks sourced data that is not a demo run (the OWASP mapping).
   const frames = root
     .querySelectorAll('[data-sample]:not([data-simulated="false"])')
@@ -15,7 +19,7 @@ export function missingStamps(root: HTMLElement): string[] {
       const id = region.getAttribute('data-sample') ?? '?';
       return region.querySelectorAll('table, section').flatMap((el, i) => {
         const where = el.tagName === 'TABLE' ? el.querySelector('caption') : el;
-        if (where?.querySelector('[data-stamp]')) return [];
+        if (hasStamp(where)) return [];
         return [`${el.tagName.toLowerCase()}#${el.id || i} in [data-sample=${id}]`];
       });
     });

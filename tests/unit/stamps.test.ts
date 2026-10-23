@@ -47,3 +47,22 @@ describe('missingStamps', () => {
     expect(check('<table><caption>T</caption></table>')).toEqual([]);
   });
 });
+
+describe('empty stamps', () => {
+  it('rejects an empty or whitespace-only stamp on a clue card', () => {
+    expect(check('<article data-clue><h3>R</h3><span data-stamp></span></article>')).toEqual([
+      'clue#0',
+    ]);
+    expect(check('<article data-clue><h3>R</h3><span data-stamp>  \n </span></article>')).toEqual([
+      'clue#0',
+    ]);
+  });
+
+  it('rejects an empty stamp in a sample caption', () => {
+    expect(
+      check(
+        '<div data-sample="x"><table><caption>T <span data-stamp> </span></caption></table></div>',
+      ),
+    ).toHaveLength(1);
+  });
+});
