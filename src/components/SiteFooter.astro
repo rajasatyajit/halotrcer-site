@@ -4,6 +4,13 @@ import { BOOKING_URL, CONTACT_EMAIL, url } from '../config/site.ts';
 import { getFlags } from '../config/flags.ts';
 
 const { analytics, launched } = getFlags();
+
+interface Props {
+  // Only on pages that show sample data, never under real prices or a visitor's estimates.
+  samples?: boolean;
+}
+
+const { samples = false } = Astro.props;
 ---
 
 <footer class="site-footer">
@@ -92,8 +99,10 @@ const { analytics, launched } = getFlags();
       </p>
     </div>
   </div>
-  <p class="container site-footer__small">
-    {launched && '$ halotrcer check · '}Numbers from the tools' own simulated demo runs on fictional
-    systems.
-  </p>
+  {samples && (
+    <p class="container site-footer__small">
+      {launched && '$ halotrcer check · '}Numbers from the tools' own simulated demo runs on
+      fictional systems.
+    </p>
+  )}
 </footer>

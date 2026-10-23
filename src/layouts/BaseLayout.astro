@@ -26,6 +26,9 @@ interface Props {
   ogTemplate?: 'pricing';
   // The page's ground: paper (docs, blog, legal) or wood (sample reports, as case files).
   surface?: 'paper' | 'wood';
+  // The page shows simulated sample data: the footer then says where its numbers come from.
+  // Defaults to a "Simulated…" share-image stamp.
+  samples?: boolean;
 }
 
 const {
@@ -38,6 +41,7 @@ const {
   ogStamp,
   ogTemplate,
   surface,
+  samples = ogStamp?.startsWith('Simulated') ?? false,
 } = Astro.props;
 const { site } = getFlags();
 const siteName = SITE_NAMES[site];
@@ -93,6 +97,6 @@ const graph = [
     <main id="main" class:list={[surface && `${surface}-main`]}>
       <slot />
     </main>
-    <SiteFooter />
+    <SiteFooter samples={samples} />
   </body>
 </html>

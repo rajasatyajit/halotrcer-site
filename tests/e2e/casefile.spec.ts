@@ -165,3 +165,22 @@ test.describe('reading heading sizes on desktop', () => {
       for (const s of await px('main h2')) expect(s).toBeLessThanOrEqual(40);
     });
 });
+
+// Review M3: the footer's "simulated demo runs" line sits only on pages that show sample data,
+// never under real prices or the visitor's own estimates.
+const SMALL = /simulated demo runs on fictional systems/i;
+for (const [site, path, shown] of [
+  ['www', '/', true],
+  ['tokvera', '/sample-report', true],
+  ['sievant', '/scan', true],
+  ['www', '/pricing', false],
+  ['www', '/audit', false],
+  ['www', '/calculator', false],
+  ['www', '/agencies', false],
+] as const)
+  test(`footer small print ${shown ? 'on' : 'not on'} ${site}${path}`, async ({ page }) => {
+    await page.goto(`${ORIGINS[site]}${path}`);
+    const footer = page.locator('footer');
+    if (shown) await expect(footer).toContainText(SMALL);
+    else await expect(footer).not.toContainText(SMALL);
+  });
