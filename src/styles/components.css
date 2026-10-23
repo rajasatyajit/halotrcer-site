@@ -38,15 +38,6 @@
   margin-inline-end: auto;
 }
 
-/* Product sites: the bold body face. Marker in the first laid-out text cost LCP there
-   (owner decision 2026-10-23); www keeps Marker. */
-:root[data-site='tokvera'] .wordmark,
-:root[data-site='sievant'] .wordmark {
-  font-family: var(--font-body);
-  font-weight: 800;
-  letter-spacing: -0.01em;
-}
-
 .site-nav ul {
   margin: 0;
   padding: 0;
