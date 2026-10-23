@@ -4,6 +4,8 @@
 // in the query string; without it, the formula below gives the same numbers.
 import { getFlags } from '../config/flags.ts';
 import { url } from '../config/site.ts';
+import { EXAMPLE_LABEL } from '../lib/calculator.ts';
+import SimulatedStamp from './SimulatedStamp.astro';
 
 const fields = [
   { name: 'r', label: 'Requests per month', hint: 'Calls to the model API in a month.' },
@@ -67,6 +69,12 @@ const tokvera = getFlags().site === 'tokvera' ? '/' : url('tokvera');
 
   <section class="calc__result" aria-labelledby="calc-result-title" data-calc-result>
     <h2 id="calc-result-title">Estimate</h2>
+    <SimulatedStamp label="Estimate" />
+    <p class="calc__estimate">Estimate from your inputs: not a measurement.</p>
+    {/* Shown by calculator.ts only for the example values (ex=1). */}
+    <p class="calc__example" data-example-label hidden>
+      {EXAMPLE_LABEL}
+    </p>
     <dl aria-live="polite" aria-atomic="true" data-user-input>
       <div>
         <dt>Monthly spend</dt>
@@ -82,8 +90,8 @@ const tokvera = getFlags().site === 'tokvera' ? '/' : url('tokvera');
       </div>
     </dl>
     <p class="calc__label">
-      An estimate computed only from your inputs, in the currency of your prices. Not a measurement.
-      <a href={tokvera}>Run Tokvera</a> to measure whether your repeated prompts are worth caching.
+      In the currency of your prices. <a href={tokvera}>Run Tokvera</a> to measure whether your
+      repeated prompts are worth caching.
     </p>
     <div class="button-row">
       <button class="button button--ghost" type="button" data-calc-copy>

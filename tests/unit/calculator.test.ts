@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { compute, encode, EXAMPLE, parse, summary } from '../../src/lib/calculator.ts';
+import { compute, encode, EXAMPLE, parse, summary, isExample } from '../../src/lib/calculator.ts';
 
 describe('calculator', () => {
   it('computes spend and repeated, uncached input spend from the inputs', () => {
@@ -33,5 +33,23 @@ describe('calculator', () => {
     const text = summary(EXAMPLE, compute(EXAMPLE), 'https://www.halotrcer.com/calculator');
     expect(text).not.toMatch(/sav(e|ing)/i);
     expect(text).toMatch(/estimate/i);
+  });
+});
+
+describe('example values', () => {
+  const r = compute(EXAMPLE);
+
+  it('labels a copied summary of example values, and only then', () => {
+    expect(summary(EXAMPLE, r, 'L', true).split('\n')[0]).toBe('Example values (not real prices).');
+    expect(summary(EXAMPLE, r, 'L')).not.toContain('Example values');
+  });
+
+  it('carries the flag in the link as ex=1', () => {
+    expect(encode(EXAMPLE, true)).toMatch(/&ex=1$/);
+    expect(encode(EXAMPLE)).not.toContain('ex=');
+    const params = new URLSearchParams(encode(EXAMPLE, true));
+    expect(isExample(params)).toBe(true);
+    expect(parse(params)).toEqual(EXAMPLE);
+    expect(isExample(new URLSearchParams('ex=0'))).toBe(false);
   });
 });

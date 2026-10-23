@@ -53,9 +53,16 @@ export function parse(params: URLSearchParams): Inputs | undefined {
   return out as Inputs;
 }
 
-export function encode(i: Inputs): string {
-  return new URLSearchParams(FIELDS.map((f) => [f, String(i[f])])).toString();
+// `example` marks the example values (ex=1), so a shared link keeps its label.
+export function encode(i: Inputs, example = false): string {
+  const params = new URLSearchParams(FIELDS.map((f) => [f, String(i[f])]));
+  if (example) params.set('ex', '1');
+  return params.toString();
 }
+
+export const isExample = (params: URLSearchParams): boolean => params.get('ex') === '1';
+
+export const EXAMPLE_LABEL = 'Example values (not real prices).';
 
 const money = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2,
@@ -67,8 +74,9 @@ export const formatAmount = (n: number) => money.format(n);
 export const formatShare = (n: number) => `${pct.format(n)}%`;
 
 // The plain-text summary that "Copy result" puts on the clipboard.
-export function summary(i: Inputs, r: Result, link: string): string {
+export function summary(i: Inputs, r: Result, link: string, example = false): string {
   return [
+    ...(example ? [EXAMPLE_LABEL] : []),
     `Estimated monthly spend: ${formatAmount(r.spend)}`,
     `Estimated spend on repeated, uncached input: ${formatAmount(r.repeat)} (${formatShare(r.share)} of the total)`,
     `An estimate computed only from these inputs (${i.r} requests a month), not a measurement.`,

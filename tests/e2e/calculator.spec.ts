@@ -107,3 +107,56 @@ test.describe('without JavaScript', () => {
     await expect(page.getByRole('heading', { name: 'How it is calculated' })).toBeVisible();
   });
 });
+
+// Example values stay labelled wherever the result goes: on the card, in the link (ex=1)
+// and in the copied text. Editing a field makes them the visitor's own numbers again.
+test.describe('example label', () => {
+  const label = (page: import('@playwright/test').Page) => page.locator('[data-example-label]');
+
+  test('the example fill labels the result and the link', async ({ page }) => {
+    await page.goto(PAGE);
+    await expect(label(page)).toBeHidden();
+    await page.getByRole('button', { name: /example values \(not real prices\)/i }).click();
+    await expect(label(page)).toBeVisible();
+    await expect(label(page)).toHaveText('Example values (not real prices).');
+    expect(new URL(page.url()).searchParams.get('ex')).toBe('1');
+  });
+
+  test('typing in a field clears the label and the flag', async ({ page }) => {
+    await page.goto(PAGE);
+    await page.getByRole('button', { name: /example values \(not real prices\)/i }).click();
+    await page.locator('input[name="r"]').fill('123');
+    await expect(label(page)).toBeHidden();
+    expect(new URL(page.url()).searchParams.get('ex')).toBeNull();
+  });
+
+  test('a shared example link shows the label; a plain link does not', async ({ page }) => {
+    await page.goto(`${PAGE}?${QUERY}&ex=1`);
+    await expect(label(page)).toBeVisible();
+    await page.goto(`${PAGE}?${QUERY}`);
+    await expect(label(page)).toBeHidden();
+  });
+
+  test.describe('copy', () => {
+    test.use({ permissions: CLIPBOARD_PERMISSIONS });
+    test('the copied text starts with the label', async ({ page }) => {
+      await recordClipboard(page);
+      await page.goto(`${PAGE}?${QUERY}&ex=1`);
+      await page.getByRole('button', { name: 'Copy result and link' }).click();
+      await expect
+        .poll(async () => (await copied(page)).split('\n')[0])
+        .toBe('Example values (not real prices).');
+    });
+  });
+
+  test.describe('without JavaScript', () => {
+    test.use({ javaScriptEnabled: false });
+    test('the card shows its estimate stamp and no example label', async ({ page }) => {
+      await page.goto(`${PAGE}?${QUERY}&ex=1`);
+      await expect(label(page)).toBeHidden();
+      const card = page.locator('[data-calc-result]');
+      await expect(card.locator('[data-stamp]')).toHaveText(/Estimate/);
+      await expect(card).toContainText('Estimate from your inputs: not a measurement');
+    });
+  });
+});
