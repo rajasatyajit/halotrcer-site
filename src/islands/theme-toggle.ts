@@ -15,7 +15,10 @@ function label(button: HTMLButtonElement, theme: Theme): void {
   button.setAttribute('aria-label', `Theme: switch to ${next}`);
 }
 
-for (const button of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
+// The header and the phone menu each have a copy; every switch relabels both.
+const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')];
+
+for (const button of buttons) {
   label(button, current());
   delete button.dataset.pending;
   button.addEventListener('click', () => {
@@ -26,6 +29,6 @@ for (const button of document.querySelectorAll<HTMLButtonElement>('[data-theme-t
     } catch {
       // Storage blocked: the choice lasts for this page only.
     }
-    label(button, next);
+    for (const b of buttons) label(b, next);
   });
 }

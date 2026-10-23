@@ -65,3 +65,20 @@ test.describe('sample report from the header at 320 px', () => {
       await expect(link).toHaveAttribute('href', url(site, '/sample-report'));
     });
 });
+
+// Both theme buttons (header and phone menu) describe the same next action after every switch.
+test.describe('theme toggle labels', () => {
+  test.use({ viewport: { width: 1280, height: 800 }, colorScheme: 'light' });
+  test('switching in the header relabels the menu copy too, and back', async ({ page }) => {
+    await page.goto(`${ORIGINS.www}/`);
+    const labels = () =>
+      page
+        .locator('[data-theme-toggle]')
+        .evaluateAll((bs) => bs.map((b) => b.getAttribute('aria-label')));
+    expect(await labels()).toEqual(['Theme: switch to dark', 'Theme: switch to dark']);
+    await page.locator('.site-header__theme').click();
+    expect(await labels()).toEqual(['Theme: switch to light', 'Theme: switch to light']);
+    await page.locator('.site-header__theme').click();
+    expect(await labels()).toEqual(['Theme: switch to dark', 'Theme: switch to dark']);
+  });
+});
