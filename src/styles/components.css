@@ -1741,3 +1741,9 @@ html:not(.js) .js-only {
 .paper-section--stack {
   padding-block: var(--s-4) var(--s-7);
 }
+
+/* Section headings on the paper under a board: 40 px. The display sizes are for the board
+   headline only; the "Launching soon" card keeps its own heading size. */
+.paper-section h2:not(.launching-soon h2) {
+  font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+}

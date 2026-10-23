@@ -294,3 +294,23 @@ for (const [site, subject] of [
       });
     });
   });
+
+// Headings in the paper sections under a board are 40 px; only the board headline (h1)
+// keeps the display sizes (up to 96 px on www, 68 px for the product sentences). The
+// "Launching soon" card keeps its own smaller heading.
+test.describe('heading sizes on desktop', () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+  for (const site of ['www', 'tokvera', 'sievant'] as const)
+    test(`${site}: display h1, paper section h2s 40 px`, async ({ page }) => {
+      await page.goto(`${ORIGINS[site]}/`);
+      const px = (sel: string) =>
+        page
+          .locator(sel)
+          .evaluateAll((els) => els.map((el) => parseFloat(getComputedStyle(el).fontSize)));
+      const [h1] = await px('.case-hero h1');
+      expect(h1).toBeGreaterThanOrEqual(68);
+      const h2s = await px('.paper-section h2:not(.launching-soon h2)');
+      expect(h2s.length).toBeGreaterThan(0);
+      expect(new Set(h2s)).toEqual(new Set([40]));
+    });
+});
