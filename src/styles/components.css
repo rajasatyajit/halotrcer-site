@@ -1835,3 +1835,64 @@ html:not(.js) .js-only {
 .not-found h1 {
   font-size: var(--text-2xl);
 }
+
+/* Paper pages (docs, blog, legal, scoring): one sheet. Only h1 and h2 are in Marker; smaller
+   headings use the bold body face for reading comfort. Code keeps the system monospace. */
+.paper-main {
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+
+.paper-main :is(h3, h4, h5, h6) {
+  font-family: var(--font-body);
+  font-weight: 800;
+}
+
+/* Sample reports as case files: each section a paper sheet on the board's wood. The header
+   and the section index sit on the wood, so their colour tokens switch to the wood's. */
+.wood-main {
+  background: var(--frame);
+  color: var(--on-frame);
+  padding-bottom: var(--s-7);
+}
+
+.wood-main :is(.page-head, .report-index) {
+  --ink: var(--on-frame);
+  --ink-muted: var(--on-frame-muted);
+  --accent: var(--sticky);
+  --line: var(--frame-edge);
+
+  color: var(--on-frame);
+}
+
+/* Boxes on the wood with their own ground (source notes) take the paper's ink back. */
+.wood-main .note {
+  color: var(--paper-ink);
+}
+
+.sheet {
+  margin-block: var(--s-5);
+  padding: var(--s-5);
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 0 10px 18px rgb(0 0 0 / 35%);
+}
+
+.sheet + .sheet {
+  border-top: 0;
+}
+
+.sheet :is(h3, h4) {
+  font-family: var(--font-body);
+  font-weight: 800;
+}
+
+.sheet :is(td, th, caption) {
+  font-family: var(--font-type);
+  font-size: var(--text-sm);
+  letter-spacing: var(--type-tracking);
+}
+
+.sheet__download {
+  font-weight: 600;
+}

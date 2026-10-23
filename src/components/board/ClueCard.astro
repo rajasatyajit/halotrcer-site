@@ -25,8 +25,8 @@ const plainFigure = !inMarkerSubset(clue.figure);
     <p class:list={['clue__figure', { 'clue__figure--plain': plainFigure }]}>{clue.figure}</p>
     <p class="clue__body">{clue.body}</p>
     <p class="clue__source">
-      {clue.tool}
-      {clue.detail && ` · ${clue.detail}`} · <a href={clue.href}>{clue.tool} sample report</a>
+      Source: <a href={clue.href}>{clue.tool} sample report</a>
+      {clue.detail && ` · ${clue.detail}`}
     </p>
     <SimulatedStamp />
   </article>

@@ -46,6 +46,7 @@ const review = serviceFor('agent-security-review');
   title="Sample Agent Security Review report"
   description="What an Agent Security Review delivers, and a sample Sievant posture report from a simulated run for a fictional organization, plus a scan of risky MCP client configurations."
   ogStamp="Simulated demo run"
+  surface="wood"
 >
   <header class="container page-head">
     <p class="eyebrow">Sample report</p>
@@ -60,7 +61,7 @@ const review = serviceFor('agent-security-review');
     </div>
   </header>
 
-  <section class="container section" id="review" aria-labelledby="review-h">
+  <section class="container section sheet" id="review" aria-labelledby="review-h">
     <h2 id="review-h">What the review delivers, and what this sample shows</h2>
     <div class="layout-split">
       <div class="panel" data-owner-source="content/pricing.md">
@@ -108,13 +109,19 @@ const review = serviceFor('agent-security-review');
     class="container"
     data-sample={`${posture.source.repo}:${posture.source.path}@${posture.source.commit}`}
   >
-    <section class="section" id="posture-report" aria-labelledby="posture">
+    <section class="section sheet" id="posture-report" aria-labelledby="posture">
       <div class="section-head">
         <h2 id="posture">
           Posture report: {p.organization}, last {p.period.label}
         </h2>
         <SimulatedStamp path={posture.source.path} />
       </div>
+      <p class="sheet__download">
+        <a href="/samples/sievant-posture.simulated-demo.json" download>
+          Download this sample (JSON)
+        </a>
+        : the report above as Sievant writes it, from a simulated demo run on synthetic test data.
+      </p>
       <p class="note">
         <strong>{p.summary.coverage.headline}</strong> {p.summary.coverage.policy}
       </p>
@@ -182,7 +189,7 @@ const review = serviceFor('agent-security-review');
     class="container"
     data-sample={`${scan.source.repo}:${scan.source.path}@${scan.source.commit}`}
   >
-    <section class="section" id="scan-report" aria-labelledby="scan">
+    <section class="section sheet" id="scan-report" aria-labelledby="scan">
       <div class="section-head">
         <h2 id="scan">Client-configuration scan</h2>
         <SimulatedStamp path={scan.source.path} />

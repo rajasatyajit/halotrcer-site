@@ -45,6 +45,7 @@ const { data: r, source } = sample<Report>('tokvera-scan');
   title="Tokvera sample report"
   description="A sample Tokvera scan report: the A–F grade, the caps that applied, ranked findings with fixes, and latency at each concurrency level, from a simulated demo run."
   ogStamp="Simulated demo run"
+  surface="wood"
 >
   <header class="container page-head">
     <p class="eyebrow">Sample report</p>
@@ -81,7 +82,7 @@ const { data: r, source } = sample<Report>('tokvera-scan');
       </ul>
     </nav>
     <div>
-      <section class="section" aria-labelledby="grade">
+      <section class="section sheet" aria-labelledby="grade">
         <div class="section-head">
           <h2 id="grade">Efficiency Score</h2>
           <SimulatedStamp path={source.path} />
@@ -128,7 +129,7 @@ const { data: r, source } = sample<Report>('tokvera-scan');
         </div>
       </section>
 
-      <section class="section" aria-labelledby="findings">
+      <section class="section sheet" aria-labelledby="findings">
         <div class="section-head">
           <h2 id="findings">Findings, ranked</h2>
           <SimulatedStamp path={source.path} />
@@ -153,7 +154,7 @@ const { data: r, source } = sample<Report>('tokvera-scan');
         </ol>
       </section>
 
-      <section class="section" aria-labelledby="levels">
+      <section class="section sheet" aria-labelledby="levels">
         <div class="section-head">
           <h2 id="levels">Latency by concurrency</h2>
           <SimulatedStamp path={source.path} />

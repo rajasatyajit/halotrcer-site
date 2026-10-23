@@ -24,6 +24,8 @@ interface Props {
   // or the pricing template that lists the services and their prices.
   ogStamp?: string;
   ogTemplate?: 'pricing';
+  // The page's ground: paper (docs, blog, legal) or wood (sample reports, as case files).
+  surface?: 'paper' | 'wood';
 }
 
 const {
@@ -35,6 +37,7 @@ const {
   crumbs,
   ogStamp,
   ogTemplate,
+  surface,
 } = Astro.props;
 const { site } = getFlags();
 const siteName = SITE_NAMES[site];
@@ -87,7 +90,7 @@ const graph = [
       Skip to content
     </a>
     <SiteHeader />
-    <main id="main">
+    <main id="main" class:list={[surface && `${surface}-main`]}>
       <slot />
     </main>
     <SiteFooter />
