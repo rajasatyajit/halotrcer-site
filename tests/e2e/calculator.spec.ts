@@ -122,12 +122,19 @@ test.describe('example label', () => {
     expect(new URL(page.url()).searchParams.get('ex')).toBe('1');
   });
 
-  test('typing in a field clears the label and the flag', async ({ page }) => {
+  test('typing after the example fill clears the example result, not just its label', async ({
+    page,
+  }) => {
     await page.goto(PAGE);
     await page.getByRole('button', { name: /example values \(not real prices\)/i }).click();
+    await expect(out(page, 'spend')).not.toHaveText('–');
     await page.locator('input[name="r"]').fill('123');
+    // Example figures never stay on screen (or in the link, or the copy) without their label.
     await expect(label(page)).toBeHidden();
-    expect(new URL(page.url()).searchParams.get('ex')).toBeNull();
+    await expect(out(page, 'spend')).toHaveText('–');
+    expect(new URL(page.url()).search).toBe('');
+    await page.getByRole('button', { name: 'Copy result and link' }).click();
+    await expect(page.locator('[data-copy-status]')).toHaveText('Calculate a result first.');
   });
 
   test('a shared example link shows the label; a plain link does not', async ({ page }) => {

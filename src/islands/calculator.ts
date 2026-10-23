@@ -74,18 +74,19 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-calculator]')) 
     history.replaceState(null, '', `?${encode(inputs, fromExample)}${location.hash}`);
   };
 
-  // Editing any field makes the numbers the visitor's own: drop the example label and flag.
+  // Editing a field after the example fill: the shown figures are still the example's, so
+  // clear the whole result (card, link and what Copy would copy), not just the label. Example
+  // figures never appear without their label.
   form.addEventListener('input', () => {
     if (!example) return;
     setExample(false);
-    const params = new URLSearchParams(location.search);
-    params.delete('ex');
-    const query = params.toString();
-    history.replaceState(
-      null,
-      '',
-      `${location.pathname}${query ? `?${query}` : ''}${location.hash}`,
-    );
+    current = undefined;
+    for (const name of ['spend', 'repeat', 'share']) {
+      const el = out(name);
+      if (el) el.textContent = '–';
+    }
+    delete result.dataset.state;
+    history.replaceState(null, '', `${location.pathname}${location.hash}`);
   });
 
   form.addEventListener('submit', (e) => {
