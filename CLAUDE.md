@@ -54,7 +54,7 @@ Other sessions own them. Only read them: no writes, builds or binaries, and no g
 ## Budgets (CI-enforced)
 
 - Lighthouse 100 in all four categories on key pages (mobile).
-- LCP < 1.2 s, CLS 0, INP < 100 ms.
+- LCP < 1.2 s as the median of 3 Lighthouse runs per page (owner decision 2026-10-23; single runs vary by more than the margins), CLS 0, INP < 100 ms.
 - JS ≤ 20 KB gz per page; page weight ≤ 250 KB excluding a demo video.
 
 ## CI

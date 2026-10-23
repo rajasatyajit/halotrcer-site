@@ -46,7 +46,9 @@ const ALL_CATEGORIES = {
 };
 
 const BUDGETS = {
-  'largest-contentful-paint': ['error', { maxNumericValue: 1200 }],
+  // Median of the 3 runs (owner decision 2026-10-23): single runs vary by more than our margin.
+  // The other budgets keep LHCI's default, the best of the runs.
+  'largest-contentful-paint': ['error', { maxNumericValue: 1200, aggregationMethod: 'median' }],
   'cumulative-layout-shift': ['error', { maxNumericValue: 0 }],
   // Lab proxy for INP; interaction timing is also tested in Playwright.
   'total-blocking-time': ['error', { maxNumericValue: 100 }],
