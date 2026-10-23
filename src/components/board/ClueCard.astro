@@ -1,0 +1,27 @@
+---
+// One clue pinned to the board. Its stamp sits inside its own border, so a cropped card
+// keeps its label (scripts/check-stamps.ts fails on a [data-clue] without one).
+import SimulatedStamp from '../SimulatedStamp.astro';
+import type { Clue } from '../../lib/clues.ts';
+
+interface Props {
+  clue: Clue;
+  // 0-based position on the board; picks the card's tilt.
+  index: number;
+}
+
+const { clue, index } = Astro.props;
+---
+
+<div class="clue-wrap" data-sample={clue.sample}>
+  <article class={`clue clue--r${index + 1}`} data-clue>
+    <p class="clue__kind">{clue.kind}</p>
+    <h3 class="clue__title">{clue.title}</h3>
+    <p class="clue__body">{clue.body}</p>
+    <p class="clue__source">
+      {clue.tool}
+      {clue.detail && ` · ${clue.detail}`} · <a href={clue.href}>{clue.tool} sample report</a>
+    </p>
+    <SimulatedStamp />
+  </article>
+</div>

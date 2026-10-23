@@ -1,0 +1,99 @@
+// The words on the case boards: DESIGN.md's approved copy, with the owner's corrections.
+// No numbers here: src/lib/clues.ts reads every value from content/samples and passes it in
+// (tests/unit/boards.test.ts fails on any digit but case numbers and percentile names).
+
+type N = number | string;
+
+export const CLUES = {
+  repeated: {
+    title: 'Repeated prompts',
+    body: (repeats: N, prompts: N) =>
+      `${repeats} of ${prompts} prompts repeat an earlier one exactly. If that is what reaches the model, each repeat is paid for again.`,
+  },
+  rush: {
+    title: 'Rush hour',
+    body: (idle: N, peak: N, level: N) =>
+      `First token, p99: ${idle} ms one request at a time, ${peak} ms with ${level} requests at once.`,
+    detail: 'p99',
+  },
+  failed: {
+    title: (failed: N, requests: N) => `${failed} of ${requests} requests failed`,
+    body: (codes: string) => `${codes}: turned away at the door.`,
+    code: (status: N, count: N) => `HTTP ${status} ×${count}`,
+  },
+  grade: {
+    title: (grade: string) => `Grade ${grade}`,
+    // Tokvera's label, verbatim.
+    body: (points: N) => `${points} points. Provisional scoring.`,
+  },
+  bypass: {
+    title: (name: string) => `MCP server “${name}”`,
+    body: 'Talks to its agent directly: no policy, no redaction, no audit.',
+  },
+  credential: {
+    title: 'Credential in arguments',
+    body: (count: N, plural: boolean) => `${count} call${plural ? 's' : ''} blocked.`,
+  },
+  checkpoint: {
+    title: 'Behind the checkpoint',
+    body: (blocked: N, requests: N, redacted: N) =>
+      `Calls through Sievant: ${blocked} of ${requests} blocked, ${redacted} results redacted.`,
+  },
+  wrapped: {
+    title: (name: string) => `MCP server “${name}”`,
+    body: 'Runs through Sievant on this machine.',
+  },
+  blocked: {
+    title: (blocked: N, requests: N) => `${blocked} of ${requests} tool calls blocked`,
+    body: (tool: string, count: N) => `Top blocked tool: ${tool} (${count}).`,
+  },
+};
+
+export const KINDS = {
+  suspect: (n: N) => `Suspect #${n}`,
+  evidence: 'Evidence',
+  accomplice: 'Accomplice',
+  caught: 'Caught',
+  alibi: 'Alibi',
+  verdict: 'Verdict',
+};
+
+export const BOARDS = {
+  www: {
+    label: 'Detective board: findings from simulated demo runs',
+    subject: { title: 'Your AI', body: 'Slow, expensive or leaking? All three leave fingerprints.' },
+    tag: 'Case HAL-001 · simulated demo runs · fictional systems',
+    sticky: 'Detectives on this case: Tokvera + Sievant.',
+    summary: (findings: string, link: string) =>
+      `Case file on my AI (simulated demo runs): ${findings}. Who's draining yours? ${link}`,
+  },
+  tokvera: {
+    label: 'Detective board: findings from a simulated Tokvera run',
+    subject: { title: 'Your LLM endpoint', body: 'Slow, failing or expensive? Each leaves a trace.' },
+    tag: "Case TOK-001 · Tokvera's built-in simulator · simulated demo run",
+    sticky: 'Detective on this case: Tokvera.',
+    summary: (findings: string, link: string) =>
+      `Case file on my LLM endpoint (simulated demo run): ${findings}. Who's draining yours? ${link}`,
+  },
+  sievant: {
+    label: 'Detective board: findings from a simulated Sievant report',
+    subject: { title: "Your agents' tools", body: 'What can your agents reach, and who is watching?' },
+    tag: (organization: string) =>
+      `Case SIE-001 · ${organization} · simulated demo run · fictional system`,
+    sticky: 'Detective on this case: Sievant.',
+    summary: (findings: string, link: string) =>
+      `Case file on my agents' tools (simulated demo run): ${findings}. What are yours exposed to? ${link}`,
+  },
+};
+
+// Short forms for the copied case file.
+export const SUMMARY = {
+  repeated: (repeats: N, prompts: N) => `${repeats} of ${prompts} prompts repeated`,
+  rush: (idle: N, peak: N) => `first token ${idle} → ${peak} ms under load`,
+  failed: (failed: N, requests: N) => `${failed} of ${requests} requests failed`,
+  grade: (grade: string) => `grade ${grade} (Provisional scoring.)`,
+  bypass: (n: N, of: N, who: string) => `${n} of ${of} MCP servers bypassing ${who}`,
+  blocked: (blocked: N, requests: N) => `${blocked} of ${requests} tool calls blocked`,
+  credential: (count: N, plural: boolean) =>
+    `${count} credential${plural ? 's' : ''} caught in arguments`,
+};

@@ -1,0 +1,57 @@
+---
+// The detective's cork board (DESIGN.md §4): clue cards around the subject, a case tag and a
+// sticky note, joined by yarn. Content comes from src/lib/clues.ts (the samples).
+import type { SiteId } from '../../config/site.ts';
+import { board, CENTRE, clueSlots, STICKY_SLOT, TAG_SLOT, yarnLines } from '../../lib/clues.ts';
+import CaseTag from './CaseTag.astro';
+import ClueCard from './ClueCard.astro';
+import StickyNote from './StickyNote.astro';
+import SubjectCard from './SubjectCard.astro';
+import Yarn from './Yarn.astro';
+
+interface Props {
+  site: SiteId;
+}
+
+const { site } = Astro.props;
+const b = board(site);
+const slots = clueSlots(b.clues.length);
+// Row by row, as the board reads; empty slots are left out (CSS places each item).
+const items = Array.from({ length: 9 }, (_, slot) => slot).filter(
+  (slot) => slot === CENTRE || slot === TAG_SLOT || slot === STICKY_SLOT || slots.includes(slot),
+);
+const heading = `board-${site}-title`;
+---
+
+<section class="case-board" aria-labelledby={heading}>
+  <h2 id={heading} class="visually-hidden">
+    {b.label}
+  </h2>
+  <div class="board-frame">
+    <Yarn lines={yarnLines(slots)} />
+    <ul class="board">
+      {items.map((slot) => {
+        const i = slots.indexOf(slot);
+        const clue = b.clues[i];
+        return (
+          <li class={`board__slot board__slot--${slot}`}>
+            {slot === CENTRE && <SubjectCard {...b.subject} />}
+            {slot === TAG_SLOT && <CaseTag text={b.tag} />}
+            {slot === STICKY_SLOT && <StickyNote text={b.sticky} />}
+            {clue && <ClueCard clue={clue} index={i} />}
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+  <p class="board-caption">
+    Every card comes from a simulated demo run on a fictional system:
+    {b.sources.map((s, i) => (
+      <>
+        {i > 0 && '; '}
+        {s.tool} <code>{s.path}</code>
+      </>
+    ))}
+    .
+  </p>
+</section>

@@ -892,3 +892,29 @@
     quote: >-
       Provisional scoring. The weights and thresholds are provisional: they have not yet been
       calibrated against real pilot scans and may change before scoring 1.0.0.
+
+- id: www.case.title
+  text: Who's draining your AI?
+  source:
+    owner: true
+    decided: 2026-10-23
+    note: The Case File hero heading (docs/redesign/DESIGN.md §5).
+
+- id: www.case.lede
+  text: >-
+    Is your AI slow, expensive or leaking? Halotrcer puts two detectives on the case, on your own
+    system: Tokvera on your LLM endpoint and Sievant on your agents' tools.
+  source:
+    owner: true
+    decided: 2026-10-23
+    note: The Case File hero line (docs/redesign/DESIGN.md §5).
+
+- id: www.continuity
+  text: >-
+    One maintainer today. Tokvera and Sievant are Apache-2.0, each a single binary you keep and run
+    with no account. Halotrcer is Apache-2.0 too; it installs and runs those two binaries, which keep
+    working without it.
+  source:
+    owner: true
+    decided: 2026-10-22
+    note: O2 in docs/redesign/proposal.md, repeated in the DESIGN.md mockup.

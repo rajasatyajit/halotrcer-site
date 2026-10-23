@@ -30,6 +30,19 @@ describe('missingStamps', () => {
     ).toEqual([]);
   });
 
+  it('flags a clue card without its own stamp, inside a sample or not', () => {
+    expect(check('<ul><li><article data-clue><h3>Rush hour</h3></article></li></ul>')).toEqual([
+      'clue#0',
+    ]);
+    expect(check(`<div data-sample="x"><article data-clue><h3>R</h3></article></div>`)).toEqual([
+      'clue#0',
+    ]);
+  });
+
+  it('accepts a clue card that carries its stamp', () => {
+    expect(check(`<article data-clue><h3>R</h3>${stamp}</article>`)).toEqual([]);
+  });
+
   it('ignores tables outside a sample', () => {
     expect(check('<table><caption>T</caption></table>')).toEqual([]);
   });
