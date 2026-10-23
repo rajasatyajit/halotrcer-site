@@ -1,10 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import InstallOrSoon from '../../../components/InstallOrSoon.astro';
-import { url } from '../../../config/site.ts';
-import { getFlags } from '../../../config/flags.ts';
-
-const { site } = getFlags();
+import NotFound from '../../../components/NotFound.astro';
 ---
 
 <BaseLayout
@@ -12,11 +9,8 @@ const { site } = getFlags();
   description="This page doesn’t exist. Start from the home page to find Tokvera, Sievant and Halotrcer."
   noindex
 >
+  <NotFound site="www" />
   <div class="container section">
-    <h1>Page not found</h1>
-    <p class="lede">
-      The page you asked for isn’t here. Try the <a href={url(site)}>home page</a>.
-    </p>
     <InstallOrSoon product="halotrcer" />
   </div>
 </BaseLayout>

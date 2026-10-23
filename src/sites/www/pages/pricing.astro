@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
 import PriceCard from '../../../components/PriceCard.astro';
 import { BOOKING_URL, CONTACT_EMAIL, url } from '../../../config/site.ts';
 import { getFlags } from '../../../config/flags.ts';
-import { loadPricing } from '../../../lib/pricing.ts';
+import { loadPricing, priceLabel } from '../../../lib/pricing.ts';
 import { service } from '../../../lib/jsonld.ts';
 
 const pricing = loadPricing();
@@ -15,46 +16,77 @@ const { launched } = getFlags();
   title="Pricing"
   description="Fixed-scope engagements: the AI Performance & Observability Audit, the Agent Security Review, and the combined AI Cost & Security Audit. Starting prices in USD."
   jsonld={jsonld}
+  ogTemplate="pricing"
 >
-  <header class="container page-head">
-    <h1>Pricing</h1>
-    <p class="lede">
-      Three fixed-scope engagements. Each scope is agreed on a call before work starts. Prices are
-      starting prices in US dollars.
-    </p>
-  </header>
+  <div class="paper-section paper-page">
+    <header class="container page-head">
+      <h1>Hire the detectives</h1>
+      <p class="lede">
+        Three fixed-scope engagements. Each scope is agreed on a call before work starts. Prices are
+        starting prices in US dollars.
+      </p>
+    </header>
 
-  <section class="container" aria-label="Engagements">
-    <div class="price-grid">
-      {pricing.services.map((s) => (
-        <PriceCard service={s} headingLevel="h2" />
-      ))}
-    </div>
-  </section>
+    <section class="container" aria-label="Engagements">
+      <ul class="price-band">
+        {pricing.services.map((s) => (
+          <li>
+            <PriceCard service={s} headingLevel="h2" compact />
+          </li>
+        ))}
+      </ul>
+    </section>
 
-  {pricing.founding_offer && (
-    <section class="container section" aria-labelledby="founding">
-      <div class="note" data-owner-source="content/pricing.md">
-        <h2 id="founding">{pricing.founding_offer.title}</h2>
-        <p>{pricing.founding_offer.text}</p>
+    {pricing.founding_offer && (
+      <section class="container" aria-labelledby="founding">
+        <p class="case-tag case-tag--band" data-owner-source="content/pricing.md">
+          <b id="founding">{pricing.founding_offer.title}</b>
+          {pricing.founding_offer.text}
+        </p>
+      </section>
+    )}
+
+    <section class="container section" aria-labelledby="before">
+      <h2 id="before">Before you book</h2>
+      <ul class="grid-3 plain-list" data-owner-source="content/pricing.md">
+        {pricing.services.map((s) => (
+          <li>
+            <h3>{s.name}</h3>
+            <p>
+              {priceLabel(s)} · {s.duration}
+            </p>
+            <ul class="checklist">
+              {s.deliverables.map((d) => (
+                <li>{d}</li>
+              ))}
+            </ul>
+            <a class="button" href={BOOKING_URL} aria-describedby={`service-${s.id}`}>
+              Book a call
+            </a>
+          </li>
+        ))}
+      </ul>
+      <h3>What if you stop maintaining it?</h3>
+      <p>
+        <Claim id="www.continuity" />
+      </p>
+    </section>
+
+    <section class="container section" aria-labelledby="free">
+      <h2 id="free">Prefer to run it yourself?</h2>
+      <p>
+        <a href={url('tokvera')}>Tokvera</a> and <a href={url('sievant')}>Sievant</a>{' '}
+        {launched ? 'are' : 'will be'} free and open source (Apache-2.0). The engagements above are
+        for teams who want us to run them, deploy the fixes and write the report.
+      </p>
+      <div class="button-row">
+        <a class="button" href={BOOKING_URL}>
+          Book a call
+        </a>
+        <a class="button button--ghost" href={`mailto:${CONTACT_EMAIL}`}>
+          Email us
+        </a>
       </div>
     </section>
-  )}
-
-  <section class="container section" aria-labelledby="free">
-    <h2 id="free">Prefer to run it yourself?</h2>
-    <p>
-      <a href={url('tokvera')}>Tokvera</a> and <a href={url('sievant')}>Sievant</a>{' '}
-      {launched ? 'are' : 'will be'} free and open source (Apache-2.0). The engagements above are
-      for teams who want us to run them, deploy the fixes and write the report.
-    </p>
-    <div class="button-row">
-      <a class="button" href={BOOKING_URL}>
-        Book a call
-      </a>
-      <a class="button button--ghost" href={`mailto:${CONTACT_EMAIL}`}>
-        Email us
-      </a>
-    </div>
-  </section>
+  </div>
 </BaseLayout>
