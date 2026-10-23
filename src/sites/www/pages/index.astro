@@ -51,9 +51,12 @@ const jsonld = [organization(), website(), softwareApplication('halotrcer')];
           Copy this case file
         </button>
       </div>
-      <p id="case-file-text" class="case-file-text" data-sample="case-file">
-        {summary}
-      </p>
+      <details class="case-file-copy">
+        <summary>What gets copied</summary>
+        <p id="case-file-text" class="case-file-text" data-sample="case-file">
+          {summary}
+        </p>
+      </details>
     </div>
   </div>
 

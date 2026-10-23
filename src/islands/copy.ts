@@ -37,7 +37,12 @@ async function copy(button: HTMLButtonElement, text: string, source?: Element): 
     button.textContent = 'Copied';
     announce('Copied to the clipboard');
   } catch {
-    if (source) selectText(source);
+    if (source) {
+      // A source inside a closed disclosure must be shown before its selection means anything.
+      const disclosure = source.closest('details');
+      if (disclosure) disclosure.open = true;
+      selectText(source);
+    }
     announce('Copy failed. The text is selected: press Ctrl+C or Cmd+C.');
   }
   setTimeout(() => (button.textContent = label), 2000);

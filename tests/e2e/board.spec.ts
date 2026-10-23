@@ -59,9 +59,15 @@ test.describe('www board', () => {
 
   test.describe('without JavaScript', () => {
     test.use({ javaScriptEnabled: false });
-    test('the case file text is visible and the copy buttons are hidden', async ({ page }) => {
+    test('the case file text sits in a closed disclosure that opens without JS', async ({
+      page,
+    }) => {
       await page.goto(`${ORIGINS.www}/`);
-      await expect(page.locator('#case-file-text')).toHaveText(board('www').summary);
+      const text = page.locator('#case-file-text');
+      await expect(text).toBeHidden();
+      await page.getByText('What gets copied', { exact: true }).click();
+      await expect(text).toBeVisible();
+      await expect(text).toHaveText(board('www').summary);
       for (const b of await page.getByRole('button', { name: 'Copy this case file' }).all())
         await expect(b).toBeHidden();
     });
@@ -69,11 +75,24 @@ test.describe('www board', () => {
 
   test.describe('with JavaScript', () => {
     test.use({ permissions: CLIPBOARD_PERMISSIONS });
-    test('Copy this case file copies the summary', async ({ page }) => {
+    test('Copy this case file copies the summary, which is not shown at rest', async ({ page }) => {
       await recordClipboard(page);
       await page.goto(`${ORIGINS.www}/`);
+      await expect(page.locator('#case-file-text')).toBeHidden();
       await page.getByRole('button', { name: 'Copy this case file' }).first().click();
       await expect.poll(() => copied(page)).toBe(board('www').summary);
+    });
+
+    test('a blocked clipboard opens the disclosure and selects the text', async ({ page }) => {
+      await page.addInitScript(() => {
+        Object.defineProperty(navigator, 'clipboard', {
+          value: { writeText: () => Promise.reject(new Error('blocked')) },
+        });
+      });
+      await page.goto(`${ORIGINS.www}/`);
+      await page.getByRole('button', { name: 'Copy this case file' }).first().click();
+      await expect(page.locator('#case-file-text')).toBeVisible();
+      expect(await page.evaluate(() => getSelection()?.toString())).toBe(board('www').summary);
     });
   });
 

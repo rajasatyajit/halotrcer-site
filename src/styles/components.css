@@ -1658,8 +1658,23 @@ caption,
   margin-top: var(--s-6);
 }
 
-.case-file-text {
+.case-file-copy {
   margin-top: var(--s-3);
+  color: var(--on-frame-muted);
+  font-size: var(--text-sm);
+}
+
+.case-file-copy summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.case-file-text {
+  margin-top: var(--s-2);
   color: var(--on-frame-muted);
   font-family: var(--font-type);
   letter-spacing: var(--type-tracking);
