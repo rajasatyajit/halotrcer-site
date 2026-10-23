@@ -451,14 +451,6 @@
   font-size: var(--text-sm);
 }
 
-.price-card .checklist {
-  margin-top: var(--s-3);
-}
-
-.price-card .button {
-  margin-top: auto;
-}
-
 .checklist {
   padding-left: var(--s-5);
 }
