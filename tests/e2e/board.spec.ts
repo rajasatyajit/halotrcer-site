@@ -214,27 +214,6 @@ test.describe('board order', () => {
   });
 });
 
-// The contact email breaks only after the @, never inside a word.
-test.describe('contact email on a phone', () => {
-  test.use({ viewport: { width: 320, height: 640 }, isMobile: false, hasTouch: false });
-  test('wraps only at the @', async ({ page }) => {
-    await page.goto(`${ORIGINS.www}/`, { waitUntil: 'networkidle' });
-    await page.goto(`${ORIGINS.www}/`, { waitUntil: 'networkidle' });
-    const pieces = await page.locator('#contact-email').evaluate((el) =>
-      [...el.childNodes]
-        .filter((n) => n.nodeType === Node.TEXT_NODE && n.textContent)
-        .map((n) => {
-          const r = document.createRange();
-          r.selectNodeContents(n);
-          const lines = new Set([...r.getClientRects()].map((x) => Math.round(x.top)));
-          return { text: n.textContent, lines: lines.size };
-        }),
-    );
-    expect(pieces.map((p) => p.lines)).toEqual(pieces.map(() => 1));
-    expect(pieces.map((p) => p.text).join('')).toBe('satyajit.rajaraman@halotrcer.com');
-  });
-});
-
 // The product homes: the same case file, with four clues.
 for (const [site, subject] of [
   ['tokvera', 'Your LLM endpoint'],

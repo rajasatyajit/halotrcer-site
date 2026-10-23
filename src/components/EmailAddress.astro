@@ -1,0 +1,13 @@
+---
+// The contact address as text. It may wrap only after the @: each half is kept whole and a
+// <wbr> marks the one break point. Copying or selecting it gives the plain address.
+import { CONTACT_EMAIL } from '../config/site.ts';
+
+const [user, domain] = CONTACT_EMAIL.split('@');
+---
+
+<span class="email-address">
+  <span>{user}@</span>
+  <wbr />
+  <span>{domain}</span>
+</span>

@@ -1,4 +1,5 @@
 ---
+import EmailAddress from './EmailAddress.astro';
 // Shown wherever install commands would appear while LAUNCHED=false.
 import { BOOKING_URL, CONTACT_EMAIL, SITE_NAMES, type SiteId } from '../config/site.ts';
 
@@ -34,7 +35,7 @@ const id = `launching-soon-${product ?? 'all'}`;
       Book a call
     </a>
     <a class="button button--ghost" href={`mailto:${CONTACT_EMAIL}`}>
-      Email {CONTACT_EMAIL}
+      Email <EmailAddress />
     </a>
   </div>
 </section>

@@ -2,17 +2,16 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Proof from '../../../components/Proof.astro';
 import Claim from '../../../components/Claim.astro';
+import EmailAddress from '../../../components/EmailAddress.astro';
 import CopyButtons from '../../../components/CopyButtons.astro';
 import InstallOrSoon from '../../../components/InstallOrSoon.astro';
 import PriceCard from '../../../components/PriceCard.astro';
 import CaseOpening from '../../../components/board/CaseOpening.astro';
-import { BOOKING_URL, CONTACT_EMAIL, url } from '../../../config/site.ts';
+import { BOOKING_URL, url } from '../../../config/site.ts';
 import { loadPricing } from '../../../lib/pricing.ts';
 import { organization, softwareApplication, website } from '../../../lib/jsonld.ts';
 
 const { services } = loadPricing();
-// The address may wrap only after the @ (copying reads the text, which the <wbr> leaves whole).
-const [emailUser, emailDomain] = CONTACT_EMAIL.split('@');
 const jsonld = [organization(), website(), softwareApplication('halotrcer')];
 ---
 
@@ -78,8 +77,7 @@ const jsonld = [organization(), website(), softwareApplication('halotrcer')];
 
       <div class="contact-row">
         <span id="contact-email" class="contact-email">
-          {emailUser}@<wbr />
-          {emailDomain}
+          <EmailAddress />
         </span>
         <button class="button button--ghost js-only" type="button" data-copy="contact-email">
           Copy email
