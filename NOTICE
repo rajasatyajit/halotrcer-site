@@ -1,0 +1,10 @@
+Halotrcer websites (www.halotrcer.com, tokvera.halotrcer.com, sievant.halotrcer.com)
+
+This repository ships one third-party font, self-hosted as a subset WOFF2 file in
+src/assets/fonts/. It is unmodified apart from subsetting. The source TTF it is cut from is
+kept in vendor/fonts/ (used at build time only, never served). Source and checksums:
+docs/fonts.md.
+
+Permanent Marker
+  Copyright (c) 2010 by Font Diner, Inc. All rights reserved.
+  Licensed under the Apache License, Version 2.0: LICENSES/fonts/Apache-2.0.txt

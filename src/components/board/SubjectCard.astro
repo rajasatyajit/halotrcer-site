@@ -1,0 +1,14 @@
+---
+// The dark card in the centre: what is under investigation.
+interface Props {
+  title: string;
+  body: string;
+}
+
+const { title, body } = Astro.props;
+---
+
+<div class="subject-card">
+  <h3>{title}</h3>
+  <p>{body}</p>
+</div>

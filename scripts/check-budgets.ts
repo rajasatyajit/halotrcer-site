@@ -1,10 +1,11 @@
 // Per-page budgets from dist: gzipped JS <= 20 KB, page weight (gzipped text
-// assets + binary assets) <= 250 KB, CSS <= 20 KB gzipped, no font files, and
-// no built module that imports another.
+// assets + binary assets, fonts included) <= 250 KB, CSS <= 20 KB gzipped, no font
+// files but the three Case File faces, and no built module that imports another.
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { builtSites, DIST, pages, Report, walk } from './lib/dist.ts';
+import { isAllowedFont } from './lib/fonts.ts';
 
 export const BUDGET = { js: 20 * 1024, css: 20 * 1024, page: 250 * 1024, search: 60 * 1024 };
 // Static or dynamic import of a relative module in minified output.
@@ -19,8 +20,13 @@ const rows: string[][] = [];
 
 for (const site of builtSites()) {
   const dir = join(DIST, site);
+  // Fonts are referenced from the CSS, not the page, so every page is charged for all of them.
+  let fonts = 0;
   for (const f of walk(dir)) {
-    if (/\.(woff2?|ttf|otf|eot)$/.test(f)) report.error(`${site}: font file shipped: ${f}`);
+    if (/\.(woff2?|ttf|otf|eot)$/.test(f)) {
+      if (isAllowedFont(f)) fonts += readFileSync(f).length;
+      else report.error(`${site}: font file shipped: ${f}`);
+    }
     // One request per island: an import between built modules is a chained
     // request (it delays LCP, and the JS budget below counts only the entry).
     if (/[/\\]_astro[/\\][^/\\]+\.js$/.test(f) && CHAINED.test(readFileSync(f, 'utf8')))
@@ -47,7 +53,8 @@ for (const site of builtSites()) {
     ];
     const js = scripts.reduce((n, s) => n + size(s), 0);
     const css = styles.reduce((n, s) => n + size(s), 0);
-    const total = gz(readFileSync(page.file)) + js + css + other.reduce((n, s) => n + size(s), 0);
+    const total =
+      gz(readFileSync(page.file)) + js + css + fonts + other.reduce((n, s) => n + size(s), 0);
     rows.push([`${site}/${page.rel}`, kb(js), kb(css), kb(total), String(total)]);
     if (js > BUDGET.js) report.error(`${site}/${page.rel}: JS ${kb(js)} > ${kb(BUDGET.js)}`);
     if (css > BUDGET.css) report.error(`${site}/${page.rel}: CSS ${kb(css)} > ${kb(BUDGET.css)}`);

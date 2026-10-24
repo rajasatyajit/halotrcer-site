@@ -14,51 +14,31 @@
   top: var(--s-4);
 }
 
-/* Header */
+/* Header: on the board's wooden frame in both themes. */
 .site-header {
-  border-bottom: 1px solid var(--line);
-  background: var(--bg);
+  background: var(--frame);
+  color: var(--on-frame);
 }
 
 .site-header__inner {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--s-3) var(--s-5);
-  min-height: 3.5rem;
-  padding-block: var(--s-2);
+  gap: var(--s-3);
+  min-height: 4.5rem;
+  padding-block: var(--s-3);
 }
 
 .wordmark {
-  font-weight: 700;
-  font-size: var(--text-lg);
-  letter-spacing: -0.01em;
-  color: var(--ink);
+  font-family: var(--font-marker);
+  font-size: 1.625rem;
+  line-height: 1;
+  color: var(--on-frame);
   text-decoration: none;
   margin-inline-end: auto;
 }
 
-.wordmark__dot {
-  color: var(--accent);
-}
-
-/* Narrow screens: wordmark and theme toggle share the first row, nav takes the second. */
-.site-nav {
-  order: 3;
-  flex-basis: 100%;
-}
-
-@media (width >= 40rem) {
-  .site-nav {
-    order: 0;
-    flex-basis: auto;
-  }
-}
-
 .site-nav ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--s-1) var(--s-4);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -67,32 +47,134 @@
 .site-nav a {
   display: inline-block;
   padding-block: var(--s-2);
-  color: var(--ink);
+  color: var(--on-frame);
+  font-weight: 600;
   text-decoration: none;
 }
 
 .site-nav a:hover,
 .site-nav a[aria-current='page'] {
   text-decoration: underline;
+  text-decoration-color: var(--sticky);
 }
 
-/* Buttons */
+.site-nav__list {
+  display: none;
+}
+
+.site-nav__menu {
+  position: relative;
+}
+
+.site-nav__menu summary {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: var(--s-3);
+  border: 2px solid var(--on-frame-muted);
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.site-nav__menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.site-nav__menu summary::after {
+  content: '▾';
+  margin-inline-start: var(--s-2);
+}
+
+.site-nav__menu[open] summary::after {
+  content: '▴';
+}
+
+.site-nav__menu ul {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + var(--s-2));
+  z-index: 5;
+  min-width: 12rem;
+  padding: var(--s-2) var(--s-4);
+  background: var(--frame);
+  border: 2px solid var(--frame-edge);
+  border-radius: 4px;
+  box-shadow: 0 10px 18px rgb(0 0 0 / 35%);
+}
+
+.site-nav__menu li a {
+  display: block;
+  min-height: 2.75rem;
+}
+
+.site-nav__menu .theme-toggle {
+  margin-block: var(--s-2);
+}
+
+.site-header__theme {
+  display: none;
+}
+
+@media (width >= 48rem) {
+  .site-nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1) var(--s-5);
+  }
+
+  .site-nav__menu {
+    display: none;
+  }
+
+  .site-header__theme {
+    display: inline-block;
+  }
+}
+
+.site-header .button--ghost {
+  min-height: 2.75rem;
+  padding-inline: var(--s-3);
+}
+
+/* Phones: wordmark, Menu and Book a call share one row down to 320 px. */
+@media (width < 48rem) {
+  .site-header__inner {
+    gap: var(--s-2);
+  }
+
+  .wordmark {
+    font-size: 1.375rem;
+  }
+
+  .site-header .button--ghost,
+  .site-nav__menu summary {
+    padding-inline: var(--s-2);
+    font-size: var(--text-sm);
+  }
+}
+
+/* Buttons (DESIGN.md §4): the primary is red with white text; the ghost is an outline in
+   the surrounding text colour. 50 px tall, 44 px where space is short. */
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--s-2);
-  min-height: 2.75rem;
+  min-height: 3.125rem;
+  max-width: 100%;
   padding: var(--s-2) var(--s-5);
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  background: var(--accent);
-  color: var(--accent-ink);
+  border: 2px solid var(--yarn);
+  border-radius: 4px;
+  background: var(--yarn);
+  color: var(--on-yarn);
   font: inherit;
-  font-weight: 600;
+  font-weight: 800;
+  text-align: center;
   text-decoration: none;
+  overflow-wrap: anywhere;
   cursor: pointer;
-  transition: background var(--duration) ease;
 }
 
 .button:hover {
@@ -100,8 +182,9 @@
 }
 
 .button--ghost {
+  border-color: currentcolor;
   background: transparent;
-  color: var(--accent);
+  color: inherit;
 }
 
 .button-row {
@@ -114,12 +197,13 @@
   min-height: 2.75rem;
   min-width: 2.75rem;
   padding: var(--s-2) var(--s-3);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: 2px solid var(--on-frame-muted);
+  border-radius: 4px;
   background: transparent;
-  color: var(--ink);
+  color: var(--on-frame);
   font: inherit;
   font-size: var(--text-sm);
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -183,12 +267,12 @@
   font-size: var(--text-xl);
 }
 
-/* Footer */
+/* Footer: wood, like the header. */
 .site-footer {
   margin-top: var(--s-8);
-  padding-block: var(--s-7);
-  border-top: 1px solid var(--line);
-  color: var(--ink-muted);
+  padding-block: var(--s-7) var(--s-6);
+  background: var(--frame);
+  color: var(--on-frame-muted);
   font-size: var(--text-sm);
 }
 
@@ -199,10 +283,13 @@
 }
 
 .site-footer h2 {
+  font-family: var(--font-body);
   font-size: var(--text-sm);
+  font-weight: 800;
+  line-height: var(--leading-tight);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--ink);
+  color: var(--on-frame);
 }
 
 .site-footer ul {
@@ -216,7 +303,14 @@
 }
 
 .site-footer a {
-  color: var(--ink-muted);
+  color: var(--on-frame-muted);
+}
+
+.site-footer__small {
+  margin-top: var(--s-6);
+  font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
+  font-size: var(--text-xs);
 }
 
 /* Terminal panel (dark in both themes) */
@@ -243,13 +337,17 @@
 .terminal__body {
   margin: 0;
   padding: var(--s-4);
-  overflow-x: auto;
   line-height: 1.7;
 }
 
+/* Lines wrap instead of running off the panel: nothing is hidden. Wrapped continuations hang
+   2ch in, so the "$ " prompt and each line's start stay easy to see. */
 .terminal__line {
   display: block;
-  white-space: pre;
+  padding-left: 2ch;
+  text-indent: -2ch;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .terminal__line--cmd::before {
@@ -282,9 +380,18 @@
   align-items: start;
 }
 
+.split > * {
+  min-width: 0;
+}
+
 @media (width >= 60rem) {
   .split {
     grid-template-columns: 1fr 1fr;
+  }
+
+  /* A section with a terminal stacks: text above, the terminal across the full width. */
+  .split:has(> .terminal) {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -298,45 +405,50 @@
 .price-card {
   display: flex;
   flex-direction: column;
+  gap: var(--s-1);
   padding: var(--s-5);
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--halotrcer);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
+  border: 2px solid var(--paper-ink);
+  background: var(--paper);
+  color: var(--paper-ink);
 }
 
-.price-card--tokvera {
-  border-top-color: var(--tokvera);
+.price-card p {
+  margin: 0;
 }
 
-.price-card--sievant {
-  border-top-color: var(--sievant);
+/* The combined service is the inverted card. */
+.price-card--www {
+  background: var(--paper-ink);
+  color: var(--paper);
+}
+
+.price-card__kicker {
+  color: var(--label);
+  font-family: var(--font-marker);
+  font-size: var(--text-sm);
+}
+
+.price-card--www .price-card__kicker {
+  color: var(--label-inverse);
 }
 
 .price-card__name {
-  font-size: var(--text-xl);
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  font-weight: 800;
 }
 
 .price-card__price {
-  margin-bottom: var(--s-1);
-  font-size: var(--text-2xl);
-  font-weight: 700;
-  line-height: var(--leading-tight);
-}
-
-.price-card__from {
-  display: block;
-  font-size: var(--text-sm);
-  font-weight: 400;
-  color: var(--ink-muted);
+  font-family: var(--font-marker);
+  font-size: 2.125rem;
+  line-height: 1.2;
 }
 
 .price-card__duration {
-  color: var(--ink-muted);
-}
-
-.price-card .button {
-  margin-top: auto;
+  font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
+  font-size: var(--text-sm);
 }
 
 .checklist {
@@ -581,8 +693,12 @@ html:not(.js) .picker__variants {
   border-radius: var(--radius);
   background: var(--term-bg);
   color: var(--term-ink);
-  overflow-x: auto;
   line-height: 1.6;
+
+  /* Commands wrap like the terminal panels: nothing is cut off on a phone. The copy button
+     copies the exact command, so a visual wrap never changes what is pasted. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 /* A bar above the command holds the copy button, so it never covers the text. */
@@ -796,7 +912,7 @@ mark {
   padding: 0 var(--s-2);
   border: 1px solid var(--ink-muted);
   border-radius: var(--radius);
-  font-family: var(--font-mono);
+  font-family: var(--font-type);
   font-size: var(--text-sm);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -805,6 +921,7 @@ mark {
 .block-list {
   display: grid;
   gap: var(--s-5);
+  max-width: none;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -917,16 +1034,30 @@ html:not(.js) .share-button {
   color: var(--ink-muted);
 }
 
+/* The result is a paper card, like a clue on the board, with its Estimate stamp inside. */
 .calc__result {
   padding: var(--s-5);
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius);
-  background: var(--surface);
+  border: 2px solid var(--paper-ink);
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 0 10px 18px rgb(0 0 0 / 18%);
 }
 
 .calc__result h2 {
-  margin-top: 0;
+  margin: 0 0 var(--s-2);
+  font-size: var(--text-2xl);
+}
+
+.calc__estimate,
+.calc__example {
+  margin: var(--s-3) 0 0;
+  font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
+}
+
+.calc__example {
+  color: var(--label);
+  font-weight: 700;
 }
 
 .calc__result dl {
@@ -1007,4 +1138,762 @@ html.js .calc__nojs {
   margin-top: var(--s-2);
   font-size: var(--text-sm);
   color: var(--ink-muted);
+}
+
+/* Stamps: the "Simulated demo run" label inside every sample frame (SimulatedStamp). */
+.stamp {
+  display: inline-block;
+  padding: 0.1em var(--s-2);
+  border: 2px solid currentcolor;
+  border-radius: 3px;
+  color: var(--label);
+  font-family: var(--font-type);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+
+.stamp__path {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  align-items: center;
+  margin-bottom: var(--s-4);
+}
+
+.section-head h2 {
+  margin: 0;
+}
+
+caption,
+.card-list__caption {
+  caption-side: top;
+  padding-block: var(--s-2);
+  font-weight: 600;
+  text-align: left;
+}
+
+/* Severity: word + shape + colour (Severity.astro). */
+.sev {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sev--critical {
+  color: var(--sev-critical);
+}
+
+.sev--high {
+  color: var(--sev-high);
+}
+
+.sev--medium {
+  color: var(--sev-medium);
+}
+
+.sev--low {
+  color: var(--sev-low);
+}
+
+.sev--info {
+  color: var(--sev-info);
+}
+
+/* Tables on wide screens, card lists on phones; one of the two is display:none. */
+.only-wide {
+  display: none;
+}
+
+@media (width >= 48rem) {
+  .only-wide {
+    display: block;
+  }
+
+  .only-narrow {
+    display: none;
+  }
+}
+
+.card-list,
+.plain-list {
+  margin: 0 0 var(--s-4);
+  padding: 0;
+  list-style: none;
+}
+
+.card-list li {
+  padding-block: var(--s-3);
+  border-bottom: 1px solid var(--line);
+}
+
+.card-list p {
+  margin: var(--s-1) 0 0;
+  font-size: var(--text-sm);
+}
+
+.plain-list li {
+  padding-block: var(--s-1);
+}
+
+.panel {
+  padding: var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.panel--sample {
+  border-style: dashed;
+  border-width: 2px;
+}
+
+.panel h3 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  align-items: center;
+}
+
+/* Long sample reports: a section index, sticky beside the report on wide screens. */
+.report-index ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  margin: 0 0 var(--s-5);
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+
+@media (width >= 64rem) {
+  .report-layout {
+    display: grid;
+    grid-template-columns: 12rem minmax(0, 1fr);
+    gap: var(--s-6);
+    align-items: start;
+  }
+
+  .report-index {
+    position: sticky;
+    top: var(--s-5);
+    padding-top: var(--s-7);
+  }
+
+  .report-index ul {
+    flex-direction: column;
+  }
+}
+
+.finding-card {
+  margin-block: var(--s-5);
+  padding: var(--s-5);
+  border: 2px dashed var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.finding-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-3);
+  align-items: center;
+}
+
+.finding-card h3 {
+  margin-top: var(--s-3);
+}
+
+/* Case board (DESIGN.md §4): wood frame, cork, pinned paper. The same in both themes. */
+.case-board {
+  color: var(--on-frame);
+}
+
+.board-frame {
+  position: relative;
+  border: 14px solid var(--frame-edge);
+  border-radius: 6px;
+  background-color: var(--cork);
+  background-image:
+    radial-gradient(var(--cork-dot) 1.2px, transparent 1.6px),
+    radial-gradient(#c99b66 1px, transparent 1.4px);
+  background-size:
+    14px 14px,
+    23px 23px;
+  background-position:
+    0 0,
+    7px 9px;
+  box-shadow:
+    inset 0 0 40px rgb(0 0 0 / 35%),
+    0 30px 60px rgb(0 0 0 / 50%);
+}
+
+.board {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-5);
+  max-width: none;
+  margin: 0;
+  padding: var(--s-5) var(--s-4);
+  list-style: none;
+}
+
+.board__slot {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  max-width: none;
+}
+
+.yarn {
+  display: none;
+}
+
+@media (width > 47.5rem) {
+  .board {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(12.5rem, 1fr));
+    padding: 28px;
+    min-height: 45rem;
+  }
+
+  .board__slot--0 {
+    grid-area: 1 / 1;
+  }
+
+  .board__slot--1 {
+    grid-area: 1 / 2;
+  }
+
+  .board__slot--2 {
+    grid-area: 1 / 3;
+  }
+
+  .board__slot--3 {
+    grid-area: 2 / 1;
+  }
+
+  .board__slot--4 {
+    grid-area: 2 / 2;
+  }
+
+  .board__slot--5 {
+    grid-area: 2 / 3;
+  }
+
+  .board__slot--6 {
+    grid-area: 3 / 1;
+  }
+
+  .board__slot--7 {
+    grid-area: 3 / 2;
+  }
+
+  .board__slot--8 {
+    grid-area: 3 / 3;
+  }
+
+  .yarn {
+    display: block;
+    position: absolute;
+    inset: 28px;
+    width: calc(100% - 56px);
+    height: calc(100% - 56px);
+    pointer-events: none;
+  }
+
+  .yarn line {
+    stroke: var(--yarn);
+    stroke-width: 2.4;
+    vector-effect: non-scaling-stroke;
+  }
+}
+
+.clue-wrap {
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+
+.clue,
+.subject-card {
+  position: relative;
+  width: 100%;
+  max-width: 19rem;
+  padding: var(--s-4) var(--s-4) 1.125rem;
+  background: var(--card);
+  color: var(--board-ink);
+  box-shadow: 0 10px 18px rgb(0 0 0 / 35%);
+  font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
+}
+
+/* The pin. */
+.clue::before,
+.subject-card::before {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ff8a8a, var(--pin) 55%, #7a0f12);
+  box-shadow: 0 3px 4px rgb(0 0 0 / 40%);
+}
+
+.clue p {
+  margin: 0;
+}
+
+.clue__kind {
+  display: inline-block;
+  padding: 1px var(--s-2);
+  border: 2px solid var(--yarn);
+  color: var(--yarn);
+  font-family: var(--font-marker);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  transform: rotate(-3deg);
+}
+
+.clue__title {
+  margin: var(--s-3) 0 0;
+  font-size: var(--text-xl);
+  line-height: 1.1;
+}
+
+.clue__figure {
+  margin: var(--s-2) 0 0;
+  color: var(--board-ink);
+  font-family: var(--font-marker);
+  font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2.25rem);
+  line-height: 1.1;
+}
+
+.clue__figure--plain {
+  font-family: var(--font-body);
+  font-weight: 800;
+}
+
+.clue__title--plain {
+  font-family: var(--font-body);
+  font-weight: 800;
+}
+
+.clue__body {
+  margin-top: var(--s-3);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+.clue__source {
+  margin-top: var(--s-3);
+  color: var(--faded);
+  font-size: 0.75rem;
+}
+
+.clue__source a {
+  color: var(--board-ink);
+}
+
+.clue .stamp {
+  margin-top: var(--s-3);
+  color: var(--yarn);
+  font-size: 0.75rem;
+  transform: rotate(-4deg);
+}
+
+.subject-card {
+  max-width: 17.5rem;
+  padding: 1.375rem 1.125rem;
+  background: var(--board-ink);
+  color: var(--on-frame);
+  text-align: center;
+}
+
+.subject-card h3 {
+  margin: 0;
+  color: var(--sticky);
+  font-size: 2.5rem;
+}
+
+.subject-card p {
+  margin: var(--s-2) 0 0;
+  color: var(--on-frame-muted);
+}
+
+.case-tag {
+  margin: 0;
+  padding: 10px 14px;
+  background: var(--tag);
+  color: var(--board-ink);
+  font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
+  font-size: var(--text-sm);
+  text-align: center;
+  box-shadow: 0 6px 12px rgb(0 0 0 / 30%);
+  transform: rotate(-1deg);
+}
+
+.case-tag b {
+  display: block;
+  color: var(--yarn);
+  font-family: var(--font-marker);
+  font-size: 1.375rem;
+  font-weight: 400;
+}
+
+.sticky-note {
+  width: 100%;
+  max-width: 15rem;
+  margin: 0;
+  padding: 1.125rem;
+  background: var(--sticky);
+  color: var(--board-ink);
+  font-family: var(--font-marker);
+  font-size: 1.25rem;
+  line-height: 1.2;
+  box-shadow: 0 8px 14px rgb(0 0 0 / 30%);
+  transform: rotate(3deg);
+}
+
+.board-caption {
+  margin-top: var(--s-3);
+  color: var(--on-frame-muted);
+  font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
+  font-size: var(--text-xs);
+  max-width: none;
+}
+
+.board-caption code {
+  font-family: inherit;
+  overflow-wrap: anywhere;
+}
+
+/* Tilt: only on wide screens with motion allowed; phones and reduced motion get straight cards. */
+@media (width > 47.5rem) and (prefers-reduced-motion: no-preference) {
+  .clue--r1 {
+    transform: rotate(-2.5deg);
+  }
+
+  .clue--r2 {
+    transform: rotate(2deg);
+  }
+
+  .clue--r3 {
+    transform: rotate(-1.2deg);
+  }
+
+  .clue--r4 {
+    transform: rotate(1.6deg);
+  }
+
+  .clue--r5 {
+    transform: rotate(-2deg);
+  }
+
+  .clue--r6 {
+    transform: rotate(2.6deg);
+  }
+
+  .clue {
+    transition: transform 0.2s;
+  }
+
+  .clue:hover {
+    transform: rotate(0) scale(1.03);
+  }
+}
+
+@media (width <= 47.5rem), (prefers-reduced-motion: reduce) {
+  .case-tag,
+  .sticky-note {
+    transform: none;
+  }
+}
+
+/* Wood: the top of a board page, the same in both themes. */
+.wood {
+  background: var(--frame);
+  color: var(--on-frame);
+  padding-bottom: var(--s-7);
+}
+
+.case-hero {
+  padding-block: var(--s-6) var(--s-5);
+}
+
+.case-hero h1 {
+  color: var(--on-frame);
+}
+
+.case-hero .lede {
+  margin: 0;
+  color: var(--on-frame-muted);
+}
+
+.case-hero__actions {
+  margin-top: var(--s-5);
+}
+
+@media (width >= 48rem) {
+  .case-hero--long h1 {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* Phones: both case buttons stay in the first screen, down to 320 × 640. */
+@media (width < 48rem) {
+  .case-hero--long h1 {
+    font-size: 1.75rem;
+  }
+
+  .case-hero {
+    padding-block: var(--s-4);
+  }
+
+  .case-hero h1 {
+    margin-bottom: var(--s-3);
+  }
+
+  .case-hero .lede {
+    font-size: var(--text-base);
+    line-height: 1.5;
+  }
+
+  .case-hero__actions {
+    margin-top: var(--s-4);
+    gap: var(--s-2);
+  }
+
+  .case-hero__actions .button {
+    min-height: 2.75rem;
+    padding-inline: var(--s-4);
+  }
+}
+
+.case-actions {
+  margin-top: var(--s-6);
+}
+
+.case-file-copy {
+  margin-top: var(--s-3);
+  color: var(--on-frame-muted);
+  font-size: var(--text-sm);
+}
+
+.case-file-copy summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.case-file-text {
+  margin-top: var(--s-2);
+  color: var(--on-frame-muted);
+  font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
+  font-size: var(--text-xs);
+}
+
+html:not(.js) .js-only {
+  display: none;
+}
+
+/* Paper: sections below the board. Switches with the theme. */
+.paper-section {
+  padding-block: var(--s-8);
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+
+.price-band {
+  display: grid;
+  gap: var(--s-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
+  margin: var(--s-5) 0 var(--s-4);
+  padding: 0;
+  list-style: none;
+  max-width: none;
+}
+
+.case-notes {
+  margin-top: var(--s-7);
+}
+
+.case-notes h3 {
+  font-size: var(--text-xl);
+}
+
+.contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: center;
+  margin-top: var(--s-6);
+}
+
+.contact-email {
+  max-width: 100%;
+  padding: 10px 14px;
+  border: 2px dashed currentcolor;
+  font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
+  user-select: all;
+}
+
+/* A product home's existing sections, stacked on one sheet of paper under the board. */
+.paper-section--stack {
+  padding-block: var(--s-4) var(--s-7);
+}
+
+/* Section headings on the paper under a board: 40 px. The display sizes are for the board
+   headline only; the "Launching soon" card keeps its own heading size. */
+.paper-section h2:not(.launching-soon h2) {
+  font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+}
+
+/* The contact address (EmailAddress.astro) breaks only at its <wbr>, after the @. */
+.email-address > span {
+  white-space: nowrap;
+}
+
+/* A paper page (pricing, audit, security, 404): one sheet; its headline a size down from the
+   board headlines. */
+.paper-page .page-head h1 {
+  font-size: var(--text-3xl);
+}
+
+.case-tag--band {
+  max-width: none;
+  margin-block: var(--s-6) 0;
+  text-align: left;
+  transform: none;
+}
+
+.case-tag--band b {
+  display: inline;
+  margin-inline-end: var(--s-2);
+}
+
+.page-head__price {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  align-items: baseline;
+  margin-block: var(--s-4);
+  font-family: var(--font-type);
+  letter-spacing: var(--type-tracking);
+}
+
+.page-head__amount {
+  font-family: var(--font-marker);
+  font-size: 2.125rem;
+  letter-spacing: 0;
+}
+
+.deliverables > li {
+  padding: var(--s-4);
+  border: 2px solid var(--paper-ink);
+  font-weight: 600;
+}
+
+.not-found {
+  max-width: 36rem;
+  padding: var(--s-6);
+  border: 2px solid var(--paper-ink);
+  box-shadow: 0 10px 18px rgb(0 0 0 / 18%);
+}
+
+.not-found h1 {
+  font-size: var(--text-2xl);
+}
+
+/* Paper pages (docs, blog, legal, scoring): one sheet. Only h1 and h2 are in Marker; smaller
+   headings use the bold body face for reading comfort. Code keeps the system monospace. */
+.paper-main {
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+
+/* Reading sizes (review I2): the board's 96/68 px display sizes are for the homes. */
+.paper-main h1 {
+  font-size: clamp(1.75rem, 1.2rem + 2.4vw, 3rem);
+}
+
+.paper-main h2:not(.prose h2) {
+  font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.5rem);
+}
+
+.paper-main :is(h3, h4, h5, h6) {
+  font-family: var(--font-body);
+  font-weight: 800;
+}
+
+/* Sample reports as case files: each section a paper sheet on the board's wood. The header
+   and the section index sit on the wood, so their colour tokens switch to the wood's. */
+.wood-main {
+  background: var(--frame);
+  color: var(--on-frame);
+  padding-bottom: var(--s-7);
+}
+
+.wood-main :is(.page-head, .report-index) {
+  --ink: var(--on-frame);
+  --ink-muted: var(--on-frame-muted);
+  --accent: var(--sticky);
+  --line: var(--frame-edge);
+
+  color: var(--on-frame);
+}
+
+/* Boxes on the wood with their own ground (source notes) take the paper's ink back. */
+.wood-main .note {
+  color: var(--paper-ink);
+}
+
+.sheet {
+  margin-block: var(--s-5);
+  padding: var(--s-5);
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: 0 10px 18px rgb(0 0 0 / 35%);
+}
+
+.sheet + .sheet {
+  border-top: 0;
+}
+
+.sheet :is(h3, h4) {
+  font-family: var(--font-body);
+  font-weight: 800;
+}
+
+.sheet :is(td, th, caption) {
+  font-family: var(--font-type);
+  font-size: var(--text-sm);
+  letter-spacing: var(--type-tracking);
+}
+
+.sheet__download {
+  font-weight: 600;
 }

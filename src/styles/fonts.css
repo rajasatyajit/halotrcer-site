@@ -1,0 +1,26 @@
+/* The one web font: a Permanent Marker subset, self-hosted WOFF2 (source and licence:
+   docs/fonts.md, NOTICE). Body and card text use system fonts (owner decision 2026-10-23,
+   LCP budget). Marker is not preloaded: preloading it made the hero wait for it.
+   The fallback face is scaled to Marker's metrics (npm run fonts:subset prints them).
+   font-display is optional, not swap: a font that misses the first paint is not swapped in
+   later, because a heading that rewraps moves the page (CLS must stay 0); from the next page
+   on it is cached and shows. The family name is our own ("Case Marker"), never the font's:
+   a visitor who has Permanent Marker installed would otherwise get the system copy swapped
+   in late. */
+
+@font-face {
+  font-family: 'Case Marker';
+  src: url('../assets/fonts/permanent-marker.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: optional;
+}
+
+@font-face {
+  font-family: 'Case Marker fallback';
+  src: local('Arial'), local('Liberation Sans'), local('Arimo'), local('Helvetica');
+  size-adjust: 112.05%;
+  ascent-override: 99.01%;
+  descent-override: 28.33%;
+  line-gap-override: 2.7%;
+}

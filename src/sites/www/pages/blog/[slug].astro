@@ -30,6 +30,8 @@ const jsonld =
     { name: 'Blog', path: '/blog' },
     { name: title, path: `/blog/${post.id}` },
   ]}
+
+  surface="paper"
 >
   <link slot="head" rel="alternate" type="application/rss+xml" title={FEED.title} href={FEED.rss} />
   <article class="container section">

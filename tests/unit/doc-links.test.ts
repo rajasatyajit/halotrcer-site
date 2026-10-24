@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { docHref } from '../../src/lib/doc-links.ts';
+import { codeLabel, docHref } from '../../src/lib/doc-links.ts';
 
 const base = { product: 'tokvera', docPath: 'docs/scan.md', repo: 'tokvera', commit: 'abc123' };
 
@@ -27,5 +27,23 @@ describe('synced doc links', () => {
   it('drops links to launch-only docs before launch', () => {
     expect(docHref({ ...base, href: 'install.md', launched: false })).toBeUndefined();
     expect(docHref({ ...base, href: 'install.md', launched: true })).toBe('/docs/install');
+  });
+});
+
+describe('codeLabel', () => {
+  const el = (tagName: string, className?: string, children: unknown[] = []) => ({
+    type: 'element',
+    tagName,
+    properties: className ? { className: [className] } : {},
+    children,
+  });
+  it('names the language from the pre or its code element', () => {
+    expect(codeLabel(el('pre', 'language-sh'))).toBe('Code example (sh)');
+    expect(codeLabel(el('pre', undefined, [el('code', 'language-yaml')]))).toBe(
+      'Code example (yaml)',
+    );
+  });
+  it('falls back to "Code example"', () => {
+    expect(codeLabel(el('pre'))).toBe('Code example');
   });
 });

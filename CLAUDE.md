@@ -44,7 +44,7 @@ Other sessions own them. Only read them: no writes, builds or binaries, and no g
 - Astro static output, zero JS by default. Vanilla-TS islands only: install picker, copy buttons, calculator, share, theme toggle.
 - Every feature works with JavaScript disabled.
 - Hand-written CSS with tokens; light and dark themes; no CSS framework.
-- System font stack. No web fonts shipped.
+- One self-hosted web font: a Permanent Marker subset (WOFF2, not preloaded) for display only. Body and card text use system fonts. Owner decisions 2026-10-23; why: docs/fonts.md.
 - No third-party scripts, fonts or trackers. Cloudflare Web Analytics is the only exception, and only when `ANALYTICS=true`.
 - Strict CSP: no inline executable scripts, no `style=` attributes, no `unsafe-inline` or `unsafe-eval`. The only allowed inline script is `application/ld+json`.
 - WCAG 2.2 AA, full keyboard support, `prefers-reduced-motion` and `prefers-color-scheme`. Never use colour alone for meaning.
@@ -54,7 +54,7 @@ Other sessions own them. Only read them: no writes, builds or binaries, and no g
 ## Budgets (CI-enforced)
 
 - Lighthouse 100 in all four categories on key pages (mobile).
-- LCP < 1.2 s, CLS 0, INP < 100 ms.
+- LCP < 1.4 s as the median of 3 Lighthouse runs per page, CLS 0, INP < 100 ms. Median: single runs vary by more than the margins. Limit 1.4 s (owner, 2026-10-23): the Marker font puts simulated LCP on a 1.21 / 1.36 / 1.51 s step; 30 runs after subsetting were all ≤ 1.36 s, so 1.4 s passes the current font and still fails if it adds another step.
 - JS ≤ 20 KB gz per page; page weight ≤ 250 KB excluding a demo video.
 
 ## CI

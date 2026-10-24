@@ -1,4 +1,5 @@
 ---
+import EmailAddress from '../../../components/EmailAddress.astro';
 // Fallback for /book while BOOKING_TARGET is unset. Once it is set, this page is
 // not built and _redirects sends /book to the booking tool (302).
 import BaseLayout from '../../../layouts/BaseLayout.astro';
@@ -9,6 +10,8 @@ import { CONTACT_EMAIL } from '../../../config/site.ts';
   title="Book a call"
   description="Book a call with Halotrcer about LLM inference cost and latency or MCP agent security."
   noindex
+
+  surface="paper"
 >
   <div class="container section">
     <h1>Book a call</h1>
@@ -17,7 +20,7 @@ import { CONTACT_EMAIL } from '../../../config/site.ts';
     </p>
     <div class="button-row">
       <a class="button" href={`mailto:${CONTACT_EMAIL}?subject=Book%20a%20call`}>
-        Email {CONTACT_EMAIL}
+        Email <EmailAddress />
       </a>
     </div>
   </div>

@@ -7,6 +7,7 @@ import {
   EXAMPLE,
   FIELDS,
   formatAmount,
+  isExample,
   formatShare,
   parse,
   summary,
@@ -35,7 +36,14 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-calculator]')) 
   if (!form || !result) continue;
   const out = (name: string) => root.querySelector<HTMLElement>(`[data-calc-out="${name}"]`);
   const field = (f: string) => form.elements.namedItem(f) as HTMLInputElement | null;
+  const exampleLabel = root.querySelector<HTMLElement>('[data-example-label]');
   let current: Inputs | undefined;
+  // True while the result shows the example values (ex=1 in the link).
+  let example = false;
+  const setExample = (flag: boolean) => {
+    example = flag;
+    if (exampleLabel) exampleLabel.hidden = !flag;
+  };
 
   const fill = (i: Inputs) => {
     for (const f of FIELDS) {
@@ -57,13 +65,29 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-calculator]')) 
     result.dataset.state = 'done';
   };
 
-  const submit = () => {
+  const submit = (fromExample = false) => {
     if (!form.reportValidity()) return;
     const inputs = parse(new URLSearchParams(FIELDS.map((f) => [f, field(f)?.value ?? ''])));
     if (!inputs) return;
     show(inputs);
-    history.replaceState(null, '', `?${encode(inputs)}${location.hash}`);
+    setExample(fromExample);
+    history.replaceState(null, '', `?${encode(inputs, fromExample)}${location.hash}`);
   };
+
+  // Editing a field after the example fill: the shown figures are still the example's, so
+  // clear the whole result (card, link and what Copy would copy), not just the label. Example
+  // figures never appear without their label.
+  form.addEventListener('input', () => {
+    if (!example) return;
+    setExample(false);
+    current = undefined;
+    for (const name of ['spend', 'repeat', 'share']) {
+      const el = out(name);
+      if (el) el.textContent = '–';
+    }
+    delete result.dataset.state;
+    history.replaceState(null, '', `${location.pathname}${location.hash}`);
+  });
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -72,7 +96,7 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-calculator]')) 
 
   root.querySelector('[data-calc-example]')?.addEventListener('click', () => {
     fill(EXAMPLE);
-    submit();
+    submit(true);
     announce('Example values filled in. They are not any provider’s real prices.');
   });
 
@@ -82,16 +106,20 @@ for (const root of document.querySelectorAll<HTMLElement>('[data-calculator]')) 
       return;
     }
     try {
-      await navigator.clipboard.writeText(summary(current, compute(current), location.href));
+      await navigator.clipboard.writeText(
+        summary(current, compute(current), location.href, example),
+      );
       announce('Result and link copied to the clipboard');
     } catch {
       announce('Could not copy. Copy the link from the address bar.');
     }
   });
 
-  const initial = parse(new URLSearchParams(location.search));
+  const params = new URLSearchParams(location.search);
+  const initial = parse(params);
   if (initial) {
     fill(initial);
     show(initial);
+    setExample(isExample(params));
   }
 }

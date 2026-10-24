@@ -8,7 +8,8 @@
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, posix } from 'node:path';
 import { stringify } from 'yaml';
-import { FORBIDDEN } from './lib/rules.ts';
+import { docTarget } from './lib/doc-target.ts';
+import { passesPrelaunch } from './lib/rules.ts';
 import { listFiles, resolveRef, showFile, showFileBytes, type RepoId } from './lib/repos.ts';
 
 interface Entry {
@@ -17,10 +18,10 @@ interface Entry {
   docs?: string[];
   dir?: string;
   exclude?: string[];
+  // Files outside `dir` (repo-root SECURITY.md), synced as well.
+  extra?: string[];
   order?: string[];
 }
-
-export const passesPrelaunch = (text: string) => FORBIDDEN.every(([re]) => !re.test(text));
 
 const config = JSON.parse(readFileSync('config/docs-sync.json', 'utf8')) as Record<
   string,
@@ -33,11 +34,13 @@ for (const [product, entry] of Object.entries(config)) {
   const outDir = join('content', 'docs', product);
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(outDir, { recursive: true });
-  const paths =
-    entry.docs ??
-    listFiles(entry.repo, commit, entry.dir ?? 'docs').filter(
-      (p) => p.endsWith('.md') && !(entry.exclude ?? []).includes(basename(p)),
-    );
+  const paths = [
+    ...(entry.docs ??
+      listFiles(entry.repo, commit, entry.dir ?? 'docs').filter(
+        (p) => p.endsWith('.md') && !(entry.exclude ?? []).includes(basename(p)),
+      )),
+    ...(entry.extra ?? []),
+  ];
   let excluded = 0;
   for (const path of paths) {
     const raw = showFile(entry.repo, commit, path);
@@ -58,7 +61,7 @@ for (const [product, entry] of Object.entries(config)) {
         );
         return `[Screenshot: ${alt || basename(file)}](/docs/assets/${basename(file)})`;
       });
-    const slug = basename(path, '.md');
+    const { slug, file } = docTarget(path);
     const order = entry.order?.indexOf(slug) ?? -1;
     const prelaunch = passesPrelaunch(raw);
     if (!prelaunch) excluded++;
@@ -68,7 +71,7 @@ for (const [product, entry] of Object.entries(config)) {
       prelaunch,
       order: order < 0 ? 999 : order,
     });
-    writeFileSync(join(outDir, basename(path)), `---\n${fm}---\n\n${body}`);
+    writeFileSync(join(outDir, file), `---\n${fm}---\n\n${body}`);
   }
   console.log(
     `${product}: ${paths.length} docs @ ${commit.slice(0, 7)} (${excluded} only when launched)`,

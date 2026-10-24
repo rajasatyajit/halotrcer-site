@@ -62,3 +62,12 @@ export function problems(recorded: Recorded, builds: SiteBuild[], mode: Mode): s
   }
   return out;
 }
+
+// Published files that are not pages but are linked as URLs (the sample downloads). They are
+// recorded and checked like sitemap URLs. `files` are paths relative to dist/<site>.
+export function downloadUrls(site: SiteId, files: string[]): string[] {
+  return files
+    .filter((f) => /^samples\/[^/]+\.json$/.test(f.replaceAll('\\', '/')))
+    .map((f) => `https://${HOSTS[site]}/${f.replaceAll('\\', '/')}`)
+    .sort();
+}

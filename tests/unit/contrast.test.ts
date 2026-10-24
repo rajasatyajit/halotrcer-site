@@ -40,8 +40,33 @@ const PAIRS: [string, string, number][] = [
   ['term-ink', 'term-bg', 4.5],
   ['term-muted', 'term-bg', 4.5],
   ['term-prompt', 'term-bg', 4.5],
-  ['focus', 'bg', 3],
+  // Severity words (always shown with the word, never colour alone).
+  ...['sev-critical', 'sev-high', 'sev-medium', 'sev-low', 'sev-info'].flatMap((fg) =>
+    TEXT_ON.map((bg) => [fg, bg, 4.5] as [string, string, number]),
+  ),
+  ...['sev-critical', 'sev-high', 'sev-medium', 'sev-low', 'sev-info'].map(
+    (fg) => [fg, 'paper', 4.5] as [string, string, number],
+  ),
+  // The Case File board: fixed colours, the same in both themes (DESIGN.md §2).
+  ['board-ink', 'card', 4.5],
+  ['faded', 'card', 4.5],
+  ['yarn', 'card', 4.5],
+  ['yarn', 'tag', 4.5],
+  ['board-ink', 'tag', 4.5],
+  ['on-yarn', 'yarn', 4.5],
+  ['board-ink', 'sticky', 4.5],
+  ['on-frame', 'frame', 4.5],
+  ['on-frame-muted', 'frame', 4.5],
+  ['sticky', 'frame', 4.5],
+  // Paper sections switch with the theme.
+  ['paper-ink', 'paper', 4.5],
+  ['label', 'paper', 4.5],
+  ['paper', 'paper-ink', 4.5],
+  ['label-inverse', 'paper-ink', 4.5],
 ];
+
+// Two-tone focus ring (ink outline, yellow halo): one of the two reaches 3:1 on every surface.
+const FOCUS_ON = ['card', 'cork', 'frame', 'tag', 'paper', 'bg', 'surface', 'surface-sunken'];
 
 describe.each([
   ['light', 0],
@@ -49,5 +74,12 @@ describe.each([
 ] as const)('%s theme', (_theme, i) => {
   it.each(PAIRS)('--%s on --%s >= %s:1', (fg, bg, min) => {
     expect(ratio(token(fg)[i], token(bg)[i])).toBeGreaterThanOrEqual(min);
+  });
+  it.each(FOCUS_ON)('focus ring visible on --%s', (bg) => {
+    const best = Math.max(
+      ratio(token('board-ink')[i], token(bg)[i]),
+      ratio(token('sticky')[i], token(bg)[i]),
+    );
+    expect(best).toBeGreaterThanOrEqual(3);
   });
 });

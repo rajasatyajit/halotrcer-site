@@ -1,4 +1,5 @@
 ---
+import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/components.css';
@@ -19,9 +20,29 @@ interface Props {
   // Structured data for this page; breadcrumbs are added for every page but the home.
   jsonld?: JsonLd[];
   crumbs?: Crumb[];
+  // Open Graph image: a label drawn into the image (e.g. "Simulated demo run"),
+  // or the pricing template that lists the services and their prices.
+  ogStamp?: string;
+  ogTemplate?: 'pricing';
+  // The page's ground: paper (docs, blog, legal) or wood (sample reports, as case files).
+  surface?: 'paper' | 'wood';
+  // The page shows simulated sample data: the footer then says where its numbers come from.
+  // Defaults to a "Simulated…" share-image stamp.
+  samples?: boolean;
 }
 
-const { title, description, bareTitle = false, noindex = false, jsonld = [], crumbs } = Astro.props;
+const {
+  title,
+  description,
+  bareTitle = false,
+  noindex = false,
+  jsonld = [],
+  crumbs,
+  ogStamp,
+  ogTemplate,
+  surface,
+  samples = ogStamp?.startsWith('Simulated') ?? false,
+} = Astro.props;
 const { site } = getFlags();
 const siteName = SITE_NAMES[site];
 const fullTitle = bareTitle ? title : `${title} · ${siteName}`;
@@ -45,8 +66,8 @@ const graph = [
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f6f3" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121315" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f2e2" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1f1a14" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteName} />
@@ -68,14 +89,14 @@ const graph = [
     <script is:inline src="/theme-init.js"></script>
     <slot name="head" />
   </head>
-  <body>
+  <body data-og-stamp={ogStamp} data-og-template={ogTemplate}>
     <a class="skip-link" href="#main">
       Skip to content
     </a>
     <SiteHeader />
-    <main id="main">
+    <main id="main" class:list={[surface && `${surface}-main`]}>
       <slot />
     </main>
-    <SiteFooter />
+    <SiteFooter samples={samples} />
   </body>
 </html>

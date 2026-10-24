@@ -1,4 +1,5 @@
 ---
+import Continuity from '../../../components/Continuity.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import SyncedDoc from '../../../components/SyncedDoc.astro';
 import { BOOKING_URL } from '../../../config/site.ts';
@@ -21,4 +22,11 @@ const jsonld = [faqPage('sievant/faq')];
   <div class="container">
     <SyncedDoc id="sievant/faq" />
   </div>
+  {/* From Halotrcer, not the synced doc: the synced wording is never edited. */}
+  <section class="container section" aria-labelledby="maintainer">
+    <h2 id="maintainer">What if the maintainer stops?</h2>
+    <p>
+      <Continuity />
+    </p>
+  </section>
 </BaseLayout>

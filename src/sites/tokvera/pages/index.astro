@@ -2,15 +2,18 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Proof from '../../../components/Proof.astro';
 import Claim from '../../../components/Claim.astro';
-import Hero from '../../../components/Hero.astro';
+import CaseOpening from '../../../components/board/CaseOpening.astro';
 import InstallOrSoon from '../../../components/InstallOrSoon.astro';
 import Terminal from '../../../components/Terminal.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
-import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+import { priceLabel, serviceFor } from '../../../lib/pricing.ts';
 import { softwareApplication } from '../../../lib/jsonld.ts';
+import { hero } from '../../../lib/heroes.ts';
 
 const audit = serviceFor('performance-audit');
 const jsonld = [softwareApplication('tokvera')];
+// The approved headline variant for this host (content/heroes), on the case board's wood.
+const h = hero('tokvera');
 ---
 
 <BaseLayout
@@ -18,118 +21,126 @@ const jsonld = [softwareApplication('tokvera')];
   description="Tokvera measures LLM inference endpoints the way users feel them: time to first token, latency at rising concurrency, error rates and cost per 1,000 requests, graded A–F."
   bareTitle
   jsonld={jsonld}
+  ogStamp="Simulated demo run"
 >
-  <Hero eyebrow="Tokvera">
-    <a class="button" href="/sample-report">
-      See a sample report
-    </a>
-    <a class="button button--ghost" href="/docs">
-      Read the docs
-    </a>
-  </Hero>
+  <CaseOpening site="tokvera" long>
+    <h1 id="case-title">
+      <span data-claim={h.title.id}>{h.title.text}</span>
+    </h1>
+    <p class="lede">
+      <span data-claim={h.lede.id}>{h.lede.text}</span> Here's what it pinned up after a simulated
+      demo run.
+    </p>
+  </CaseOpening>
 
-  <section class="container section split" aria-labelledby="measures">
-    <div>
-      <h2 id="measures">What it measures</h2>
-      <p>
-        <Claim id="tokvera.measures" />
-      </p>
-      <p>
-        <Claim id="tokvera.summary" />
-      </p>
-      <p>
-        The grade is labelled provisional until it is calibrated.{' '}
-        <a href="/scoring">How the grade works</a>.
-      </p>
-    </div>
-    <Terminal
-      label="tokvera scan --demo"
-      claimId="tokvera.demo-terminal"
-      note="Simulated demo run, from the README"
-    />
-  </section>
-
-  <section class="container section split" aria-labelledby="own">
-    <div>
-      <h2 id="own">Then your own endpoint</h2>
-      <p>
-        <Claim id="tokvera.load-warning" />
-      </p>
-      <p>
-        <Claim id="tokvera.privacy-report" />
-      </p>
-      <p>
-        <Claim id="tokvera.no-telemetry" />
-      </p>
-    </div>
-    <Terminal label="Scan your endpoint" claimId="tokvera.target-terminal" note="From the README" />
-  </section>
-
-  <section class="container section" aria-labelledby="runs">
-    <h2 id="runs">Where else it runs</h2>
-    <ul class="feature-grid">
-      <li>
-        <h3>In CI</h3>
+  <div class="paper-section paper-section--stack">
+    <section class="container section split" aria-labelledby="measures">
+      <div>
+        <h2 id="measures">What it measures</h2>
         <p>
-          <Claim id="tokvera.ci" />
+          <Claim id="tokvera.measures" />
         </p>
-      </li>
-      <li>
-        <h3>In Kubernetes</h3>
         <p>
-          <Claim id="tokvera.k8s" />
+          <Claim id="tokvera.summary" />
         </p>
-      </li>
-      <li>
-        <h3>In your coding agent</h3>
         <p>
-          <Claim id="tokvera.mcp" />
+          The grade is labelled provisional until it is calibrated.{' '}
+          <a href="/scoring">How the grade works</a>.
         </p>
-      </li>
-    </ul>
-    <p>
-      <a href="/integrations">All integrations</a> · <a href="/faq">FAQ</a>
-    </p>
-  </section>
+      </div>
+      <Terminal
+        label="tokvera scan --demo"
+        claimId="tokvera.demo-terminal"
+        note="Simulated demo run, from the README"
+      />
+    </section>
 
-  <section class="container section" aria-labelledby="estimate">
-    <h2 id="estimate">Estimate before you measure</h2>
-    <p>
-      The <a href="/calculator">AI bill leak calculator</a> estimates your monthly spend and the
-      part that goes on repeated, uncached input, from your own volumes and prices. A scan then
-      measures it.
-    </p>
-  </section>
+    <section class="container section split" aria-labelledby="own">
+      <div>
+        <h2 id="own">Then your own endpoint</h2>
+        <p>
+          <Claim id="tokvera.load-warning" />
+        </p>
+        <p>
+          <Claim id="tokvera.privacy-report" />
+        </p>
+        <p>
+          <Claim id="tokvera.no-telemetry" />
+        </p>
+      </div>
+      <Terminal
+        label="Scan your endpoint"
+        claimId="tokvera.target-terminal"
+        note="From the README"
+      />
+    </section>
 
-  <Proof />
+    <section class="container section" aria-labelledby="runs">
+      <h2 id="runs">Where else it runs</h2>
+      <ul class="feature-grid">
+        <li>
+          <h3>In CI</h3>
+          <p>
+            <Claim id="tokvera.ci" />
+          </p>
+        </li>
+        <li>
+          <h3>In Kubernetes</h3>
+          <p>
+            <Claim id="tokvera.k8s" />
+          </p>
+        </li>
+        <li>
+          <h3>In your coding agent</h3>
+          <p>
+            <Claim id="tokvera.mcp" />
+          </p>
+        </li>
+      </ul>
+      <p>
+        <a href="/integrations">All integrations</a> · <a href="/faq">FAQ</a>
+      </p>
+    </section>
 
-  <section class="container section" aria-labelledby="audit">
-    <h2 id="audit">Want it fixed?</h2>
-    <p>
-      <Claim id="tokvera.audit" />
-    </p>
-    <p data-owner-source="content/pricing.md">
-      {audit.name}: from {formatPrice(audit.from)}, {audit.duration.toLowerCase()}.
-    </p>
-    <div class="button-row">
-      <a class="button" href={BOOKING_URL}>
-        Book a call
-      </a>
-      <a class="button button--ghost" href={url('www', '/pricing')}>
-        Pricing
-      </a>
-    </div>
-  </section>
+    <section class="container section" aria-labelledby="estimate">
+      <h2 id="estimate">Estimate before you measure</h2>
+      <p>
+        The <a href="/calculator">AI bill leak calculator</a> estimates your monthly spend and the
+        part that goes on repeated, uncached input, from your own volumes and prices. A scan then
+        measures it.
+      </p>
+    </section>
 
-  <section class="container section" aria-labelledby="sievant-cta">
-    <h2 id="sievant-cta">Running AI agents too?</h2>
-    <p>
-      <a href={url('sievant')}>Sievant</a> checks every tool call your agents make.{' '}
-      <a href={url('www')}>Halotrcer</a> runs both and writes one report.
-    </p>
-  </section>
+    <Proof />
 
-  <section class="container section">
-    <InstallOrSoon product="tokvera" />
-  </section>
+    <section class="container section" aria-labelledby="audit">
+      <h2 id="audit">Want it fixed?</h2>
+      <p>
+        <Claim id="tokvera.audit" />
+      </p>
+      <p data-owner-source="content/pricing.md">
+        {audit.name}: {priceLabel(audit, { inSentence: true })}, {audit.duration.toLowerCase()}.
+      </p>
+      <div class="button-row">
+        <a class="button" href={BOOKING_URL}>
+          Book a call
+        </a>
+        <a class="button button--ghost" href={url('www', '/pricing')}>
+          Pricing
+        </a>
+      </div>
+    </section>
+
+    <section class="container section" aria-labelledby="sievant-cta">
+      <h2 id="sievant-cta">Running AI agents too?</h2>
+      <p>
+        <a href={url('sievant')}>Sievant</a> checks every tool call your agents make.{' '}
+        <a href={url('www')}>Halotrcer</a> runs both and writes one report.
+      </p>
+    </section>
+
+    <section class="container section">
+      <InstallOrSoon product="tokvera" />
+    </section>
+  </div>
 </BaseLayout>

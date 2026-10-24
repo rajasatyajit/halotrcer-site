@@ -252,6 +252,16 @@
       - time to first token, and latency percentiles at rising concurrency; - error rates; - cost
       per 1,000 requests; - whether repeated prompts are worth caching.
 
+# Owner-approved narrow quote (2026-10-24): the calculator's closing line.
+- id: tokvera.measures-caching
+  text: whether repeated prompts are worth caching
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '7-10'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: whether repeated prompts are worth caching
+
 - id: sievant.scan-finds
   text: >-
     Credentials and secret values in MCP configuration files, servers given the filesystem root or
@@ -679,6 +689,16 @@
       quote: "A credential in a tool's arguments. The call never reaches the server:",
     }
 
+# Owner-approved narrow quote (2026-10-24): the credential clue card's sentence.
+- id: sievant.block-credential-short
+  text: The call never reaches the server.
+  source:
+    repo: sievant
+    path: README.md
+    lines: '53-54'
+    commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
+    quote: The call never reaches the server
+
 - id: sievant.block-credential-out
   text: Arguments contain a credential (aws_access_key); call blocked.
   source:
@@ -892,3 +912,77 @@
     quote: >-
       Provisional scoring. The weights and thresholds are provisional: they have not yet been
       calibrated against real pilot scans and may change before scoring 1.0.0.
+
+- id: www.case.title
+  text: Who's draining your AI?
+  source:
+    owner: true
+    decided: 2026-10-23
+    note: The Case File hero heading (docs/redesign/DESIGN.md §5).
+
+- id: www.case.lede
+  text: >-
+    Is your AI slow, expensive or leaking? Halotrcer puts two detectives on the case, on your own
+    system: Tokvera on your LLM endpoint and Sievant on your agents' tools.
+  source:
+    owner: true
+    decided: 2026-10-23
+    note: The Case File hero line (docs/redesign/DESIGN.md §5).
+
+- id: www.continuity
+  text: >-
+    One maintainer today. Tokvera and Sievant are Apache-2.0, each a single binary you keep and run
+    with no account. Halotrcer is Apache-2.0 too; it installs and runs those two binaries, which keep
+    working without it.
+  source:
+    owner: true
+    decided: 2026-10-22
+    note: O2 in docs/redesign/proposal.md, repeated in the DESIGN.md mockup.
+
+- id: www.continuity.prelaunch
+  text: >-
+    One maintainer today. Tokvera and Sievant will be Apache-2.0, each a single binary that will be
+    yours to keep and run with no account. Halotrcer will be Apache-2.0 too; it will install and run
+    those two binaries, which keep working without it.
+  source:
+    owner: true
+    decided: 2026-10-23
+    note: >-
+      Pre-launch wording of www.continuity (owner, 2026-10-23): "will be", matching /pricing, until
+      the binaries are released.
+
+- id: sievant.report-org
+  text: sievant report --org <name> names your client's organization in the report title.
+  source:
+    repo: sievant
+    path: cmd/sievant/report.go
+    lines: '46'
+    commit: efa96682872b476c786a6d0f507aa17254000ac0
+    quote: '--org <name>            organization named in the title'
+
+- id: sievant.report-no-cta
+  text: sievant report --no-cta leaves out the footer offering a professional review.
+  source:
+    repo: sievant
+    path: cmd/sievant/report.go
+    lines: '49'
+    commit: efa96682872b476c786a6d0f507aa17254000ac0
+    quote: '--no-cta                leave out the footer offering a professional review'
+
+- id: tokvera.scan-no-cta
+  text: tokvera scan --no-cta leaves the "Want this fixed?" footer out.
+  source:
+    repo: tokvera
+    path: cmd/tokvera/scan.go
+    lines: '65'
+    commit: ca4ed28d816d01ffee0b0707a2d6b2cdf4387735
+    quote: '--no-cta               leave the "Want this fixed?" footer out'
+
+- id: halotrcer.check-no-cta
+  text: halotrcer check --no-cta leaves out the footer call to action.
+  source:
+    repo: halotrcer
+    path: cmd/halotrcer/check.go
+    lines: '52'
+    commit: a3561bfff5794bb60623faa70c439701077d1ec7
+    quote: '--no-cta                  leave out the footer call to action'

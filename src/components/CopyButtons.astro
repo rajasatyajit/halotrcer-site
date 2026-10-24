@@ -1,0 +1,9 @@
+---
+// Loads the copy-button island. Every page or component with [data-copy] buttons includes
+// this instead of importing the island, so it stays one module (a second importer would
+// split it into a shared chunk: a chained request that npm run budget rejects).
+---
+
+<script>
+  import '../islands/copy.ts';
+</script>

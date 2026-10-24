@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Claim from '../../../components/Claim.astro';
+import { getFlags } from '../../../config/flags.ts';
+import { BOOKING_URL, url } from '../../../config/site.ts';
+
+const { launched } = getFlags();
+---
+
+<BaseLayout
+  title="For agencies and consultancies"
+  description="Run Tokvera and Sievant for your clients: name the client in the Sievant report and leave our call-to-action footers out. Talk to us about referrals."
+>
+  <div class="paper-section paper-page">
+    <header class="container page-head">
+      <h1>For agencies and consultancies</h1>
+      <p class="lede">
+        You build and run AI products for clients. Tokvera and Sievant{' '}
+        {launched ? 'are both' : 'will both be'} Apache-2.0.
+      </p>
+    </header>
+
+    <section class="container section" aria-labelledby="run">
+      <h2 id="run">Run it for your clients</h2>
+      <p>
+        Run <a href={url('tokvera')}>Tokvera</a> against a client's inference endpoint and
+        <a href={url('sievant')}>Sievant</a> against their agents' tools, then hand over the
+        reports. See what a report looks like first:
+      </p>
+      <ul class="checklist">
+        <li>
+          <a href={url('tokvera', '/sample-report')}>Tokvera sample report</a>
+        </li>
+        <li>
+          <a href={url('sievant', '/sample-report')}>Sievant sample report</a>
+        </li>
+      </ul>
+    </section>
+
+    <section class="container section" aria-labelledby="carry">
+      <h2 id="carry">What the report can carry</h2>
+      <ul class="checklist">
+        <li>
+          <Claim id="sievant.report-org" />
+        </li>
+        <li>
+          <Claim id="sievant.report-no-cta" />
+        </li>
+        <li>
+          <Claim id="tokvera.scan-no-cta" />
+        </li>
+        <li>
+          <Claim id="halotrcer.check-no-cta" />
+        </li>
+      </ul>
+      <p>There is no logo or branding option.</p>
+    </section>
+
+    <section class="container section" aria-labelledby="referrals">
+      <h2 id="referrals">Talk to us about referrals</h2>
+      <p>
+        If a client needs more than a report, the engagements on the
+        <a href={url('www', '/pricing')}>pricing page</a> are open to them. Talk to us about how
+        referrals would work for you.
+      </p>
+      <div class="button-row">
+        <a class="button" href={BOOKING_URL}>
+          Book a call
+        </a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

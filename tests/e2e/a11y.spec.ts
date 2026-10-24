@@ -26,6 +26,9 @@ for (const scheme of ['light', 'dark'] as const) {
 test('explicit dark theme from the toggle persists across pages', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' });
   await page.goto(ORIGINS.www + '/');
+  // On phones the toggle sits in the header menu.
+  const menu = page.getByRole('navigation', { name: 'Main' }).getByText('Menu', { exact: true });
+  if (await menu.isVisible()) await menu.click();
   const toggle = page.getByRole('button', { name: /^Theme/ });
   await expect(toggle).toBeVisible();
   await toggle.click();
@@ -53,7 +56,9 @@ test.describe('without JavaScript', () => {
       await expect(page.locator('h1')).toBeVisible();
       await expect(page.locator('main')).not.toBeEmpty();
       // The theme toggle needs JS: it must not be shown as a dead control.
-      await expect(page.locator('[data-theme-toggle]')).toBeHidden();
+      // (Two copies: the header's and, on phones, the menu's.)
+      for (const toggle of await page.locator('[data-theme-toggle]').all())
+        await expect(toggle).toBeHidden();
     });
   }
 });

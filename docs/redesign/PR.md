@@ -1,0 +1,243 @@
+# M8: The AI Case File
+
+Branch `m8-redesign`, 59 commits ahead of `main`. Spec: `docs/redesign/DESIGN.md` (owner-approved
+2026-10-23, mockup in `docs/redesign/reference/`). Plan:
+`docs/superpowers/plans/2026-10-23-m8-case-file.md`. Every sentence I wrote is listed in
+`docs/redesign/new-copy.md`, with the sample field or claim it relies on.
+
+## Summary
+
+- **Case boards on all three homes.** A cork board with clue cards, red yarn, a case tag and a
+  sticky note. www shows six clues from the Tokvera and Sievant samples. Tokvera and Sievant show
+  four each.
+  - Every figure and every number in a card sentence is computed from `content/samples/*.json`
+    (`src/lib/clues.ts`), never typed.
+  - Every card carries its own "Simulated demo run" stamp.
+  - "Open your case" books a call. "Copy this case file" copies a one-paragraph summary; a
+    closed "What gets copied" disclosure shows the text first.
+- **Header and footer.** A wood header with per-host navigation and "Book a call". The phone menu
+  is a `<details>`, so it works without JS, and the theme toggle lives in it. The footer's
+  simulated-data line appears only on pages that show sample data.
+- **Paper pages.**
+  - /pricing ("Hire the detectives", short price cards, "Before you book"), /audit, /security
+    (now with a "For your security questionnaire" list) and the 404s.
+  - Sample reports are case-file sheets, each section stamped. The Sievant sample report leads
+    with what the Agent Security Review delivers and links a JSON download of the sample.
+  - Docs, blog and legal pages get a paper body with reading sizes.
+- **New page `/agencies`.** The client-name and no-CTA flags, each from a claim. It also says
+  plainly that there is no logo or branding option, and has "Talk to us about referrals".
+- **Continuity answer** on the home, /pricing, /security and both FAQs: "will be" before launch,
+  "are" after.
+- **One web font:** a Permanent Marker subset (16,196 B, not preloaded, `font-display:
+optional`), re-cut with `npm run font:marker`. Body and card text use system fonts.
+- **Docs.**
+  - `SECURITY.md` is synced into both product docs. Text about GitHub's private vulnerability
+    reporting is held back until launch.
+  - Code blocks are focusable, named groups that keep their sideways scroll.
+- **New checks:**
+  - `check:stamps` (every sample frame and clue card stamped, no empty stamp);
+  - `check:marker` (Marker text inside the subset; names the missing glyphs);
+  - `board-numbers.test.ts` (every board number derived from the samples, plus a mutation test);
+  - URL permanence now covers the sample JSON download.
+- **Removed:** `Hero.astro`, the price card's full-size form and the `--focus` token, none of
+  them used.
+
+## Owner decisions in this branch
+
+1. **One font: Permanent Marker, subset (2026-10-23).**
+   - It is the only web font, for display only, self-hosted, not preloaded.
+   - The subset is the glyphs the built pages set in Marker plus agreed extras (digits, A–F,
+     punctuation, `→ × % $`, no-break space).
+   - `npm run font:marker` rebuilds it from both modes of all three hosts. `check:marker` fails
+     on a missing glyph and says to run it.
+   - The reasons and run-by-run figures are in `docs/fonts.md` and DESIGN §3.
+2. **LCP gate: under 1.4 s as the median of 3 Lighthouse runs per page (2026-10-23).**
+   - First a median of 3 replaced single runs, because single runs vary by more than the margins.
+   - The limit went from 1.3 s to 1.4 s. With Marker, simulated LCP lands on a 1.21 / 1.36 /
+     1.51 s step; 30 runs after subsetting were all ≤ 1.36 s. So 1.4 s passes the current font
+     and still fails if it adds another step.
+   - Recorded in `lighthouserc.cjs`, CLAUDE.md, PLAN.md and DESIGN §7.
+3. **Pre-launch continuity wording (2026-10-23).** Before launch: "Tokvera and Sievant will be
+   Apache-2.0, each a single binary that will be yours to keep and run with no account. Halotrcer
+   will be Apache-2.0 too; it will install and run those two binaries, which keep working without
+   it." After launch: "are", "you keep", "installs and runs". Two owner claims
+   (`www.continuity.prelaunch`, `www.continuity`); tested in both modes.
+
+4. **Copy decisions on 18f4008 (2026-10-24).**
+   - `/agencies` intro: "Tokvera and Sievant will both be Apache-2.0." before launch and "are
+     both" after, as on `/pricing`, restating `tokvera.license` and `sievant.license`; no new
+     claim. Tested in both modes.
+   - Two new claims, owner-approved quotes from the same `file:line` as existing ones:
+     `sievant.block-credential-short` ("The call never reaches the server.", Sievant
+     `README.md:53-54`) and `tokvera.measures-caching` ("whether repeated prompts are worth
+     caching", Tokvera `README.md:7-10`).
+   - The credential clue card's sentence is the first claim; the calculator's last line is "Run
+     Tokvera to measure" plus the second. Both render through `<Claim>`, so the claim scan
+     covers them.
+
+5. **CI fixes after the first manual run (2026-10-24).**
+   - Product headlines (Tokvera, Sievant homes) are 1.75rem below 48rem, down from 2rem. On
+     Ubuntu, `system-ui` is DejaVu Sans, wide enough to wrap the header to two rows; the Tokvera
+     home's second case button then ended at 662 px on a 320 × 640 screen. A new test repeats
+     the first-screen check on all three homes with DejaVu Sans forced as the body font.
+   - WebKit serialises the computed font family without quotes; the two Marker checks accept
+     the name with or without them. Nothing else changed in those tests.
+
+Earlier owner decisions this branch carries:
+
+- **O1:** "Talk to us about referrals" only, no white-label.
+- **O2:** the continuity wording.
+- **O3:** SECURITY.md synced, email-only before launch.
+- **O4:** screenshots out of git, regenerated by `npm run shots`.
+- Prices stay "From $X".
+- The sievant posture JSON is published, labelled.
+
+## Gates and results (local, at 0ab89b1; `docs/acceptance.md`, "M8 acceptance")
+
+The copy change after acceptance (decision 4) was re-gated locally on both builds: lint,
+typecheck, 366 unit tests, `verify:claims` (79 quotes), every `check:dist` gate,
+`check:prelaunch` / `check:launched` (126 commands), internal links and URL permanence, plus the
+calculator, board, case-file and paper Playwright specs in Chromium (114 passed per mode). The
+full Lighthouse and three-browser runs below are from 0ab89b1 and were not repeated; CI runs
+both.
+
+Every run started at a 1-minute load average below 1.0. Pre-launch is `npm run build:prelaunch`;
+launched is `npm run build:launched-fixture`, as in CI.
+
+**Lighthouse** (mobile, `lhci autorun` with `lighthouserc.cjs`, 3 runs per page, 23 key pages
+× 2 modes): all 46 page runs passed.
+
+- 100 in performance, accessibility and best practices on every run, with CLS 0 and TBT 0 ms.
+  SEO is 100 everywhere except the two `noindex` pages (404, /book), where the config doesn't
+  check it.
+- LCP medians were 1.21–1.36 s against the 1.4 s limit. Most pages sit on the 1.36 s step, a
+  margin of about 40 ms.
+
+| Page                       | LCP median, pre-launch | LCP median, launched |
+| -------------------------- | ---------------------- | -------------------- |
+| www/                       | 1.36 s                 | 1.36 s               |
+| www/404                    | 1.21 s                 | 1.36 s               |
+| www/agencies               | 1.21 s                 | 1.21 s               |
+| www/audit                  | 1.36 s                 | 1.36 s               |
+| www/blog                   | 1.21 s                 | 1.21 s               |
+| www/book                   | 1.21 s                 | 1.21 s               |
+| www/calculator             | 1.36 s                 | 1.36 s               |
+| www/install                | 1.21 s                 | 1.36 s               |
+| www/pricing                | 1.21 s                 | 1.21 s               |
+| www/scoring                | 1.21 s                 | 1.21 s               |
+| www/security               | 1.21 s                 | 1.21 s               |
+| tokvera/                   | 1.36 s                 | 1.36 s               |
+| tokvera/404                | 1.21 s                 | 1.36 s               |
+| tokvera/calculator         | 1.36 s                 | 1.36 s               |
+| tokvera/docs/scan          | 1.36 s                 | 1.36 s               |
+| tokvera/sample-report      | 1.36 s                 | 1.36 s               |
+| tokvera/scoring            | 1.21 s                 | 1.21 s               |
+| sievant/                   | 1.36 s                 | 1.36 s               |
+| sievant/404                | 1.21 s                 | 1.36 s               |
+| sievant/docs/scan-and-wrap | 1.36 s                 | 1.36 s               |
+| sievant/owasp-llm-top-10   | 1.36 s                 | 1.36 s               |
+| sievant/sample-report      | 1.36 s                 | 1.36 s               |
+| sievant/scan               | 1.36 s                 | 1.36 s               |
+
+**Checks** (both builds unless stated):
+
+| Gate                                          | Result                                                                                                                                               |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit tests (Vitest)                           | 364 passed                                                                                                                                           |
+| Lint (ESLint, Stylelint, Prettier), typecheck | pass                                                                                                                                                 |
+| HTML, headers/CSP, claims scan, SEO, JSON-LD  | pass                                                                                                                                                 |
+| `check:stamps`, `check:marker`                | pass                                                                                                                                                 |
+| Budgets                                       | pre-launch: largest JS 2.5 KB gz, largest page 34.2 KB; launched: largest JS 3.7 KB gz, largest page 48.2 KB; docs search 24.4 KB JS at first search |
+| `check:prelaunch` / `check:launched`          | pass (126 commands present, scripts byte-identical)                                                                                                  |
+| Internal links, URL permanence                | pass, 63 URLs including the sample JSON                                                                                                              |
+| `verify:claims`                               | 77 quotes verified                                                                                                                                   |
+| `check:external`                              | 23 links OK (at 3f8158e)                                                                                                                             |
+
+**Browsers** (full Playwright suite: axe in both themes, no-JS, keyboard, board, fonts, 320 px
+layout, email wrapping, text blocks, calculator, picker, docs):
+
+| Browser  | Pre-launch                                                  | Launched   |
+| -------- | ----------------------------------------------------------- | ---------- |
+| Chromium | 294 passed, 22 skipped (picker tests need a launched build) | 316 passed |
+| Firefox  | 294 passed, 22 skipped                                      | 316 passed |
+| WebKit   | not run (see below)                                         | not run    |
+
+**Honesty:**
+
+- The claims scan runs on every page.
+- Every board figure and every number in a card sentence is derived from the samples, and the
+  mutation test proves it.
+- Every clue card and sample frame says "Simulated demo run".
+- No customers, logos, testimonials, counts, benchmarks or savings.
+
+## WebKit
+
+WebKit was not run locally. It won't launch on the build machine, which is missing `libicu74`
+and `libflite1`, Ubuntu libraries this Arch Linux host doesn't have. Every "failure" in the
+attempted run was the browser failing to start, not a test result. Installing them needs `sudo`
+and Ubuntu packages, so it wasn't done.
+
+CI runs WebKit on ubuntu-24.04, but the `e2e-browsers` job (Firefox and WebKit, both modes) runs
+only on `main` and on manual runs (`if:` at `.github/workflows/ci.yml:170`). It does not run for
+a push of `m8-redesign` or for the PR. To see WebKit before merging, start a manual run on the
+branch: `gh workflow run ci.yml --ref m8-redesign`.
+
+Note on that manual run: it shares the concurrency group `ci-refs/heads/m8-redesign` with the
+branch's push run (`cancel-in-progress: true`). Started while the push run is still going, it
+cancels it. The manual run includes every job, so either wait for the push run to finish or let
+the manual run stand in for it.
+
+## Rulings made during the build
+
+These are decisions the plan or spec left open. Each is in the plan's progress log.
+
+- **Fonts:**
+  - `font-display: optional` rather than `swap`, for CLS 0.
+  - Our own CSS family name (`Case Marker`), so a locally installed copy can't be swapped in
+    after the first paint.
+  - DESIGN §3 says "not preloaded", because the preload measured slower.
+  - A clue title or figure from the samples outside the subset is set in the body face.
+- **Tokens:** the board's fixed ink is `--board-ink`, and the old page tokens map onto the paper
+  palette.
+- **Header:** on phones the theme toggle lives in the menu. At 320 px "Book a call" wraps to a
+  second row.
+- **Board:**
+  - Empty grid slots aren't rendered, so the product boards are 7-item lists.
+  - The product subject-card lines, the reworded clue sentences around the figures, and the
+    "{Tool} sample report" link text are my copy (`new-copy.md`).
+  - The no-digit test allows case numbers and "p99".
+  - The board-fit test allows the 12 px corner sweep of the tilted cards.
+- **Homes:**
+  - One shared `CaseOpening` component for all three.
+  - The product heroes dropped their small label above the headline (it failed contrast on wood)
+    and their old links.
+  - Product headlines are set smaller so the buttons fit a 320 px screen.
+  - The old home sections were removed.
+- **Pages:**
+  - Example values in the calculator are marked by `isExample()` (`ex=1`) rather than by
+    changing `parse()`.
+  - /pricing uses the short price cards plus "Before you book", and gained the pricing share
+    image.
+  - The 404 heading is "No such page on this board".
+  - The /agencies referral sentences are my wording; the intro's second sentence is yours (decision 4).
+  - A `surface` prop puts each page on paper or wood, including /scan, OWASP and the
+    integrations pages.
+- **Docs sync:** the sync also pulled newer versions of 36 product docs. Those were reverted, to
+  be done as a separate refresh.
+- **Review I3:** the Marker subset stays, as decided; `font:marker` makes adding a glyph one
+  command.
+- **Testing:**
+  - The 320 px layout test runs without phone emulation and on a second load.
+  - The screenshots warm the cache first and include first visits.
+  - "Where your data goes" was left whole.
+
+Deferred minors: none; the six from the branch review were fixed in the last round.
+
+## Owner's manual steps
+
+- Push `m8-redesign` and open the PR. Start the manual CI run above if you want WebKit before
+  merging.
+- Review `new-copy.md`. Every sentence in it now has a claim, a sample field or "no factual
+  claim" behind it.
+- Merge to `main`. The `main` push runs Firefox and WebKit in both modes.
+- Nothing new on DNS, Pages projects, the booking link or Search Console.

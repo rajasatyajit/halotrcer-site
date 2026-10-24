@@ -1,0 +1,13 @@
+---
+// "Case HAL-001 · …": the case number in marker, the rest typed.
+interface Props {
+  text: string;
+}
+
+const [number, ...rest] = Astro.props.text.split(' · ');
+---
+
+<p class="case-tag">
+  <b>{number}</b>
+  {rest.join(' · ')}
+</p>

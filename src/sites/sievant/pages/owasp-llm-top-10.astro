@@ -22,6 +22,8 @@ const controlsFor = (id: string) => m.controls.filter((c) => c.categories.includ
 <BaseLayout
   title="Sievant and the OWASP LLM Top 10"
   description="Which OWASP Top 10 for LLM Applications categories Sievant's controls address, and which they do not. A mapping of controls to categories, not a certification."
+
+  surface="paper"
 >
   <header class="container page-head">
     <p class="eyebrow">OWASP LLM Top 10 ({m.edition})</p>
@@ -34,7 +36,11 @@ const controlsFor = (id: string) => m.controls.filter((c) => c.categories.includ
     </div>
   </header>
 
-  <div class="container" data-sample={`${source.repo}:${source.path}@${source.commit}`}>
+  <div
+    class="container"
+    data-sample={`${source.repo}:${source.path}@${source.commit}`}
+    data-simulated="false"
+  >
     <p class="note">
       <strong>{m.disclaimer}</strong>
     </p>

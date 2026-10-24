@@ -1,0 +1,31 @@
+---
+// The 404 page body for every host: a paper card with the way back to the home page and to
+// the sample report(s) of that host.
+import { SITE_NAMES, url, type SiteId } from '../config/site.ts';
+
+interface Props {
+  site: SiteId;
+}
+
+const { site } = Astro.props;
+const reports: SiteId[] = site === 'www' ? ['tokvera', 'sievant'] : [site];
+---
+
+<div class="paper-section paper-page">
+  <div class="container">
+    <section class="not-found" aria-labelledby="not-found-title">
+      <h1 id="not-found-title">No such page on this board</h1>
+      <p>The page you asked for isn’t here. These are:</p>
+      <ul class="checklist">
+        <li>
+          <a href={url(site)}>The {SITE_NAMES[site]} home page</a>
+        </li>
+        {reports.map((r) => (
+          <li>
+            <a href={url(r, '/sample-report')}>The {SITE_NAMES[r]} sample report</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</div>

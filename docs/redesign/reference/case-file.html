@@ -1,0 +1,152 @@
+<title>The AI Case File</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Special+Elite&family=Karla:wght@400;600;800&display=swap">
+<style>
+/* Layout: a detective's cork board. Polaroid-style clue cards pinned in a 3x3 grid around "Your AI", joined by red yarn; stacks on phones. Single deliberate look. */
+:root{
+  --cork:#B98A55; --cork-dot:#A2763F; --frame:#3B2A1A;
+  --card:#FFFDF6; --ink:#1F1A14; --faded:#5E544A; --yarn:#C1121F; --pin:#D62828; --sticky:#FFE45C; --tag:#F7F2E2;
+  --marker:'Permanent Marker','Comic Sans MS',cursive;
+  --type:'Special Elite','Courier New',monospace;
+  --body:'Karla',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{background:var(--frame);color:var(--card);font:17px/1.55 var(--body)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--sticky)}
+:focus-visible{outline:3px solid var(--sticky);outline-offset:3px}
+h1,h2,h3{margin:0;text-wrap:balance}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-block:18px}
+.brand{font:400 26px var(--marker);text-decoration:none;color:var(--card)}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 24px;border-radius:4px;font:800 16px var(--body);text-decoration:none}
+.btn:focus-visible{outline:3px solid var(--sticky);outline-offset:3px}
+.btn-main{background:var(--yarn);color:#FFFFFF}
+.btn-ghost{border:2px solid var(--card);color:var(--card)}
+.intro{padding-block:12px 24px}
+.intro h1{font:400 clamp(44px,7vw,96px)/1 var(--marker);color:var(--card)}
+.intro h1 span{color:var(--sticky)}
+.intro p{margin:16px 0 0;font-size:19px;color:#E6D9C6;max-width:40em}
+.boardframe{border:14px solid #5A3D22;border-radius:6px;box-shadow:inset 0 0 40px rgba(0,0,0,.35),0 30px 60px rgba(0,0,0,.5);
+  background-color:var(--cork);background-image:radial-gradient(var(--cork-dot) 1.2px,transparent 1.6px),radial-gradient(#C99B66 1px,transparent 1.4px);background-size:14px 14px,23px 23px;background-position:0 0,7px 9px}
+.board{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(200px,1fr));gap:24px;padding:28px;min-height:720px}
+.yarn{position:absolute;inset:28px;width:calc(100% - 56px);height:calc(100% - 56px);pointer-events:none}
+.yarn line{stroke:var(--yarn);stroke-width:2.4;vector-effect:non-scaling-stroke}
+.slot{display:grid;place-items:center;position:relative;z-index:1;min-width:0}
+.clue{position:relative;width:100%;max-width:300px;background:var(--card);color:var(--ink);padding:16px 16px 18px;box-shadow:0 10px 18px rgba(0,0,0,.35);font-family:var(--type)}
+.clue::before{content:"";position:absolute;top:-9px;left:50%;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FF8A8A,var(--pin) 55%,#7A0F12);box-shadow:0 3px 4px rgba(0,0,0,.4)}
+.clue .kind{display:inline-block;font:400 13px var(--marker);letter-spacing:.04em;color:var(--yarn);border:2px solid var(--yarn);padding:1px 8px;transform:rotate(-3deg)}
+.clue h3{font:400 24px/1.1 var(--marker);margin-top:8px}
+.clue p{margin:8px 0 0;font-size:15px;line-height:1.45}
+.clue .src{display:block;margin-top:8px;font-size:12px;color:var(--faded)}
+.r1{transform:rotate(-2.5deg)} .r2{transform:rotate(2deg)} .r3{transform:rotate(-1.2deg)} .r4{transform:rotate(1.6deg)} .r5{transform:rotate(-2deg)} .r6{transform:rotate(2.6deg)}
+.center .clue{max-width:280px;background:#1F1A14;color:var(--card);text-align:center;padding:22px 18px}
+.center .clue h3{font-size:40px;color:var(--sticky)}
+.center .clue p{color:#E6D9C6}
+.tagcard{background:var(--tag);color:var(--ink);font:400 15px var(--type);padding:10px 14px;transform:rotate(-1deg);box-shadow:0 6px 12px rgba(0,0,0,.3);text-align:center}
+.tagcard b{display:block;font:400 22px var(--marker);color:var(--yarn)}
+.sticky{background:var(--sticky);color:var(--ink);font:400 20px/1.2 var(--marker);padding:18px;width:100%;max-width:240px;transform:rotate(3deg);box-shadow:0 8px 14px rgba(0,0,0,.3)}
+@media (prefers-reduced-motion:no-preference){.clue,.sticky,.tagcard{transition:transform .2s}.clue:hover{transform:rotate(0) scale(1.03)}}
+@media (max-width:760px){.board{grid-template-columns:minmax(0,1fr);grid-template-rows:none;min-height:0}.yarn{display:none}.r1,.r2,.r3,.r4,.r5,.r6{transform:none}}
+.ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.note{font:13px var(--type);color:#E6D9C6;margin-top:10px}
+.fees{background:var(--card);color:var(--ink)}
+.fees .inner{padding-block:56px}
+.fees h2{font:400 clamp(38px,5.4vw,68px)/1 var(--marker)}
+.prices{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:22px}
+.price{border:2px solid var(--ink);padding:20px;display:flex;flex-direction:column;gap:6px;font-family:var(--type)}
+.price.both{background:var(--ink);color:var(--card)}
+.price small{font:400 14px var(--marker);color:var(--yarn)}
+.price.both small{color:var(--sticky)}
+.price h3{font:800 18px var(--body)}
+.price .amt{font:400 34px var(--marker)}
+.price .dur{font-size:15px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;margin-top:40px}
+.two h3{font:400 24px var(--marker)}
+.two p{margin:8px 0 0;color:#3E352C}
+.contact{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:24px}
+.email{font:400 16px var(--type);border:2px dashed var(--ink);padding:10px 14px;user-select:all}
+.fees .btn-ghost{border-color:var(--ink);color:var(--ink)}
+.fees .note{color:var(--faded)}
+footer{padding-block:24px 40px;font:14px var(--type);color:#C9B79E}
+</style>
+
+<header class="wrap top">
+  <a class="brand" href="#top">Halotrcer</a>
+  <a class="btn btn-ghost" href="#fees" style="min-height:44px">Book a call</a>
+</header>
+
+<main id="top">
+<section class="wrap intro">
+  <h1>Who's draining <span>your AI?</span></h1>
+  <p>Is your AI slow, expensive or leaking? Halotrcer puts two detectives on the case, on your own system: Tokvera on your LLM endpoint and Sievant on your agents' tools. Here's what they pinned up after one simulated run.</p>
+</section>
+
+<section class="wrap">
+  <div class="boardframe">
+    <div class="board" aria-label="Detective board of findings from a simulated run">
+      <svg class="yarn" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="500" y1="300" x2="167" y2="100"></line>
+        <line x1="500" y1="300" x2="833" y2="100"></line>
+        <line x1="500" y1="300" x2="167" y2="300"></line>
+        <line x1="500" y1="300" x2="833" y2="300"></line>
+        <line x1="500" y1="300" x2="167" y2="500"></line>
+        <line x1="500" y1="300" x2="833" y2="500"></line>
+        <line x1="167" y1="100" x2="167" y2="300"></line>
+        <line x1="833" y1="300" x2="833" y2="500"></line>
+      </svg>
+      <div class="slot"><article class="clue r1"><span class="kind">Suspect #1</span><h3>Repeated prompts</h3><p>16 of 40 prompts seen twice. Paid for both times.</p><span class="src">Tokvera</span></article></div>
+      <div class="slot"><div class="tagcard"><b>Case HAL-001</b>Example Co · simulated demo run · fictional system</div></div>
+      <div class="slot"><article class="clue r2"><span class="kind">Suspect #2</span><h3>Rush hour</h3><p>First token: 11 ms alone. 201 ms with 16 users at once.</p><span class="src">Tokvera · p99</span></article></div>
+      <div class="slot"><article class="clue r3"><span class="kind">Evidence</span><h3>5 of 60 requests failed</h3><p>HTTP 429. Turned away at the door.</p><span class="src">Tokvera</span></article></div>
+      <div class="slot center"><article class="clue"><h3>Your AI</h3><p>Slow, expensive or leaking? All three leave fingerprints.</p></article></div>
+      <div class="slot"><article class="clue r4"><span class="kind">Accomplice</span><h3>MCP server B</h3><p>Bypasses every control. No policy, no redaction, no audit.</p><span class="src">Sievant</span></article></div>
+      <div class="slot"><article class="clue r5"><span class="kind">Caught</span><h3>Credential in arguments</h3><p>aws_access_key. Call blocked.</p><span class="src">Sievant</span></article></div>
+      <div class="slot"><div class="sticky">Detectives on this case: Tokvera + Sievant. One report, ranked by what to fix first.</div></div>
+      <div class="slot"><article class="clue r6"><span class="kind">Alibi</span><h3>MCP server A</h3><p>Behind Sievant. 13 of 19 calls blocked, 3 results redacted.</p><span class="src">Sievant</span></article></div>
+    </div>
+  </div>
+  <div class="ctas">
+    <a class="btn btn-main" href="#fees">Open your case</a>
+    <button class="btn btn-ghost" id="copyCase" type="button">Copy this case file</button>
+  </div>
+  <p class="note" id="copyNote"></p>
+</section>
+
+<section class="fees" id="fees" style="margin-top:56px">
+  <div class="wrap inner">
+    <h2>Hire the detectives</h2>
+    <div class="prices">
+      <div class="price"><small>Your bill or latency</small><h3>AI Performance &amp; Observability Audit</h3><span class="amt">From $3,500</span><span class="dur">About 2 weeks</span></div>
+      <div class="price"><small>Your customer's security review</small><h3>Agent Security Review</h3><span class="amt">From $7,500</span><span class="dur">1–2 weeks</span></div>
+      <div class="price both"><small>Both detectives</small><h3>AI Cost &amp; Security Audit</h3><span class="amt">From $9,500</span><span class="dur">2–3 weeks</span></div>
+    </div>
+    <div class="two">
+      <div><h3>What stays on your machine</h3><p>Your data. No account, no telemetry. The tools talk only to the endpoint you point them at.</p></div>
+      <div><h3>What if you stop maintaining it?</h3><p>One maintainer today. Tokvera and Sievant are Apache-2.0, each a single binary you keep and run with no account. Halotrcer is Apache-2.0 too; it installs and runs those two binaries, which keep working without it.</p></div>
+    </div>
+    <div class="contact">
+      <span class="email" id="email">satyajit.rajaraman@halotrcer.com</span>
+      <button class="btn btn-ghost" id="copyEmail" type="button">Copy email</button>
+      <span class="note" id="emailNote" style="margin:0"></span>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="wrap">$ halotrcer check · numbers from the tools' own simulated test runs on a fictional system</footer>
+
+<script>
+(function () {
+  function copy(text, id, ok) {
+    var el = document.getElementById(id);
+    try { navigator.clipboard.writeText(text).then(function () { el.textContent = ok; }, function () { el.textContent = 'Copy blocked here: select the text instead.'; }); }
+    catch (e) { el.textContent = 'Copy blocked here: select the text instead.'; }
+  }
+  document.getElementById('copyCase').addEventListener('click', function () {
+    copy('Case file on my AI (simulated demo run): suspect #1 repeated prompts (16 of 40 paid twice), suspect #2 rush hour (first token 11 → 201 ms), 5 of 60 requests failed, 1 MCP server with no security. Who is draining yours? https://www.halotrcer.com', 'copyNote', 'Copied. Paste it anywhere.');
+  });
+  document.getElementById('copyEmail').addEventListener('click', function () { copy(document.getElementById('email').textContent, 'emailNote', 'Copied.'); });
+})();
+</script>

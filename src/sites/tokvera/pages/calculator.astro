@@ -4,7 +4,7 @@ import Claim from '../../../components/Claim.astro';
 import Calculator from '../../../components/Calculator.astro';
 import ShareButton from '../../../components/ShareButton.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
-import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+import { priceLabel, serviceFor } from '../../../lib/pricing.ts';
 
 const audit = serviceFor('performance-audit');
 ---
@@ -12,6 +12,7 @@ const audit = serviceFor('performance-audit');
 <BaseLayout
   title="AI bill leak calculator"
   description="Before you run a Tokvera scan, estimate your monthly LLM API spend and the part that goes on repeated, uncached input, from your own volumes and prices."
+  ogStamp="Estimate · your own inputs"
 >
   <header class="container page-head">
     <p class="eyebrow">Calculator</p>
@@ -37,7 +38,7 @@ const audit = serviceFor('performance-audit');
     </p>
     <p>The {audit.name} instruments your production traffic and leaves a ranked fix list.</p>
     <p data-owner-source="content/pricing.md">
-      From {formatPrice(audit.from)}, {audit.duration.toLowerCase()}.
+      {priceLabel(audit)}, {audit.duration.toLowerCase()}.
     </p>
     <div class="button-row">
       <a class="button" href={BOOKING_URL}>

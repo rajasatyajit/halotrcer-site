@@ -5,7 +5,7 @@ import { navFor } from '../data/nav.ts';
 import { canonicalPath } from '../lib/paths.ts';
 
 const { site } = getFlags();
-const items = navFor(site);
+const { items, cta } = navFor(site);
 const here = url(site, canonicalPath(Astro.url.pathname));
 ---
 
@@ -13,12 +13,11 @@ const here = url(site, canonicalPath(Astro.url.pathname));
   <div class="container site-header__inner">
     <a class="wordmark" href={url(site)}>
       {SITE_NAMES[site]}
-      <span class="wordmark__dot" aria-hidden="true">
-        .
-      </span>
     </a>
+    {/* Two copies of the list, one shown per width (display:none hides the other from
+        assistive technology too). The phone copy is a <details>, so it opens without JS. */}
     <nav class="site-nav" aria-label="Main">
-      <ul>
+      <ul class="site-nav__list">
         {items.map((item) => (
           <li>
             <a href={item.href} aria-current={item.href === here ? 'page' : undefined}>
@@ -27,8 +26,29 @@ const here = url(site, canonicalPath(Astro.url.pathname));
           </li>
         ))}
       </ul>
+      <details class="site-nav__menu">
+        <summary>Menu</summary>
+        <ul>
+          {items.map((item) => (
+            <li>
+              <a href={item.href} aria-current={item.href === here ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+          <li>
+            <button class="theme-toggle" type="button" data-theme-toggle data-pending>
+              Theme
+            </button>
+          </li>
+        </ul>
+      </details>
     </nav>
-    <button class="theme-toggle" type="button" data-theme-toggle data-pending>
+    <a class="button button--ghost site-header__cta" href={cta.href}>
+      {cta.label}
+    </a>
+    {/* Phones get this button inside the menu instead (one row fits at 320 px). */}
+    <button class="theme-toggle site-header__theme" type="button" data-theme-toggle data-pending>
       Theme
     </button>
   </div>

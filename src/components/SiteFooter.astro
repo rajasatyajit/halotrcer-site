@@ -1,8 +1,16 @@
 ---
+import EmailAddress from './EmailAddress.astro';
 import { BOOKING_URL, CONTACT_EMAIL, url } from '../config/site.ts';
 import { getFlags } from '../config/flags.ts';
 
-const { analytics } = getFlags();
+const { analytics, launched } = getFlags();
+
+interface Props {
+  // Only on pages that show sample data, never under real prices or a visitor's estimates.
+  samples?: boolean;
+}
+
+const { samples = false } = Astro.props;
 ---
 
 <footer class="site-footer">
@@ -29,6 +37,9 @@ const { analytics } = getFlags();
         </li>
         <li>
           <a href={url('www', '/pricing')}>Pricing</a>
+        </li>
+        <li>
+          <a href={url('www', '/agencies')}>For agencies</a>
         </li>
         <li>
           <a href={url('www', '/scoring')}>How findings are ranked</a>
@@ -73,7 +84,9 @@ const { analytics } = getFlags();
           <a href={BOOKING_URL}>Book a call</a>
         </li>
         <li>
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+          <a href={`mailto:${CONTACT_EMAIL}`}>
+            <EmailAddress />
+          </a>
         </li>
       </ul>
     </div>
@@ -86,4 +99,10 @@ const { analytics } = getFlags();
       </p>
     </div>
   </div>
+  {samples && (
+    <p class="container site-footer__small">
+      {launched && '$ halotrcer check · '}Numbers from the tools' own simulated demo runs on
+      fictional systems.
+    </p>
+  )}
 </footer>

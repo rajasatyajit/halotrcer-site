@@ -1,4 +1,5 @@
 ---
+import EmailAddress from '../../../components/EmailAddress.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Claim from '../../../components/Claim.astro';
 import { BOOKING_URL, CONTACT_EMAIL, url } from '../../../config/site.ts';
@@ -7,6 +8,8 @@ import { BOOKING_URL, CONTACT_EMAIL, url } from '../../../config/site.ts';
 <BaseLayout
   title="About"
   description="Halotrcer makes Tokvera and Sievant, open-source tools for LLM inference cost and latency and for MCP agent security, and runs audits with them."
+
+  surface="paper"
 >
   <header class="container page-head">
     <h1>About Halotrcer</h1>
@@ -45,8 +48,10 @@ import { BOOKING_URL, CONTACT_EMAIL, url } from '../../../config/site.ts';
   <section class="container section" aria-labelledby="contact">
     <h2 id="contact">Contact</h2>
     <p>
-      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>, or{' '}
-      <a href={BOOKING_URL}>book a call</a>.
+      <a href={`mailto:${CONTACT_EMAIL}`}>
+        <EmailAddress />
+      </a>
+      , or <a href={BOOKING_URL}>book a call</a>.
     </p>
     <p class="source-note">
       <Claim id="about.copyright" />

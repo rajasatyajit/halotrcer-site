@@ -6,7 +6,7 @@ source:
   ref: main
   commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
 prelaunch: false
-order: 15
+order: 16
 ---
 
 Every `sievant` command exits with one of these codes. Codes 0–2 have

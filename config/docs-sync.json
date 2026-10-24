@@ -1,5 +1,5 @@
 {
-  "$comment": "Docs synced read-only from the product repos (git show <ref>:<path>). Owner decision Q8: main until launch, release tags after. `dir` syncs every .md in it except `exclude` (internal docs); `order` sets the docs navigation. Run `npm run sync:docs`, review, commit.",
+  "$comment": "Docs synced read-only from the product repos (git show <ref>:<path>). Owner decision Q8: main until launch, release tags after. `dir` syncs every .md in it except `exclude` (internal docs), plus `extra` repo-root files (SECURITY.md, synced as /docs/security; owner decision O3); `order` sets the docs navigation. Run `npm run sync:docs`, review, commit.",
   "halotrcer": {
     "repo": "halotrcer",
     "ref": "main",
@@ -10,6 +10,7 @@
     "ref": "main",
     "dir": "docs",
     "exclude": ["releasing.md", "development.md", "findings-schema-detail.md"],
+    "extra": ["SECURITY.md"],
     "order": [
       "scan",
       "scoring",
@@ -27,6 +28,7 @@
       "install",
       "exit-codes",
       "troubleshooting",
+      "security",
       "faq",
       "roadmap"
     ]
@@ -36,6 +38,7 @@
     "ref": "main",
     "dir": "docs",
     "exclude": ["releasing.md", "development.md"],
+    "extra": ["SECURITY.md"],
     "order": [
       "local-quickstart",
       "scan-and-wrap",
@@ -49,6 +52,7 @@
       "telemetry",
       "owasp-llm-mapping",
       "threat-model",
+      "security",
       "compatibility",
       "commands",
       "install",

@@ -34,6 +34,13 @@ test('computes from the inputs and puts them in the URL', async ({ page }) => {
   expect(new URL(page.url()).search).toBe(`?${QUERY}`);
 });
 
+test('closes on the caching claim, worded as a sentence', async ({ page }) => {
+  await page.goto(PAGE);
+  await expect(page.locator('.calc__label').filter({ hasText: 'Run Tokvera' })).toHaveText(
+    'In the currency of your prices. Run Tokvera to measure whether repeated prompts are worth caching.',
+  );
+});
+
 test('a shared link restores the inputs and the result', async ({ page }) => {
   await page.goto(`${PAGE}?${QUERY}`);
   await expect(page.locator('input[name="h"]')).toHaveValue('25');
@@ -105,5 +112,65 @@ test.describe('without JavaScript', () => {
     await expect(page.getByRole('button', { name: 'Calculate' })).toBeHidden();
     await expect(page.getByText('The calculator needs JavaScript.')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'How it is calculated' })).toBeVisible();
+  });
+});
+
+// Example values stay labelled wherever the result goes: on the card, in the link (ex=1)
+// and in the copied text. Editing a field makes them the visitor's own numbers again.
+test.describe('example label', () => {
+  const label = (page: import('@playwright/test').Page) => page.locator('[data-example-label]');
+
+  test('the example fill labels the result and the link', async ({ page }) => {
+    await page.goto(PAGE);
+    await expect(label(page)).toBeHidden();
+    await page.getByRole('button', { name: /example values \(not real prices\)/i }).click();
+    await expect(label(page)).toBeVisible();
+    await expect(label(page)).toHaveText('Example values (not real prices).');
+    expect(new URL(page.url()).searchParams.get('ex')).toBe('1');
+  });
+
+  test('typing after the example fill clears the example result, not just its label', async ({
+    page,
+  }) => {
+    await page.goto(PAGE);
+    await page.getByRole('button', { name: /example values \(not real prices\)/i }).click();
+    await expect(out(page, 'spend')).not.toHaveText('–');
+    await page.locator('input[name="r"]').fill('123');
+    // Example figures never stay on screen (or in the link, or the copy) without their label.
+    await expect(label(page)).toBeHidden();
+    await expect(out(page, 'spend')).toHaveText('–');
+    expect(new URL(page.url()).search).toBe('');
+    await page.getByRole('button', { name: 'Copy result and link' }).click();
+    await expect(page.locator('[data-copy-status]')).toHaveText('Calculate a result first.');
+  });
+
+  test('a shared example link shows the label; a plain link does not', async ({ page }) => {
+    await page.goto(`${PAGE}?${QUERY}&ex=1`);
+    await expect(label(page)).toBeVisible();
+    await page.goto(`${PAGE}?${QUERY}`);
+    await expect(label(page)).toBeHidden();
+  });
+
+  test.describe('copy', () => {
+    test.use({ permissions: CLIPBOARD_PERMISSIONS });
+    test('the copied text starts with the label', async ({ page }) => {
+      await recordClipboard(page);
+      await page.goto(`${PAGE}?${QUERY}&ex=1`);
+      await page.getByRole('button', { name: 'Copy result and link' }).click();
+      await expect
+        .poll(async () => (await copied(page)).split('\n')[0])
+        .toBe('Example values (not real prices).');
+    });
+  });
+
+  test.describe('without JavaScript', () => {
+    test.use({ javaScriptEnabled: false });
+    test('the card shows its estimate stamp and no example label', async ({ page }) => {
+      await page.goto(`${PAGE}?${QUERY}&ex=1`);
+      await expect(label(page)).toBeHidden();
+      const card = page.locator('[data-calc-result]');
+      await expect(card.locator('[data-stamp]')).toHaveText(/Estimate/);
+      await expect(card).toContainText('Estimate from your inputs: not a measurement');
+    });
   });
 });

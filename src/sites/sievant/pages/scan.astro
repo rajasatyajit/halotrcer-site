@@ -5,9 +5,12 @@ import InstallOrSoon from '../../../components/InstallOrSoon.astro';
 import ShareButton from '../../../components/ShareButton.astro';
 import SourceNote from '../../../components/SourceNote.astro';
 import Terminal from '../../../components/Terminal.astro';
+import SimulatedStamp from '../../../components/SimulatedStamp.astro';
+import Severity from '../../../components/Severity.astro';
 import { BOOKING_URL, url } from '../../../config/site.ts';
 import { docTable } from '../../../lib/md-table.ts';
-import { formatPrice, serviceFor } from '../../../lib/pricing.ts';
+import { priceLabel, serviceFor } from '../../../lib/pricing.ts';
+import { sample } from '../../../lib/samples.ts';
 import { getEntry } from 'astro:content';
 
 const rules = docTable('sievant/scan-and-wrap', 'Scanning MCP client configurations');
@@ -15,11 +18,28 @@ const doc = await getEntry('docs', 'sievant/scan-and-wrap');
 if (!doc) throw new Error('sievant/scan-and-wrap not synced');
 const src = doc.data.source;
 const review = serviceFor('agent-security-review');
+
+interface Finding {
+  rule: string;
+  severity: string;
+  title: string;
+  client: string;
+  server: string;
+  where: string;
+  detail: string;
+  fix: string;
+}
+const scan = sample<{ findings: Finding[] }>('sievant-scan');
+const example = scan.data.findings[0];
+if (!example) throw new Error('sievant-scan sample has no findings');
 ---
 
 <BaseLayout
   title="Is your MCP setup leaking?"
   description="Check the MCP servers your AI clients launch for hard-coded credentials, access to your whole disk and servers fetched from the internet. sievant scan reads, never changes."
+
+  surface="paper"
+  samples
 >
   <header class="container page-head">
     <p class="eyebrow">MCP configuration scan</p>
@@ -47,6 +67,28 @@ const review = serviceFor('agent-security-review');
       <p>
         <Claim id="sievant.scan-inspect" />
       </p>
+      <article
+        class="finding-card"
+        aria-label="Sample finding"
+        data-sample={`${scan.source.repo}:${scan.source.path}@${scan.source.commit}`}
+      >
+        <p class="finding-card__head">
+          <Severity level={example.severity} /> <code>{example.rule}</code>
+          <SimulatedStamp />
+        </p>
+        <h3>{example.title}</h3>
+        <p class="source-note">
+          {example.client} · {example.server} · <code>{example.where}</code>
+        </p>
+        <p>{example.detail}</p>
+        <p>
+          <em>Fix:</em> {example.fix}
+        </p>
+        <p class="source-note">
+          From <a href="/sample-report#scan-report">the sample scan report</a>, over synthetic MCP
+          client configurations.
+        </p>
+      </article>
     </div>
     <Terminal label="sievant scan" claimId="sievant.block-scan-out" note="From the README" />
   </section>
@@ -101,7 +143,7 @@ const review = serviceFor('agent-security-review');
       agents (observe first, then enforce) and a posture report for your customer’s security review.
     </p>
     <p data-owner-source="content/pricing.md">
-      From {formatPrice(review.from)}, {review.duration.toLowerCase()}.
+      {priceLabel(review)}, {review.duration.toLowerCase()}.
     </p>
     <div class="button-row">
       <a class="button" href={BOOKING_URL}>

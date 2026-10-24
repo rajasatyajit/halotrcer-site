@@ -27,7 +27,7 @@ if (env.LAUNCHED === 'true' && !env.RELEASE_DATA_DIR) {
 
 for (const site of targets) {
   console.log(`\n== building ${site}`);
-  const res = spawnSync('npx', ['astro', 'build'], {
+  const res = spawnSync('npx', ['--no-install', 'astro', 'build'], {
     stdio: 'inherit',
     env: { ...env, SITE_ID: site },
   });

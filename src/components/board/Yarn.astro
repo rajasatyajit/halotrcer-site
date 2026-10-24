@@ -1,0 +1,19 @@
+---
+// Red yarn from each clue to the centre: decoration only, hidden from assistive technology
+// and on phones (where the board is one column).
+interface Props {
+  lines: { x1: number; y1: number; x2: number; y2: number }[];
+}
+---
+
+<svg
+  class="yarn"
+  viewBox="0 0 1000 600"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  {Astro.props.lines.map((l) => (
+    <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />
+  ))}
+</svg>
