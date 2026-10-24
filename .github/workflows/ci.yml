@@ -78,6 +78,8 @@ jobs:
         run: npm run budget
       - name: Sample stamps and Marker glyphs
         run: npm run check:stamps && npm run check:marker
+      - name: No glued words (a missing {' '})
+        run: npm run check:glue
       - name: Pre-launch mode
         if: matrix.launched == 'false'
         run: npm run check:prelaunch

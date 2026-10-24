@@ -54,6 +54,21 @@ With these, every card and calculator sentence that restates a product claim is 
 `<Claim>`, and no sentence in this list is without a claim, a sample field or "no factual
 claim".
 
+## Spaces restored, no wording changed
+
+`npm run check:glue` (added on `m8-copy-fixes`) found seven places where a missing `{' '}` glued
+a word to a link or to emphasised text. These were already live on `main`; the wording is
+unchanged and only the space is back:
+
+- www `/agencies`: "on the pricing page";
+- www `/audit`: "(tagged deal risk)" and "on how findings are ranked";
+- www `/privacy`: "on the security page" and "see Cloudflare’s privacy policy";
+- www `/security`: "the OpenPGP key halotrcer-packages.asc";
+- www `/terms`: "pricing page are starting prices".
+
+"Run Tokvera against … and Sievant against …" on `/agencies` was glued the same way ("andSievant")
+on `main`; the change to that paragraph fixed it.
+
 ## Every host
 
 | Text                                                                                      | Relies on                                                                                                                 | Note                                                                                                                                           |
