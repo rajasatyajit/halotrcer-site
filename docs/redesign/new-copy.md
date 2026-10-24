@@ -29,7 +29,7 @@ Not listed, because I didn't write it:
   - the continuity answer (claims `www.continuity` and `www.continuity.prelaunch`, your wording
     and your "will be" decision);
   - "Talk to us about referrals" (O1);
-  - three sentences changed by your decisions of 2026-10-24 (see the next section).
+  - the text changed by your decisions of 2026-10-24 (see the next section).
 - **Product text:**
   - the synced `SECURITY.md` pages (`/docs/security` on both product sites);
   - the tools' own finding, gap and fix text, rendered from `content/samples/*.json`.
@@ -39,14 +39,15 @@ Where my text adapts owner wording, the Note column says so.
 
 ## Changed by your decisions of 2026-10-24
 
-These replaced three sentences of mine. Their wording is yours or a claim's, so they are not in
-the tables below.
+These replaced text of mine. Their wording is yours or a claim's, so they are not in the tables
+below.
 
-| Page                                  | Text now                                                                                                           | Source                                                                                                                                                                                                                         | Replaced (my sentence)                                                                       |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
-| www `/agencies` (intro)               | Before launch: Tokvera and Sievant will both be Apache-2.0. After launch: Tokvera and Sievant are both Apache-2.0. | Your wording, restating claims `tokvera.license` and `sievant.license`. No new claim. Plain text; "will both be" / "are both" by mode, the same pattern as `/pricing` (your decision of 2026-10-24, tested in both modes)      | These tools can go into your engagements, and the reports they write are yours to hand over. |
-| www and Sievant `/` (credential card) | The call never reaches the server.                                                                                 | New claim `sievant.block-credential-short`, an owner-approved quote from Sievant `README.md:53-54` (same source as `sievant.block-credential`). Rendered by `<Claim>`                                                          | Sievant stopped the call before it reached the tool.                                         |
-| www and Tokvera `/calculator`         | Run Tokvera to measure whether repeated prompts are worth caching.                                                 | "Run Tokvera" (the link) and "to measure" are your wording; the rest is new claim `tokvera.measures-caching`, an owner-approved quote from Tokvera `README.md:7-10` (same source as `tokvera.measures`). Rendered by `<Claim>` | Run Tokvera to measure whether your repeated prompts are worth caching.                      |
+| Page                                                  | Text now                                                                                                           | Source                                                                                                                                                                                                                         | Replaced (my sentence)                                                                       |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| www `/agencies` (intro)                               | Before launch: Tokvera and Sievant will both be Apache-2.0. After launch: Tokvera and Sievant are both Apache-2.0. | Your wording, restating claims `tokvera.license` and `sievant.license`. No new claim. Plain text; "will both be" / "are both" by mode, the same pattern as `/pricing` (your decision of 2026-10-24, tested in both modes)      | These tools can go into your engagements, and the reports they write are yours to hand over. |
+| www and Sievant `/` (credential card)                 | The call never reaches the server.                                                                                 | New claim `sievant.block-credential-short`, an owner-approved quote from Sievant `README.md:53-54` (same source as `sievant.block-credential`). Rendered by `<Claim>`                                                          | Sievant stopped the call before it reached the tool.                                         |
+| www and Tokvera `/calculator`                         | Run Tokvera to measure whether repeated prompts are worth caching.                                                 | "Run Tokvera" (the link) and "to measure" are your wording; the rest is new claim `tokvera.measures-caching`, an owner-approved quote from Tokvera `README.md:7-10` (same source as `tokvera.measures`). Rendered by `<Claim>` | Run Tokvera to measure whether your repeated prompts are worth caching.                      |
+| www `/security`, Tokvera and Sievant `/faq` (heading) | What if you stop maintaining it?                                                                                   | Your question, the same heading as on www `/` and `/pricing`. No factual claim; heads the continuity claim                                                                                                                     | What if the maintainer disappears? (`/security`); What if the maintainer stops? (both FAQs)  |
 
 `npm run verify:claims` checks both new quotes at their recorded commits (79 quotes verified).
 With these, every card and calculator sentence that restates a product claim is inside
@@ -158,21 +159,14 @@ The "search" and credential cards are the same as on www.
 
 ## www `/security`
 
-| Text                                                                                        | Relies on                                             | Note                              |
-| ------------------------------------------------------------------------------------------- | ----------------------------------------------------- | --------------------------------- |
-| What if the maintainer disappears?                                                          | No factual claim                                      | Heading over the continuity claim |
-| For your security questionnaire                                                             | No factual claim                                      | Heading                           |
-| What to send a customer's security team, all public and labelled as samples where they are: | Every sample frame carries its stamp (`check:stamps`) |                                   |
-| The sample Agent Security Review: what the review delivers and what a report covers.        | Sievant `/sample-report#review`                       |                                   |
-| Sievant and the OWASP LLM Top 10.                                                           | The existing Sievant OWASP page                       | Link text                         |
-| Tokvera's security policy.                                                                  | Tokvera's synced `SECURITY.md` (`/docs/security`)     | Link text                         |
-| Sievant's threat model.                                                                     | Sievant's synced threat-model doc                     | Link text                         |
-
-## Tokvera and Sievant `/faq`
-
-| Text                          | Relies on        | Note                               |
-| ----------------------------- | ---------------- | ---------------------------------- |
-| What if the maintainer stops? | No factual claim | Question over the continuity claim |
+| Text                                                                                        | Relies on                                             | Note      |
+| ------------------------------------------------------------------------------------------- | ----------------------------------------------------- | --------- |
+| For your security questionnaire                                                             | No factual claim                                      | Heading   |
+| What to send a customer's security team, all public and labelled as samples where they are: | Every sample frame carries its stamp (`check:stamps`) |           |
+| The sample Agent Security Review: what the review delivers and what a report covers.        | Sievant `/sample-report#review`                       |           |
+| Sievant and the OWASP LLM Top 10.                                                           | The existing Sievant OWASP page                       | Link text |
+| Tokvera's security policy.                                                                  | Tokvera's synced `SECURITY.md` (`/docs/security`)     | Link text |
+| Sievant's threat model.                                                                     | Sievant's synced threat-model doc                     | Link text |
 
 ## Sievant `/sample-report`
 

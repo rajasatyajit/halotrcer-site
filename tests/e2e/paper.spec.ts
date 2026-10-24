@@ -50,7 +50,7 @@ test('/security: continuity and questionnaire sections first, email route kept',
   await page.goto(`${ORIGINS.www}/security`);
   const h2s = await page.locator('main h2').allTextContents();
   expect(h2s.slice(0, 2)).toEqual([
-    'What if the maintainer disappears?',
+    'What if you stop maintaining it?',
     'For your security questionnaire',
   ]);
   await expect(page.locator('main')).toContainText(continuity);
@@ -127,7 +127,7 @@ for (const site of ['tokvera', 'sievant'] as const)
   test(`${site}/faq: the continuity answer after the synced FAQ`, async ({ page }) => {
     await page.goto(`${ORIGINS[site]}/faq`);
     const section = page.locator('section', {
-      has: page.getByRole('heading', { name: 'What if the maintainer stops?' }),
+      has: page.getByRole('heading', { name: 'What if you stop maintaining it?' }),
     });
     await expect(section).toContainText(continuity);
   });
