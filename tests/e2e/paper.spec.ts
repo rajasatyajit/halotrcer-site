@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { url } from '../../src/config/site.ts';
 import { claim } from '../../src/lib/claims.ts';
+import { wrap } from '../../src/lib/og.ts';
 import { loadPricing, priceLabel, serviceFor } from '../../src/lib/pricing.ts';
 import { ORIGINS } from './helpers.ts';
 
@@ -148,6 +149,19 @@ test('/agencies: Launching soon and "once released" before launch; unchanged aft
   await expect(run).toHaveText(
     "Once Tokvera and Sievant are released, you can run Tokvera against a client's inference endpoint and Sievant against their agents' tools, then hand over the reports. Until then, see what a report looks like:",
   );
+});
+
+test('/agencies: meta and share text say "once released" before launch; unchanged after', async ({
+  page,
+}) => {
+  await page.goto(`${ORIGINS.www}/agencies`);
+  const text = LAUNCHED
+    ? 'Run Tokvera and Sievant for your clients: name the client in the Sievant report and leave our call-to-action footers out. Talk to us about referrals.'
+    : 'Once Tokvera and Sievant are released, run them for your clients: name the client in the Sievant report, leave our call-to-action footers out. Talk to us about referrals.';
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', text);
+  await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', text);
+  // The share image draws this text in three lines of 58 characters (src/lib/og.ts); none is cut.
+  expect(wrap(text, 58, 3).join(' ')).toBe(text);
 });
 
 test('/agencies is linked from pricing and the footer', async ({ page }) => {

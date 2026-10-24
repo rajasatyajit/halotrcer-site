@@ -6,12 +6,13 @@ import { getFlags } from '../../../config/flags.ts';
 import { BOOKING_URL, url } from '../../../config/site.ts';
 
 const { launched } = getFlags();
+// Also the share image's text (integrations/og.ts); both fit it uncut (paper.spec.ts).
+const description = launched
+  ? 'Run Tokvera and Sievant for your clients: name the client in the Sievant report and leave our call-to-action footers out. Talk to us about referrals.'
+  : 'Once Tokvera and Sievant are released, run them for your clients: name the client in the Sievant report, leave our call-to-action footers out. Talk to us about referrals.';
 ---
 
-<BaseLayout
-  title="For agencies and consultancies"
-  description="Run Tokvera and Sievant for your clients: name the client in the Sievant report and leave our call-to-action footers out. Talk to us about referrals."
->
+<BaseLayout title="For agencies and consultancies" description={description}>
   <div class="paper-section paper-page">
     <header class="container page-head">
       <h1>For agencies and consultancies</h1>
