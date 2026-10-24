@@ -5,7 +5,8 @@ import { ORIGINS } from './helpers.ts';
 // Task 10: sample reports as case files (paper sheets on wood, each stamped), the Sievant
 // sample download, and docs, blog and legal pages on paper.
 const WOOD = 'rgb(59, 42, 26)';
-const marker = (family: string) => family.startsWith('"Case Marker"');
+// WebKit serialises the computed family without quotes; Chromium and Firefox quote it.
+const marker = (family: string) => /^"?Case Marker"?,/.test(family);
 
 for (const site of ['tokvera', 'sievant'] as const)
   test.describe(`${site} sample report`, () => {

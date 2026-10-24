@@ -293,3 +293,41 @@ test.describe('heading sizes on desktop', () => {
       expect(new Set(h2s)).toEqual(new Set([40]));
     });
 });
+
+// The first-screen check again with DejaVu Sans as the body font. It is wider than most
+// system UI fonts and is what Ubuntu's system-ui resolves to, so a header or hero that only
+// fits with a narrow font is caught on any machine, not just in CI. The override is appended
+// to the site's own stylesheet, so the page's CSP stays in force.
+test.describe('phone first screen with a wide body font (DejaVu Sans)', () => {
+  test.use({ viewport: { width: 320, height: 640 } });
+  for (const site of ['www', 'tokvera', 'sievant'] as const)
+    test(`${site}: both case buttons are in it`, async ({ page }) => {
+      await page.route('**/_astro/*.css', async (route) => {
+        const res = await route.fetch();
+        const body = `${await res.text()}\n:root{--font-body:'DejaVu Sans',monospace!important}`;
+        await route.fulfill({ response: res, body });
+      });
+      await page.goto(`${ORIGINS[site]}/`);
+      // Fails rather than passing on a fallback when DejaVu Sans is not installed.
+      const installed = await page.evaluate(() => {
+        const width = (family: string) => {
+          const ctx = document.createElement('canvas').getContext('2d');
+          if (!ctx) return 0;
+          ctx.font = `16px ${family}`;
+          return ctx.measureText('mmmmWWWWiiii').width;
+        };
+        return width("'DejaVu Sans', monospace") !== width('monospace');
+      });
+      expect(installed, 'DejaVu Sans must be installed for this test').toBe(true);
+      expect(
+        await page.locator('.case-hero .lede').evaluate((el) => getComputedStyle(el).fontFamily),
+      ).toMatch(/DejaVu Sans/);
+      for (const loc of [
+        page.locator('.case-hero').getByRole('link', { name: 'Open your case' }),
+        page.locator('.case-hero').getByRole('button', { name: 'Copy this case file' }),
+      ]) {
+        const box = await loc.boundingBox();
+        expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(640);
+      }
+    });
+});

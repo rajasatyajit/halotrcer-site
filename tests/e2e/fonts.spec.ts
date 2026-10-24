@@ -50,6 +50,7 @@ test.describe('fonts on www/', () => {
     });
     expect(loaded).toContain('Case Marker');
     const family = await page.locator('h1').evaluate((el) => getComputedStyle(el).fontFamily);
-    expect(family).toMatch(/^"Case Marker"/);
+    // WebKit serialises the family without quotes; Chromium and Firefox quote it.
+    expect(family).toMatch(/^"?Case Marker"?,/);
   });
 });

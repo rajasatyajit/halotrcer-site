@@ -1,6 +1,6 @@
 # M8: The AI Case File
 
-Branch `m8-redesign`, 58 commits ahead of `main`. Spec: `docs/redesign/DESIGN.md` (owner-approved
+Branch `m8-redesign`, 59 commits ahead of `main`. Spec: `docs/redesign/DESIGN.md` (owner-approved
 2026-10-23, mockup in `docs/redesign/reference/`). Plan:
 `docs/superpowers/plans/2026-10-23-m8-case-file.md`. Every sentence I wrote is listed in
 `docs/redesign/new-copy.md`, with the sample field or claim it relies on.
@@ -74,6 +74,14 @@ optional`), re-cut with `npm run font:marker`. Body and card text use system fon
    - The credential clue card's sentence is the first claim; the calculator's last line is "Run
      Tokvera to measure" plus the second. Both render through `<Claim>`, so the claim scan
      covers them.
+
+5. **CI fixes after the first manual run (2026-10-24).**
+   - Product headlines (Tokvera, Sievant homes) are 1.75rem below 48rem, down from 2rem. On
+     Ubuntu, `system-ui` is DejaVu Sans, wide enough to wrap the header to two rows; the Tokvera
+     home's second case button then ended at 662 px on a 320 × 640 screen. A new test repeats
+     the first-screen check on all three homes with DejaVu Sans forced as the body font.
+   - WebKit serialises the computed font family without quotes; the two Marker checks accept
+     the name with or without them. Nothing else changed in those tests.
 
 Earlier owner decisions this branch carries:
 

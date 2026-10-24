@@ -1661,7 +1661,7 @@ caption,
 /* Phones: both case buttons stay in the first screen, down to 320 × 640. */
 @media (width < 48rem) {
   .case-hero--long h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .case-hero {

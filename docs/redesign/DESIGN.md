@@ -57,6 +57,9 @@ Revised by the owner on 2026-10-23 (LCP budget, measured that day; the runs are 
 - `font-display: optional` plus a metric-matched fallback (`size-adjust`), under our own
   family name, so CLS stays 0.
 - Scale: display 96/68/40/24, body 19/17/15, small 13. Headings `text-wrap: balance`.
+- Phones (below 48rem): the product homes' headlines (Tokvera, Sievant) are 28 px (1.75rem),
+  so both case buttons stay in a 320 × 640 first screen even when a wide system font
+  (DejaVu Sans, Ubuntu's system-ui) wraps the header to two rows (owner, 2026-10-24).
 
 ## 4. Components
 
