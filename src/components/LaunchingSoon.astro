@@ -1,15 +1,17 @@
 ---
 import EmailAddress from './EmailAddress.astro';
 // Shown wherever install commands would appear while LAUNCHED=false.
-import { BOOKING_URL, CONTACT_EMAIL, SITE_NAMES, type SiteId } from '../config/site.ts';
+import { BOOKING_URL, CONTACT_EMAIL, SITE_NAMES, type SiteId, url } from '../config/site.ts';
 
 interface Props {
   // 'www' means all three; 'halotrcer' means the bundle alone.
   product?: SiteId | 'halotrcer';
   headingLevel?: 'h2' | 'h3' | 'h4';
+  // 'install-page' on pages that get no install picker after launch.
+  commands?: 'here' | 'install-page';
 }
 
-const { product, headingLevel = 'h2' } = Astro.props;
+const { product, headingLevel = 'h2', commands = 'here' } = Astro.props;
 const Heading = headingLevel;
 const name =
   product === 'halotrcer'
@@ -27,8 +29,15 @@ const id = `launching-soon-${product ?? 'all'}`;
   <p class="eyebrow">Launching soon</p>
   <Heading id={id}>{subject}</Heading>
   <p>
-    Install commands will appear here on release day. Until then, book a call to talk through your
-    setup, or email us.
+    {commands === 'here' ? (
+      'Install commands will appear here on release day.'
+    ) : (
+      <>
+        Install commands will appear on the <a href={url('www', '/install')}>install page</a> on
+        release day.
+      </>
+    )}{' '}
+    Until then, book a call to talk through your setup, or email us.
   </p>
   <div class="button-row">
     <a class="button" href={BOOKING_URL}>

@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { url } from '../../src/config/site.ts';
 import { claim } from '../../src/lib/claims.ts';
+import { wrap } from '../../src/lib/og.ts';
 import { loadPricing, priceLabel, serviceFor } from '../../src/lib/pricing.ts';
 import { ORIGINS } from './helpers.ts';
 
@@ -50,7 +51,7 @@ test('/security: continuity and questionnaire sections first, email route kept',
   await page.goto(`${ORIGINS.www}/security`);
   const h2s = await page.locator('main h2').allTextContents();
   expect(h2s.slice(0, 2)).toEqual([
-    'What if the maintainer disappears?',
+    'What if you stop maintaining it?',
     'For your security questionnaire',
   ]);
   await expect(page.locator('main')).toContainText(continuity);
@@ -117,6 +118,52 @@ test('/agencies: the licence line says "will both be" before launch and "are bot
   );
 });
 
+test('/agencies: Launching soon and "once released" before launch; unchanged after', async ({
+  page,
+}) => {
+  await page.goto(`${ORIGINS.www}/agencies`);
+  const soon = page.locator('main [data-launching-soon]');
+  const run = page
+    .locator('section', { has: page.locator('#run') })
+    .locator('p')
+    .first();
+  if (LAUNCHED) {
+    await expect(soon).toHaveCount(0);
+    await expect(run).toHaveText(
+      "Run Tokvera against a client's inference endpoint and Sievant against their agents' tools, then hand over the reports. See what a report looks like first:",
+    );
+    return;
+  }
+  await expect(soon).toHaveCount(1);
+  await expect(soon.getByRole('heading', { level: 2 })).toHaveText(
+    'Tokvera, Sievant and Halotrcer aren’t released yet',
+  );
+  // This page has no install picker after launch, so the block points at /install, not "here".
+  await expect(soon).toContainText(
+    'Install commands will appear on the install page on release day.',
+  );
+  await expect(soon).not.toContainText('appear here');
+  await expect(soon.locator(`a[href="${url('www', '/install')}"]`)).toHaveText('install page');
+  await expect(soon.getByRole('link', { name: 'Book a call' })).toBeVisible();
+  await expect(soon.locator('a[href^="mailto:"]')).toBeVisible();
+  await expect(run).toHaveText(
+    "Once Tokvera and Sievant are released, you can run Tokvera against a client's inference endpoint and Sievant against their agents' tools, then hand over the reports. Until then, see what a report looks like:",
+  );
+});
+
+test('/agencies: meta and share text say "once released" before launch; unchanged after', async ({
+  page,
+}) => {
+  await page.goto(`${ORIGINS.www}/agencies`);
+  const text = LAUNCHED
+    ? 'Run Tokvera and Sievant for your clients: name the client in the Sievant report and leave our call-to-action footers out. Talk to us about referrals.'
+    : 'Once Tokvera and Sievant are released, run them for your clients: name the client in the Sievant report, leave our call-to-action footers out. Talk to us about referrals.';
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', text);
+  await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', text);
+  // The share image draws this text in three lines of 58 characters (src/lib/og.ts); none is cut.
+  expect(wrap(text, 58, 3).join(' ')).toBe(text);
+});
+
 test('/agencies is linked from pricing and the footer', async ({ page }) => {
   await page.goto(`${ORIGINS.www}/pricing`);
   await expect(page.locator(`main a[href="${url('www', '/agencies')}"]`)).toHaveCount(1);
@@ -127,7 +174,7 @@ for (const site of ['tokvera', 'sievant'] as const)
   test(`${site}/faq: the continuity answer after the synced FAQ`, async ({ page }) => {
     await page.goto(`${ORIGINS[site]}/faq`);
     const section = page.locator('section', {
-      has: page.getByRole('heading', { name: 'What if the maintainer stops?' }),
+      has: page.getByRole('heading', { name: 'What if you stop maintaining it?' }),
     });
     await expect(section).toContainText(continuity);
   });

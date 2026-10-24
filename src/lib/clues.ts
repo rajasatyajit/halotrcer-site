@@ -193,7 +193,7 @@ export function board(site: SiteId): Board {
         SUMMARY.repeated(t.v.repeats, t.v.prompts),
         SUMMARY.rush(t.v.idle, t.v.peak),
         SUMMARY.failed(t.v.failed, t.v.requests),
-        SUMMARY.bypass(s.v.bypassing, s.v.servers, 'security'),
+        SUMMARY.bypass(s.v.bypassing, s.v.servers),
       ].join(', ');
       return {
         label: b.label,
@@ -226,7 +226,7 @@ export function board(site: SiteId): Board {
     case 'sievant': {
       const b = BOARDS.sievant;
       const findings = [
-        SUMMARY.bypass(s.v.bypassing, s.v.servers, 'Sievant'),
+        SUMMARY.bypass(s.v.bypassing, s.v.servers),
         SUMMARY.blocked(s.v.blocked, s.v.requests),
         SUMMARY.credential(s.v.credentials, s.v.credentials !== 1),
       ].join(', ');

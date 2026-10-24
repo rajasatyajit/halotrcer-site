@@ -102,7 +102,7 @@ export const SUMMARY = {
   rush: (idle: N, peak: N) => `first token ${idle} → ${peak} ms under load`,
   failed: (failed: N, requests: N) => `${failed} of ${requests} requests failed`,
   grade: (grade: string) => `grade ${grade} (Provisional scoring.)`,
-  bypass: (n: N, of: N, who: string) => `${n} of ${of} MCP servers bypassing ${who}`,
+  bypass: (n: N, of: N) => `${n} of ${of} MCP servers bypassing Sievant`,
   blocked: (blocked: N, requests: N) => `${blocked} of ${requests} tool calls blocked`,
   credential: (count: N, plural: boolean) =>
     `${count} credential${plural ? 's' : ''} caught in arguments`,
