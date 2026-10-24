@@ -117,6 +117,39 @@ test('/agencies: the licence line says "will both be" before launch and "are bot
   );
 });
 
+test('/agencies: Launching soon and "once released" before launch; unchanged after', async ({
+  page,
+}) => {
+  await page.goto(`${ORIGINS.www}/agencies`);
+  const soon = page.locator('main [data-launching-soon]');
+  const run = page
+    .locator('section', { has: page.locator('#run') })
+    .locator('p')
+    .first();
+  if (LAUNCHED) {
+    await expect(soon).toHaveCount(0);
+    await expect(run).toHaveText(
+      "Run Tokvera against a client's inference endpoint and Sievant against their agents' tools, then hand over the reports. See what a report looks like first:",
+    );
+    return;
+  }
+  await expect(soon).toHaveCount(1);
+  await expect(soon.getByRole('heading', { level: 2 })).toHaveText(
+    'Tokvera, Sievant and Halotrcer aren’t released yet',
+  );
+  // This page has no install picker after launch, so the block points at /install, not "here".
+  await expect(soon).toContainText(
+    'Install commands will appear on the install page on release day.',
+  );
+  await expect(soon).not.toContainText('appear here');
+  await expect(soon.locator(`a[href="${url('www', '/install')}"]`)).toHaveText('install page');
+  await expect(soon.getByRole('link', { name: 'Book a call' })).toBeVisible();
+  await expect(soon.locator('a[href^="mailto:"]')).toBeVisible();
+  await expect(run).toHaveText(
+    "Once Tokvera and Sievant are released, you can run Tokvera against a client's inference endpoint and Sievant against their agents' tools, then hand over the reports. Until then, see what a report looks like:",
+  );
+});
+
 test('/agencies is linked from pricing and the footer', async ({ page }) => {
   await page.goto(`${ORIGINS.www}/pricing`);
   await expect(page.locator(`main a[href="${url('www', '/agencies')}"]`)).toHaveCount(1);

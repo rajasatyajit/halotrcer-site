@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Claim from '../../../components/Claim.astro';
+import LaunchingSoon from '../../../components/LaunchingSoon.astro';
 import { getFlags } from '../../../config/flags.ts';
 import { BOOKING_URL, url } from '../../../config/site.ts';
 
@@ -22,11 +23,19 @@ const { launched } = getFlags();
 
     <section class="container section" aria-labelledby="run">
       <h2 id="run">Run it for your clients</h2>
-      <p>
-        Run <a href={url('tokvera')}>Tokvera</a> against a client's inference endpoint and
-        <a href={url('sievant')}>Sievant</a> against their agents' tools, then hand over the
-        reports. See what a report looks like first:
-      </p>
+      {launched ? (
+        <p>
+          Run <a href={url('tokvera')}>Tokvera</a> against a client's inference endpoint and{' '}
+          <a href={url('sievant')}>Sievant</a> against their agents' tools, then hand over the
+          reports. See what a report looks like first:
+        </p>
+      ) : (
+        <p>
+          Once Tokvera and Sievant are released, you can run <a href={url('tokvera')}>Tokvera</a>{' '}
+          against a client's inference endpoint and <a href={url('sievant')}>Sievant</a> against
+          their agents' tools, then hand over the reports. Until then, see what a report looks like:
+        </p>
+      )}
       <ul class="checklist">
         <li>
           <a href={url('tokvera', '/sample-report')}>Tokvera sample report</a>
@@ -36,6 +45,12 @@ const { launched } = getFlags();
         </li>
       </ul>
     </section>
+
+    {!launched && (
+      <section class="container section">
+        <LaunchingSoon product="www" commands="install-page" />
+      </section>
+    )}
 
     <section class="container section" aria-labelledby="carry">
       <h2 id="carry">What the report can carry</h2>
