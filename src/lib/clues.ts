@@ -2,6 +2,7 @@
 // clue card comes from here; src/data/boards.ts holds only the words.
 import { url, type SiteId } from '../config/site.ts';
 import { BOARDS, CLUES, KINDS, SUMMARY } from '../data/boards.ts';
+import { claim } from './claims.ts';
 import { sample } from './samples.ts';
 
 export type SampleId = 'tokvera-scan' | 'sievant-posture';
@@ -12,6 +13,8 @@ export interface Clue {
   // The key number, set large under the title.
   figure: string;
   body: string;
+  // Set when body is a claim's text; the card then renders it as that claim.
+  bodyClaim?: string;
   tool: 'Tokvera' | 'Sievant';
   detail?: string;
   sample: SampleId;
@@ -142,7 +145,8 @@ function sievant() {
     kind: KINDS.caught,
     title: CLUES.credential.title,
     figure: CLUES.credential.figure(v.credentials),
-    body: CLUES.credential.body(v.credentials !== 1),
+    body: claim(CLUES.credential.bodyClaim).text,
+    bodyClaim: CLUES.credential.bodyClaim,
   };
   const checkpoint: Clue = {
     ...base,

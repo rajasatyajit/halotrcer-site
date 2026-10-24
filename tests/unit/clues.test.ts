@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { board, clueSlots, yarnLines } from '../../src/lib/clues.ts';
 import { sample } from '../../src/lib/samples.ts';
 import { url } from '../../src/config/site.ts';
+import { claim } from '../../src/lib/claims.ts';
 
 const text = (site: Parameters<typeof board>[0], title: string) => {
   const c = board(site).clues.find((x) => x.title === title);
@@ -36,9 +37,7 @@ describe('www board', () => {
     expect(text('www', 'MCP server “search”').body).toBe(
       'MCP servers in this run that skip Sievant: no policy, no redaction, no audit.',
     );
-    expect(text('www', 'Credential in arguments').body).toBe(
-      'Sievant stopped the call before it reached the tool.',
-    );
+    expect(text('www', 'Credential in arguments').body).toBe('The call never reaches the server.');
     expect(text('www', 'Behind the checkpoint').body).toBe(
       'Calls through Sievant that were blocked; 3 results redacted.',
     );
@@ -78,6 +77,22 @@ describe('www board', () => {
   });
 });
 
+describe('claim-sourced card sentences', () => {
+  it('the credential card sentence is the registered claim', () => {
+    for (const site of ['www', 'sievant'] as const) {
+      const c = text(site, 'Credential in arguments');
+      expect(c.bodyClaim).toBe('sievant.block-credential-short');
+      expect(c.body).toBe(claim('sievant.block-credential-short').text);
+    }
+  });
+
+  it('only the credential card carries a claim', () => {
+    for (const site of ['www', 'tokvera', 'sievant'] as const)
+      for (const c of board(site).clues)
+        if (c.title !== 'Credential in arguments') expect(c.bodyClaim).toBeUndefined();
+  });
+});
+
 describe('product boards', () => {
   it('tokvera: four clues, the grade with its provisional label', () => {
     const b = board('tokvera');
@@ -105,12 +120,7 @@ describe('product boards', () => {
         '1 of 2',
         'MCP servers in this run that skip Sievant: no policy, no redaction, no audit.',
       ],
-      [
-        'Caught',
-        'Credential in arguments',
-        '1 blocked',
-        'Sievant stopped the call before it reached the tool.',
-      ],
+      ['Caught', 'Credential in arguments', '1 blocked', 'The call never reaches the server.'],
       [
         'Alibi',
         'MCP server “notes”',

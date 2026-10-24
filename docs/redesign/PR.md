@@ -1,6 +1,6 @@
 # M8: The AI Case File
 
-Branch `m8-redesign`, 56 commits ahead of `main`. Spec: `docs/redesign/DESIGN.md` (owner-approved
+Branch `m8-redesign`, 57 commits ahead of `main`. Spec: `docs/redesign/DESIGN.md` (owner-approved
 2026-10-23, mockup in `docs/redesign/reference/`). Plan:
 `docs/superpowers/plans/2026-10-23-m8-case-file.md`. Every sentence I wrote is listed in
 `docs/redesign/new-copy.md`, with the sample field or claim it relies on.
@@ -63,6 +63,17 @@ optional`), re-cut with `npm run font:marker`. Body and card text use system fon
    it." After launch: "are", "you keep", "installs and runs". Two owner claims
    (`www.continuity.prelaunch`, `www.continuity`); tested in both modes.
 
+4. **Copy decisions on 18f4008 (2026-10-24).**
+   - `/agencies` intro: "Tokvera and Sievant are both Apache-2.0.", restating `tokvera.license`
+     and `sievant.license`; no new claim.
+   - Two new claims, owner-approved quotes from the same `file:line` as existing ones:
+     `sievant.block-credential-short` ("The call never reaches the server.", Sievant
+     `README.md:53-54`) and `tokvera.measures-caching` ("whether repeated prompts are worth
+     caching", Tokvera `README.md:7-10`).
+   - The credential clue card's sentence is the first claim; the calculator's last line is "Run
+     Tokvera to measure" plus the second. Both render through `<Claim>`, so the claim scan
+     covers them.
+
 Earlier owner decisions this branch carries:
 
 - **O1:** "Talk to us about referrals" only, no white-label.
@@ -73,6 +84,13 @@ Earlier owner decisions this branch carries:
 - The sievant posture JSON is published, labelled.
 
 ## Gates and results (local, at 0ab89b1; `docs/acceptance.md`, "M8 acceptance")
+
+The copy change after acceptance (decision 4) was re-gated locally on both builds: lint,
+typecheck, 366 unit tests, `verify:claims` (79 quotes), every `check:dist` gate,
+`check:prelaunch` / `check:launched` (126 commands), internal links and URL permanence, plus the
+calculator, board, case-file and paper Playwright specs in Chromium (113 passed per mode). The
+full Lighthouse and three-browser runs below are from 0ab89b1 and were not repeated; CI runs
+both.
 
 Every run started at a 1-minute load average below 1.0. Pre-launch is `npm run build:prelaunch`;
 launched is `npm run build:launched-fixture`, as in CI.
@@ -192,7 +210,7 @@ These are decisions the plan or spec left open. Each is in the plan's progress l
   - /pricing uses the short price cards plus "Before you book", and gained the pricing share
     image.
   - The 404 heading is "No such page on this board".
-  - The /agencies intro and referral sentences are my wording.
+  - The /agencies referral sentences are my wording; the intro's second sentence is yours (decision 4).
   - A `surface` prop puts each page on paper or wood, including /scan, OWASP and the
     integrations pages.
 - **Docs sync:** the sync also pulled newer versions of 36 product docs. Those were reverted, to
@@ -210,7 +228,7 @@ Deferred minors: none; the six from the branch review were fixed in the last rou
 
 - Push `m8-redesign` and open the PR. Start the manual CI run above if you want WebKit before
   merging.
-- Review `new-copy.md`. The one sentence with no claim or sample behind it is on `/agencies`:
-  "These tools can go into your engagements, and the reports they write are yours to hand over."
+- Review `new-copy.md`. Every sentence in it now has a claim, a sample field or "no factual
+  claim" behind it.
 - Merge to `main`. The `main` push runs Firefox and WebKit in both modes.
 - Nothing new on DNS, Pages projects, the booking link or Search Console.

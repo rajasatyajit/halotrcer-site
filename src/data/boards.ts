@@ -39,10 +39,8 @@ export const CLUES = {
   credential: {
     title: 'Credential in arguments',
     figure: (count: N) => `${count} blocked`,
-    body: (plural: boolean) =>
-      plural
-        ? 'Sievant stopped the calls before they reached the tool.'
-        : 'Sievant stopped the call before it reached the tool.',
+    // The sentence is a claim (content/claims.yaml), so the claim scan covers it.
+    bodyClaim: 'sievant.block-credential-short',
   },
   checkpoint: {
     title: 'Behind the checkpoint',

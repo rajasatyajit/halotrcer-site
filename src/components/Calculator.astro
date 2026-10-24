@@ -5,6 +5,7 @@
 import { getFlags } from '../config/flags.ts';
 import { url } from '../config/site.ts';
 import { EXAMPLE_LABEL } from '../lib/calculator.ts';
+import Claim from './Claim.astro';
 import SimulatedStamp from './SimulatedStamp.astro';
 
 const fields = [
@@ -90,8 +91,8 @@ const tokvera = getFlags().site === 'tokvera' ? '/' : url('tokvera');
       </div>
     </dl>
     <p class="calc__label">
-      In the currency of your prices. <a href={tokvera}>Run Tokvera</a> to measure whether your
-      repeated prompts are worth caching.
+      In the currency of your prices. <a href={tokvera}>Run Tokvera</a> to measure{' '}
+      <Claim id="tokvera.measures-caching" />.
     </p>
     <div class="button-row">
       <button class="button button--ghost" type="button" data-calc-copy>

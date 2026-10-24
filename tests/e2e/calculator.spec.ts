@@ -34,6 +34,13 @@ test('computes from the inputs and puts them in the URL', async ({ page }) => {
   expect(new URL(page.url()).search).toBe(`?${QUERY}`);
 });
 
+test('closes on the caching claim, worded as a sentence', async ({ page }) => {
+  await page.goto(PAGE);
+  await expect(page.locator('.calc__label').filter({ hasText: 'Run Tokvera' })).toHaveText(
+    'In the currency of your prices. Run Tokvera to measure whether repeated prompts are worth caching.',
+  );
+});
+
 test('a shared link restores the inputs and the result', async ({ page }) => {
   await page.goto(`${PAGE}?${QUERY}`);
   await expect(page.locator('input[name="h"]')).toHaveValue('25');

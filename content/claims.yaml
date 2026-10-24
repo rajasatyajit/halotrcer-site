@@ -252,6 +252,16 @@
       - time to first token, and latency percentiles at rising concurrency; - error rates; - cost
       per 1,000 requests; - whether repeated prompts are worth caching.
 
+# Owner-approved narrow quote (2026-10-24): the calculator's closing line.
+- id: tokvera.measures-caching
+  text: whether repeated prompts are worth caching
+  source:
+    repo: tokvera
+    path: README.md
+    lines: '7-10'
+    commit: 0f37696950d5ea62c83e7342b2ae8bd1c37e4417
+    quote: whether repeated prompts are worth caching
+
 - id: sievant.scan-finds
   text: >-
     Credentials and secret values in MCP configuration files, servers given the filesystem root or
@@ -678,6 +688,16 @@
       commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc,
       quote: "A credential in a tool's arguments. The call never reaches the server:",
     }
+
+# Owner-approved narrow quote (2026-10-24): the credential clue card's sentence.
+- id: sievant.block-credential-short
+  text: The call never reaches the server.
+  source:
+    repo: sievant
+    path: README.md
+    lines: '53-54'
+    commit: 8529db16ad9ab178c7131966ba1c6fa5588047fc
+    quote: The call never reaches the server
 
 - id: sievant.block-credential-out
   text: Arguments contain a credential (aws_access_key); call blocked.

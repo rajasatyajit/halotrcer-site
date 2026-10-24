@@ -1,6 +1,7 @@
 ---
 // One clue pinned to the board. Its stamp sits inside its own border, so a cropped card
 // keeps its label (scripts/check-stamps.ts fails on a [data-clue] without one).
+import Claim from '../Claim.astro';
 import SimulatedStamp from '../SimulatedStamp.astro';
 import type { Clue } from '../../lib/clues.ts';
 import { inMarkerSubset } from '../../lib/fonts.ts';
@@ -23,7 +24,7 @@ const plainFigure = !inMarkerSubset(clue.figure);
     <p class="clue__kind">{clue.kind}</p>
     <h3 class:list={['clue__title', { 'clue__title--plain': plain }]}>{clue.title}</h3>
     <p class:list={['clue__figure', { 'clue__figure--plain': plainFigure }]}>{clue.figure}</p>
-    <p class="clue__body">{clue.body}</p>
+    <p class="clue__body">{clue.bodyClaim ? <Claim id={clue.bodyClaim} /> : clue.body}</p>
     <p class="clue__source">
       Source: <a href={clue.href}>{clue.tool} sample report</a>
       {clue.detail && ` · ${clue.detail}`}
