@@ -65,7 +65,7 @@ describe('www board', () => {
       { tool: 'Sievant', path: 'pkg/report/testdata/golden/gateway.json' },
     ]);
     expect(b.summary).toBe(
-      `Case file on my AI (simulated demo runs): 16 of 40 prompts repeated, first token 11 → 201 ms under load, 5 of 60 requests failed, 1 of 2 MCP servers bypassing security. Who's draining yours? ${url('www', '/')}`,
+      `Case file on my AI (simulated demo runs): 16 of 40 prompts repeated, first token 11 → 201 ms under load, 5 of 60 requests failed, 1 of 2 MCP servers bypassing Sievant. Who's draining yours? ${url('www', '/')}`,
     );
   });
 
