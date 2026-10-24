@@ -1,7 +1,10 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Claim from '../../../components/Claim.astro';
+import { getFlags } from '../../../config/flags.ts';
 import { BOOKING_URL, url } from '../../../config/site.ts';
+
+const { launched } = getFlags();
 ---
 
 <BaseLayout
@@ -12,7 +15,8 @@ import { BOOKING_URL, url } from '../../../config/site.ts';
     <header class="container page-head">
       <h1>For agencies and consultancies</h1>
       <p class="lede">
-        You build and run AI products for clients. Tokvera and Sievant are both Apache-2.0.
+        You build and run AI products for clients. Tokvera and Sievant{' '}
+        {launched ? 'are both' : 'will both be'} Apache-2.0.
       </p>
     </header>
 

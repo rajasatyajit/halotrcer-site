@@ -1,6 +1,6 @@
 # M8: The AI Case File
 
-Branch `m8-redesign`, 57 commits ahead of `main`. Spec: `docs/redesign/DESIGN.md` (owner-approved
+Branch `m8-redesign`, 58 commits ahead of `main`. Spec: `docs/redesign/DESIGN.md` (owner-approved
 2026-10-23, mockup in `docs/redesign/reference/`). Plan:
 `docs/superpowers/plans/2026-10-23-m8-case-file.md`. Every sentence I wrote is listed in
 `docs/redesign/new-copy.md`, with the sample field or claim it relies on.
@@ -64,8 +64,9 @@ optional`), re-cut with `npm run font:marker`. Body and card text use system fon
    (`www.continuity.prelaunch`, `www.continuity`); tested in both modes.
 
 4. **Copy decisions on 18f4008 (2026-10-24).**
-   - `/agencies` intro: "Tokvera and Sievant are both Apache-2.0.", restating `tokvera.license`
-     and `sievant.license`; no new claim.
+   - `/agencies` intro: "Tokvera and Sievant will both be Apache-2.0." before launch and "are
+     both" after, as on `/pricing`, restating `tokvera.license` and `sievant.license`; no new
+     claim. Tested in both modes.
    - Two new claims, owner-approved quotes from the same `file:line` as existing ones:
      `sievant.block-credential-short` ("The call never reaches the server.", Sievant
      `README.md:53-54`) and `tokvera.measures-caching` ("whether repeated prompts are worth
@@ -88,7 +89,7 @@ Earlier owner decisions this branch carries:
 The copy change after acceptance (decision 4) was re-gated locally on both builds: lint,
 typecheck, 366 unit tests, `verify:claims` (79 quotes), every `check:dist` gate,
 `check:prelaunch` / `check:launched` (126 commands), internal links and URL permanence, plus the
-calculator, board, case-file and paper Playwright specs in Chromium (113 passed per mode). The
+calculator, board, case-file and paper Playwright specs in Chromium (114 passed per mode). The
 full Lighthouse and three-browser runs below are from 0ab89b1 and were not repeated; CI runs
 both.
 

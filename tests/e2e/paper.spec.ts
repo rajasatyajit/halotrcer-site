@@ -107,6 +107,16 @@ test('/agencies: what the report can carry, no branding option, referrals', asyn
     await expect(main.locator(`a[href="${href}"]`).first()).toBeVisible();
 });
 
+test('/agencies: the licence line says "will both be" before launch and "are both" after', async ({
+  page,
+}) => {
+  await page.goto(`${ORIGINS.www}/agencies`);
+  const lede = page.locator('.page-head .lede');
+  await expect(lede).toHaveText(
+    `You build and run AI products for clients. Tokvera and Sievant ${LAUNCHED ? 'are both' : 'will both be'} Apache-2.0.`,
+  );
+});
+
 test('/agencies is linked from pricing and the footer', async ({ page }) => {
   await page.goto(`${ORIGINS.www}/pricing`);
   await expect(page.locator(`main a[href="${url('www', '/agencies')}"]`)).toHaveCount(1);
