@@ -1,18 +1,75 @@
 # Acceptance
 
-Every requirement in the brief, what enforces it, and its state at the end of M7. "CI" means
+Every requirement in the brief, what enforces it, and its state at the end of M8. "CI" means
 `.github/workflows/ci.yml` on every push unless a row says otherwise. Rows marked **manual** need
 the deployed sites or the owner and are not claimed as done.
 
-Last full green CI: run 39638677403 (`m7-hardening` 91f318f, manual run, 21 of 21 jobs:
-Lighthouse, and the browser tests in Chromium, Firefox and WebKit, both modes).
+Last full green CI: run 40169288251 (`main` 9b3a836, push, 21 of 21 jobs: Lighthouse, and the
+browser tests in Chromium, Firefox and WebKit, both modes).
 
-## M8 acceptance (`m8-redesign`, 0ab89b1)
+## M8 acceptance
+
+### On main (9b3a836, 2026-10-25)
+
+`main` at 9b3a836 (merge of PR #3) holds M8: the redesign (PR #1, merge 91d8cc3), the copy fixes
+(PR #2, merge 3b0ebfd) and the /agencies pre-launch share text (PR #3).
+
+CI run 40169288251 (push): success, 21 of 21 jobs.
+
+| Job                                    | Pre-launch                                                     | Launched                   |
+| -------------------------------------- | -------------------------------------------------------------- | -------------------------- |
+| Types, lint, unit tests, audit         | pass (mode-independent)                                        |                            |
+| Builds (www, tokvera, sievant)         | pass: HTML, headers/CSP, claims, budgets, stamps, Marker, glue | pass, and `check:launched` |
+| Links and SEO across all hosts         | pass                                                           | pass                       |
+| Chromium (axe and browser tests)       | 301 passed, 22 skipped (picker tests need a launched build)    | 323 passed                 |
+| Firefox                                | 301 passed, 22 skipped                                         | 323 passed                 |
+| WebKit                                 | 301 passed, 22 skipped                                         | 323 passed                 |
+| Lighthouse (3 hosts, 23 pages, 3 runs) | pass                                                           | pass                       |
+
+Lighthouse: 100/100/100/100 on every page in both modes, except SEO on the two `noindex` pages
+(404, /book), which is off by config. CLS 0 and TBT 0 ms on every run. LCP medians of 3 runs, all
+under the 1.4 s limit; the highest median is 1.37 s (tokvera/, launched), and no single run was
+above 1.37 s:
+
+| Page                       | LCP median, pre-launch | LCP median, launched |
+| -------------------------- | ---------------------- | -------------------- |
+| www/                       | 1.36 s                 | 1.36 s               |
+| www/404                    | 1.21 s                 | 1.36 s               |
+| www/agencies               | 1.36 s                 | 1.21 s               |
+| www/audit                  | 1.36 s                 | 1.36 s               |
+| www/blog                   | 1.21 s                 | 1.21 s               |
+| www/book                   | 1.21 s                 | 1.21 s               |
+| www/calculator             | 1.36 s                 | 1.36 s               |
+| www/install                | 1.36 s                 | 1.21 s               |
+| www/pricing                | 1.36 s                 | 1.21 s               |
+| www/scoring                | 1.21 s                 | 1.21 s               |
+| www/security               | 1.21 s                 | 1.21 s               |
+| tokvera/                   | 1.36 s                 | 1.37 s               |
+| tokvera/404                | 1.36 s                 | 1.36 s               |
+| tokvera/calculator         | 1.21 s                 | 1.36 s               |
+| tokvera/docs/scan          | 1.36 s                 | 1.36 s               |
+| tokvera/sample-report      | 1.36 s                 | 1.36 s               |
+| tokvera/scoring            | 1.21 s                 | 1.21 s               |
+| sievant/                   | 1.36 s                 | 1.36 s               |
+| sievant/404                | 1.36 s                 | 1.22 s               |
+| sievant/docs/scan-and-wrap | 1.36 s                 | 1.36 s               |
+| sievant/owasp-llm-top-10   | 1.36 s                 | 1.36 s               |
+| sievant/sample-report      | 1.36 s                 | 1.36 s               |
+| sievant/scan               | 1.36 s                 | 1.23 s               |
+
+Cloudflare Pages production deployments of 9b3a836, all "Deployed successfully": halotrcer-www
+94836103, halotrcer-tokvera e514803d, halotrcer-sievant e8658e84. www, tokvera and sievant
+.halotrcer.com return 200 in pre-launch mode and serve the same stylesheet as those deployments.
+www.halotrcer.com/agencies serves the pre-launch description and `og:description` "Once
+released, run Tokvera and Sievant for your clients: name the client in the Sievant report and
+leave our call-to-action footers out. Talk to us about referrals."
+
+### Local run (`m8-redesign`, 0ab89b1, before merge)
 
 The Case File redesign (docs/redesign/DESIGN.md, plan
 docs/superpowers/plans/2026-10-23-m8-case-file.md). Run locally on 2026-10-23, every run started
 at a 1-minute load average below 1.0. Pre-launch is `npm run build:prelaunch`; launched is
-`npm run build:launched-fixture` with `LAUNCHED=true`, as in CI. Not merged; nothing pushed.
+`npm run build:launched-fixture` with `LAUNCHED=true`, as in CI.
 
 ### Lighthouse (mobile; `lhci autorun` with `lighthouserc.cjs`, 3 runs per page)
 
@@ -67,11 +124,11 @@ now sit on the 1.36 s step, 40 ms under the 1.4 s limit (docs/fonts.md).
 
 ### Browsers (full Playwright suite: axe in both themes, no-JS, keyboard, board, fonts, layout at 320 px, email wrapping, text blocks, calculator, picker, docs)
 
-| Browser  | Pre-launch                                                                                                                       | Launched           |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| Chromium | 294 passed, 22 skipped (picker tests need a launched build)                                                                      | 316 passed         |
-| Firefox  | 294 passed, 22 skipped                                                                                                           | 316 passed         |
-| WebKit   | **not run**: WebKit does not launch on this machine (host lacks libicu74 and libflite1; Arch Linux). CI runs it on ubuntu-24.04. | **not run** (same) |
+| Browser  | Pre-launch                                                                                                                         | Launched           |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| Chromium | 294 passed, 22 skipped (picker tests need a launched build)                                                                        | 316 passed         |
+| Firefox  | 294 passed, 22 skipped                                                                                                             | 316 passed         |
+| WebKit   | **not run**: WebKit does not launch on this machine (host lacks libicu74 and libflite1; Arch Linux). CI on main passes it (above). | **not run** (same) |
 
 ### Picker behaviour and honesty
 
@@ -83,8 +140,8 @@ now sit on the 1.36 s step, 40 ms under the 1.4 s limit (docs/fonts.md).
 
 ### Owner's manual steps
 
-- Review and merge `m8-redesign` to `main`, then push. After the push: confirm CI is green,
-  including WebKit, which could not be run locally.
+- Done: `m8-redesign`, `m8-copy-fixes` and `m8-share-text` merged to `main` (9b3a836); CI is
+  green there, including WebKit.
 - Nothing new on DNS, Pages projects, the booking link or Search Console.
 
 ## Hosts, products and content
@@ -125,7 +182,7 @@ now sit on the 1.36 s step, 40 ms under the 1.4 s limit (docs/fonts.md).
 | WCAG 2.2 AA                                                               | axe on every key page, light and dark; keyboard tests for the picker                                                                                                                                                                                                                                                                                                              | ✅ CI (automated subset); manual review advised |
 | Works with JavaScript disabled                                            | no-JS render tests per key page; picker `<details>`; calculator shows the formula                                                                                                                                                                                                                                                                                                 | ✅ CI                                           |
 | No third-party scripts, fonts or trackers; analytics off                  | CSP `'self'`, LHCI third-party count 0, no font file but the self-hosted Permanent Marker subset (budget), `ANALYTICS` defaults off                                                                                                                                                                                                                                               | ✅ CI                                           |
-| Firefox and WebKit                                                        | `e2e-browsers` job on main and manual runs                                                                                                                                                                                                                                                                                                                                        | ✅ CI (run 39638677403, both modes)             |
+| Firefox and WebKit                                                        | `e2e-browsers` job on main and manual runs                                                                                                                                                                                                                                                                                                                                        | ✅ CI (run 40169288251, both modes)             |
 
 ## SEO and sharing
 
