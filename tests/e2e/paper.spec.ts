@@ -157,7 +157,7 @@ test('/agencies: meta and share text say "once released" before launch; unchange
   await page.goto(`${ORIGINS.www}/agencies`);
   const text = LAUNCHED
     ? 'Run Tokvera and Sievant for your clients: name the client in the Sievant report and leave our call-to-action footers out. Talk to us about referrals.'
-    : 'Once Tokvera and Sievant are released, run them for your clients: name the client in the Sievant report, leave our call-to-action footers out. Talk to us about referrals.';
+    : 'Once released, run Tokvera and Sievant for your clients: name the client in the Sievant report and leave our call-to-action footers out. Talk to us about referrals.';
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', text);
   await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', text);
   // The share image draws this text in three lines of 58 characters (src/lib/og.ts); none is cut.
